@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MIS 279 – Week 1 Slides (HTML)</title>
+<style>
+  :root {
+    --bg: #0f172a; /* slate-900 */
+    --panel: #111827; /* gray-900 */
+    --text: #e5e7eb; /* gray-200 */
+    --muted: #94a3b8; /* slate-400 */
+    --accent: #38bdf8; /* sky-400 */
+  }
+  html, body { height: 100%; }
+  body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: var(--bg); color: var(--text); }
+  .wrap { display: grid; grid-template-rows: auto 1fr auto; min-height: 100%; }
+  header { padding: 20px 28px; border-bottom: 1px solid rgba(255,255,255,.06); background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)); }
+  header h1 { margin: 0; font-size: 20px; letter-spacing: .5px; }
+  header .sub { color: var(--muted); font-size: 13px; }
+  .deck { position: relative; overflow: hidden; }
+  .slide { width: 100%; height: calc(100vh - 160px); max-width: 1100px; margin: 24px auto; padding: 36px; box-sizing: border-box; background: var(--panel); border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.35); display: none; }
+  .slide.active { display: block; animation: fadeIn .35s ease; }
+  .title { font-size: 28px; font-weight: 800; margin: 0 0 14px; }
+  .kicker { color: var(--muted); font-size: 14px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 10px; }
+  ul { margin: 12px 0 0 20px; font-size: 18px; line-height: 1.6; }
+  li { margin: 8px 0; }
+  .footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; border-top: 1px solid rgba(255,255,255,.06); }
+  .controls { display: inline-flex; gap: 10px; }
+  button { background: rgba(56,189,248,.12); color: var(--text); border: 1px solid rgba(56,189,248,.35); border-radius: 10px; padding: 10px 14px; font-weight: 600; cursor: pointer; }
+  button:hover { background: rgba(56,189,248,.2); }
+  .hint { color: var(--muted); font-size: 13px; }
+  .progress { height: 6px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
+  .bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), #60a5fa); transition: width .25s ease; }
+  .badge { display:inline-block; font-size:12px; padding:4px 8px; background: rgba(99,102,241,.2); border:1px solid rgba(99,102,241,.4); color:#c7d2fe; border-radius:999px; margin-left:8px; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
+  @media print {
+    body { background: #fff; color: #000; }
+    header, .footer { display:none; }
+    .slide { display:block !important; height: auto; box-shadow:none; background:#fff; color:#000; page-break-inside: avoid; border:1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>MIS 279 — E‑commerce • Week 1 <span class="badge">HTML Deck</span></h1>
+      <div class="sub">Lecture 1.1 (What is E‑commerce?) & Lecture 1.2 (Market Research Tools)</div>
+    </header>
+
+    <div class="deck" id="deck">
+
+      <!-- LECTURE 1.1 -->
+      <section class="slide active">
+        <div class="kicker">Lecture 1.1</div>
+        <h2 class="title">What is E‑commerce?</h2>
+        <ul>
+          <li>Definition & scope of digital commerce and its touchpoints</li>
+          <li>Why MIS: bridging business models with technology execution</li>
+          <li>Course journey: Pitch → No‑code MVP → Full‑stack (MSSQL + Node.js)</li>
+        </ul>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Lecture 1.1</div>
+        <h2 class="title">Evolution & Milestones</h2>
+        <ul>
+          <li>1990s: Early online stores, SSL, the first carts</li>
+          <li>2000s: Marketplaces & payments (PayPal, fraud/risk standards)</li>
+          <li>2010s: Mobile commerce, social selling, logistics platforms</li>
+          <li>2020s: AI search/reco, subscriptions, AR try‑ons, same‑day</li>
+        </ul>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Lecture 1.1</div>
+        <h2 class="title">Business Models</h2>
+        <ul>
+          <li>B2C, B2B, C2C, D2C, and hybrid models</li>
+          <li>Subscriptions & memberships (recurring revenue)</li>
+          <li>Marketplaces: network effects, take rates, compliance</li>
+          <li>Key metrics: CAC, LTV, AOV, conversion, churn</li>
+        </ul>
+      </section>
+
+      <!-- LECTURE 1.2 -->
+      <section class="slide">
+        <div class="kicker">Lecture 1.2</div>
+        <h2 class="title">Market Research: Why It Matters</h2>
+        <ul>
+          <li>De‑risk ideas with data before building</li>
+          <li>Quantify demand; identify underserved segments</li>
+          <li>Translate findings into a clear value proposition</li>
+        </ul>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Lecture 1.2</div>
+        <h2 class="title">Core Tools & Signals</h2>
+        <ul>
+          <li>Google Trends for demand patterns & seasonality</li>
+          <li>Similarweb for competitor traffic & channels</li>
+          <li>Statista / Think with Google for market sizing</li>
+          <li>Social listening: Reddit, TikTok, Instagram for pain points</li>
+        </ul>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Lecture 1.2 (Hands‑on)</div>
+        <h2 class="title">Activity: Find a Market Gap</h2>
+        <ul>
+          <li>Pick a category (fashion, food, tech, services)</li>
+          <li>Use Google Trends to compare top 3 terms</li>
+          <li>Audit 2 competitors with Similarweb (sources & geo)</li>
+          <li>Draft 3 pain points + 1 hypothesis statement</li>
+          <li>Prepare a 2‑minute pitch for next class</li>
+        </ul>
+      </section>
+
+    </div>
+
+    <div class="footer">
+      <div class="controls">
+        <button id="prev" type="button" aria-label="Previous slide">◀ Prev</button>
+        <button id="next" type="button" aria-label="Next slide">Next ▶</button>
+      </div>
+      <div class="hint">Tip: Use ← / → keys or click buttons • Press Ctrl/Cmd+P to print/PDF</div>
+      <div class="progress" style="width: 240px"><div id="bar" class="bar"></div></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const bar = document.getElementById('bar');
+  let index = 0;
+  function show(i){
+    index = Math.max(0, Math.min(slides.length-1, i));
+    slides.forEach((s, idx)=> s.classList.toggle('active', idx===index));
+    bar.style.width = (((index+1)/slides.length)*100).toFixed(1) + '%';
+    history.replaceState(null, '', '#'+(index+1));
+  }
+  function next(){ show(index+1); }
+  function prev(){ show(index-1); }
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+  // Deep link support via hash
+  const start = parseInt(location.hash.replace('#',''),10);
+  if (!isNaN(start)) show(start-1); else show(0);
+})();
+</script>
+</body>
+</html>

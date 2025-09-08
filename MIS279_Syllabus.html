@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MIS 279 – E-commerce Development | Syllabus</title>
+  <style>
+    :root{
+      --ink:#0f172a;
+      --muted:#475569;
+      --brand:#2563eb;
+      --bg:#ffffff;
+      --soft:#f8fafc;
+      --accent:#e2e8f0;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--soft);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,Apple Color Emoji,Segoe UI Emoji}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .page{
+      max-width:1100px;margin:32px auto;padding:24px;
+      background:var(--bg);border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.08)
+    }
+    header{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;border-bottom:1px solid var(--accent);padding-bottom:16px;margin-bottom:20px}
+    header h1{font-size:28px;line-height:1.2;margin:0}
+    header .meta{color:var(--muted);font-size:14px}
+    .badge{display:inline-block;background:var(--brand);color:#fff;font-weight:600;padding:4px 10px;border-radius:999px;font-size:12px;margin-left:8px}
+    h2{font-size:22px;margin:24px 0 12px}
+    h3{font-size:18px;margin:18px 0 8px}
+    p,li{line-height:1.6}
+    section{padding:14px 0;border-top:1px solid var(--accent)}
+    .grid{display:grid;gap:16px}
+    .two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (max-width:820px){.two{grid-template-columns:1fr}}
+    .card{background:var(--soft);border:1px solid var(--accent);border-radius:12px;padding:14px}
+    table{width:100%;border-collapse:collapse;background:var(--bg);border-radius:12px;overflow:hidden}
+    th,td{padding:10px 12px;border-bottom:1px solid var(--accent);text-align:left;vertical-align:top}
+    th{background:#f1f5f9;font-weight:700}
+    tr:last-child td{border-bottom:0}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;font-weight:600}
+    .small{color:var(--muted);font-size:13px}
+    .list-compact li{margin:6px 0}
+    .footer{margin-top:24px;color:var(--muted);font-size:12px;text-align:center}
+    .print-note{font-size:12px;color:var(--muted)}
+    @media print{
+      body{background:#fff}
+      .page{box-shadow:none;margin:0;border-radius:0}
+      a{text-decoration:none;color:inherit}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <h1>Haigazian University — Department of MIS<br/>MIS 279: E-commerce Development <span class="badge">Syllabus</span></h1>
+        <div class="meta">Instructor: [Your Name] &nbsp;·&nbsp; Email: [your@email.edu] &nbsp;·&nbsp; Office Hours: [Times] &nbsp;·&nbsp; Semester: [Fall/Spring 20XX]</div>
+      </div>
+    </header>
+
+    <section id="description">
+      <h2>Course Description</h2>
+      <p>This course takes a <strong>hands-on</strong> approach to e-commerce. Students progress from <em>business ideation &amp; pitching</em>, to a <em>no‑code MVP</em>, and finally build a <em>full‑stack e‑commerce application</em> using <strong>MSSQL, Node.js (Express)</strong>, and a modern frontend. The structure mirrors a real startup journey from idea to deployment.</p>
+    </section>
+
+    <section id="outcomes">
+      <h2>Learning Outcomes</h2>
+      <ul class="list-compact">
+        <li>Identify market gaps and develop a viable e-commerce business model and pitch deck.</li>
+        <li>Create an MVP using no-code tools (e.g., Shopify, Wix, Webflow) and gather feedback.</li>
+        <li>Design an <strong>MSSQL</strong> schema and implement relational models for products, orders, and users.</li>
+        <li>Build REST APIs with <strong>Node.js + Express</strong>; implement authentication and validations.</li>
+        <li>Develop a functional frontend, connect it to APIs, and integrate <strong>Stripe (test mode)</strong>.</li>
+        <li>Deploy to the cloud (Azure/Heroku), document, and present a working product.</li>
+      </ul>
+    </section>
+
+    <section id="weekly">
+      <h2>Weekly Breakdown</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:64px">Week</th>
+            <th>Topics</th>
+            <th>Hands-On / Deliverables</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Intro to E-commerce &amp; Trends</td>
+            <td>Market research with Google Trends &amp; Statista; niche selection</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Business Models &amp; Lean Canvas</td>
+            <td>Draft Lean/Business Model Canvas</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Pitch Deck &amp; Presentations</td>
+            <td><span class="pill">Assignment 1</span> Pitch deck due (5 min) &amp; 2-page summary</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>No-code Platforms Overview</td>
+            <td>Build MVP with Shopify/Wix/Webflow</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Usability &amp; Prototype Testing</td>
+            <td>MVP peer testing &amp; feedback reflection</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Data Modeling for E‑commerce</td>
+            <td>Design ERD (dbdiagram/Lucidchart)</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>MSSQL Implementation</td>
+            <td>Create schema + seed data; connect from SSMS</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>SQL Analytics Queries</td>
+            <td><span class="pill">Assignment 2</span> Advanced SQL + analytics</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Node.js &amp; Express API</td>
+            <td>CRUD endpoints for products, users, orders (Postman collection)</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Auth &amp; Payments</td>
+            <td>JWT login + Stripe test checkout integration</td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>Frontend (React/Next.js)</td>
+            <td>Connect pages to APIs; cart &amp; checkout flow</td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>Cloud &amp; Deployment</td>
+            <td>Deploy API &amp; frontend (Azure/Heroku); env &amp; scaling basics</td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td>Project Integration</td>
+            <td>End-to-end integration; bug fixing; documentation</td>
+          </tr>
+          <tr>
+            <td>14</td>
+            <td>Final Presentations</td>
+            <td>Demo journey: Pitch → No‑code MVP → Full‑stack app</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small print-note">Note: Schedule may adjust slightly to accommodate guest talks or campus events.</p>
+    </section>
+
+    <section id="assessments">
+      <h2>Assessments &amp; Weighting</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Assignments &amp; Labs — 40%</h3>
+          <ul class="list-compact">
+            <li><strong>Assignment 1:</strong> Market Gap Pitch (deck + 2-page brief) — 20%</li>
+            <li><strong>Assignment 2:</strong> Database &amp; Advanced SQL — 20%</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Final Project — 40%</h3>
+          <ul class="list-compact">
+            <li>Full-stack prototype (MSSQL + Node.js + Frontend)</li>
+            <li>Payment integration (Stripe test mode)</li>
+            <li>Deployed demo + documentation + presentation</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Quizzes / Participation — 20%</h3>
+          <ul class="list-compact">
+            <li>Short quizzes/reflections on tools (GA4, Stripe, SQL)</li>
+            <li>In-class engagement and code reviews</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="tools">
+      <h2>Required Tools &amp; Platforms</h2>
+      <div class="grid two">
+        <div class="card">
+          <h3>Software</h3>
+          <ul class="list-compact">
+            <li>Microsoft SQL Server + SSMS</li>
+            <li>Node.js (LTS), Express</li>
+            <li>Visual Studio Code, Git &amp; GitHub</li>
+            <li>Postman</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Platforms</h3>
+          <ul class="list-compact">
+            <li>Shopify / Wix / Webflow (trial for MVP)</li>
+            <li>Stripe (test mode)</li>
+            <li>Azure / Heroku (deployment)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources">
+      <h2>Readings &amp; Resources</h2>
+      <ul class="list-compact">
+        <li>Laudon &amp; Traver, <em>E-commerce</em> (latest edition)</li>
+        <li>Microsoft SQL Docs; Express.js Docs; Stripe Docs</li>
+        <li>Articles: HBR on digital commerce; GA4 and SEO primers; Statista market data</li>
+      </ul>
+    </section>
+
+    <section id="policies">
+      <h2>Policies</h2>
+      <h3>Academic Integrity</h3>
+      <p>All submitted work must be original. Plagiarism or unauthorized code sharing will result in a zero and may trigger disciplinary action. Group work is allowed only when explicitly stated.</p>
+      <h3>Attendance &amp; Participation</h3>
+      <p>Attendance is essential for labs and live demos. More than two unexcused absences may impact the participation component.</p>
+      <h3>Late Work</h3>
+      <p>Late submissions lose 10% per day (up to 3 days). After 3 days, submissions are not accepted unless prior arrangements are made.</p>
+      <h3>Teamwork</h3>
+      <p>Projects may be completed individually or in teams of up to 3. Each team must maintain a shared GitHub repo with meaningful commit history per member.</p>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>For course-related questions, use the class Whatsapp group during office hours. For technical blockers</p>
+    </section>
+
+    <div class="footer">
+      © Haigazian University — MIS 279 • This document is a working syllabus and may be refined during the term.
+    </div>
+  </div>
+</body>
+</html>

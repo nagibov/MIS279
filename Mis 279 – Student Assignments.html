@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MIS 279 – Student Assignments</title>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #121318;
+      --muted: #9aa4b2;
+      --text: #eef2f7;
+      --accent: #6ea8fe;
+      --border: #20242c;
+      --ok: #5ac18e;
+    }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .container { max-width: 1000px; margin: 48px auto; padding: 0 24px; }
+    header { margin-bottom: 24px; }
+    h1 { font-size: 2rem; margin: 0 0 8px; }
+    .subtitle { color: var(--muted); margin: 0 0 24px; }
+    .toc { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px 20px; margin-bottom: 24px; }
+    .toc h2 { font-size: 1.1rem; margin: 0 0 8px; }
+    .toc a { color: var(--accent); text-decoration: none; }
+    .toc ul { margin: 8px 0 0 20px; padding: 0; }
+
+    section.assignment { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+    section.assignment h2 { margin-top: 0; font-size: 1.35rem; }
+    .meta { display:flex; gap:12px; flex-wrap:wrap; color: var(--muted); margin: -8px 0 8px; }
+    .chip { border:1px solid var(--border); background:#0e1016; padding:4px 10px; border-radius: 999px; font-size: .9rem; }
+
+    h3 { margin-top: 20px; font-size: 1.05rem; }
+    ul { margin-top: 8px; }
+    li { margin: 4px 0; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    th, td { border: 1px solid var(--border); padding: 10px 12px; vertical-align: top; }
+    th { background: #151821; text-align: left; }
+    .muted { color: var(--muted); }
+
+    .callout { border-left: 4px solid var(--accent); background: #0e1220; padding: 12px 14px; border-radius: 8px; }
+
+    footer { color: var(--muted); text-align: center; margin: 32px 0 80px; }
+
+    /* Print */
+    @media print {
+      :root { --bg: #fff; --card:#fff; --text:#000; --muted:#444; --border:#ddd; --accent:#000; }
+      body { background:#fff; color:#000; }
+      .container { margin: 0; max-width: 100%; }
+      a { color: #000; text-decoration: underline; }
+      .toc { page-break-inside: avoid; }
+      section.assignment { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>MIS 279 – Student Assignments</h1>
+      <p class="subtitle">Haigazian University • Department of MIS • Modernized course flow: <strong>Pitch → No‑code MVP → SQL Analytics → Full‑stack App</strong></p>
+    </header>
+
+    <nav class="toc">
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#a1">Assignment 1 – Market Gap Pitch</a></li>
+        <li><a href="#a2">Assignment 2 – No‑code Prototype (MVP)</a></li>
+        <li><a href="#a3">Assignment 3 – Database &amp; SQL Analytics</a></li>
+        <li><a href="#a4">Assignment 4 – Full‑Stack Development Project</a></li>
+        <li><a href="#sum">Summary of Deliverables</a></li>
+      </ul>
+    </nav>
+
+    <!-- Assignment 1 -->
+    <section id="a1" class="assignment">
+      <h2>Assignment 1 – Market Gap Pitch</h2>
+      <div class="meta">
+        <span class="chip">Due: Week 3</span>
+        <span class="chip">Weight: 20%</span>
+      </div>
+      <p><strong>Objective:</strong> Identify a market opportunity and design a viable e‑commerce business concept, presented via a professional pitch deck.</p>
+      <h3>Tasks</h3>
+      <ul>
+        <li>Research trends using tools such as <em>Google Trends</em>, <em>Statista</em>, and <em>SimilarWeb</em>.</li>
+        <li>Fill a <strong>Lean Canvas</strong> for your idea (Problem, Solution, UVP, Customer Segments, Channels, Revenue, Costs, Key Metrics, Unfair Advantage).</li>
+        <li>Create a <strong>5–6 slide</strong> pitch deck covering: Problem, Target Audience, Business Model, Value Proposition, Monetization.</li>
+        <li>Deliver a <strong>5‑minute</strong> in‑class presentation.</li>
+      </ul>
+      <h3>Deliverables</h3>
+      <ul>
+        <li>Pitch deck (PDF or PPT).</li>
+        <li>2‑page business summary (PDF/Doc).</li>
+      </ul>
+      <h3>Evaluation (20%)</h3>
+      <table>
+        <thead><tr><th>Criterion</th><th>Weight</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Originality &amp; Feasibility</td><td>40%</td><td>Clear market gap; practical go‑to‑market.</td></tr>
+          <tr><td>Market Research</td><td>20%</td><td>Evidence &amp; data‑driven rationale.</td></tr>
+          <tr><td>Communication</td><td>20%</td><td>Clarity, visuals, time management.</td></tr>
+          <tr><td>Q&amp;A / Defense</td><td>20%</td><td>Confident responses and reasoning.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Assignment 2 -->
+    <section id="a2" class="assignment">
+      <h2>Assignment 2 – No‑code Prototype (MVP)</h2>
+      <div class="meta">
+        <span class="chip">Due: Week 5</span>
+        <span class="chip">Weight: 20%</span>
+      </div>
+      <p><strong>Objective:</strong> Validate your concept quickly using a no‑code platform.</p>
+      <h3>Tasks</h3>
+      <ul>
+        <li>Choose a platform (e.g., <strong>Shopify</strong>, <strong>Wix</strong>, <strong>Webflow</strong>, or <strong>Bubble</strong>).</li>
+        <li>Build an MVP including: Home page &amp; branding, Product listing, Checkout flow (mock or test mode).</li>
+        <li>Conduct a peer usability test; record key findings.</li>
+        <li>Write a short reflection: what worked, what didn’t, and planned improvements for the coded build.</li>
+      </ul>
+      <h3>Deliverables</h3>
+      <ul>
+        <li>Public/live MVP link.</li>
+        <li>2–3 page usability reflection with screenshots.</li>
+      </ul>
+      <h3>Evaluation (20%)</h3>
+      <table>
+        <thead><tr><th>Criterion</th><th>Weight</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Functionality &amp; Design</td><td>40%</td><td>Coherent flows; accessible UI; consistent brand.</td></tr>
+          <tr><td>Usability</td><td>20%</td><td>Navigation clarity; feedback‑driven fixes.</td></tr>
+          <tr><td>Creativity</td><td>20%</td><td>Compelling value proposition &amp; messaging.</td></tr>
+          <tr><td>Reflection Quality</td><td>20%</td><td>Honest learnings; clear next steps.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Assignment 3 -->
+    <section id="a3" class="assignment">
+      <h2>Assignment 3 – Database &amp; SQL Analytics</h2>
+      <div class="meta">
+        <span class="chip">Due: Week 8</span>
+        <span class="chip">Weight: 20%</span>
+      </div>
+      <p><strong>Objective:</strong> Design and analyze an e‑commerce database in <strong>MSSQL</strong>.</p>
+      <div class="callout"><strong>Schema guidance:</strong> include Products, Categories/Tags, Users, Orders, OrderDetails, Payments, Addresses. Add audit fields (createdAt/updatedAt) and sensible indexes.</div>
+      <h3>Tasks</h3>
+      <ol>
+        <li>Design an <strong>ERD</strong> &amp; implement schema in MSSQL with sample data.</li>
+        <li>Write analytics queries:
+          <ul>
+            <li>Customers who signed up but never purchased.</li>
+            <li>Top customers by spend &amp; frequency.</li>
+            <li>Abandoned baskets (open carts without orders).</li>
+            <li>Top‑selling items &amp; categories.</li>
+            <li>Low‑stock items (threshold you define).</li>
+            <li>Monthly sales (revenue, AOV, orders).</li>
+          </ul>
+        </li>
+        <li>Summarize business insights in a concise report.</li>
+      </ol>
+      <h3>Deliverables</h3>
+      <ul>
+        <li>ERD (PDF or image).</li>
+        <li>SQL script (schema + seed + queries).</li>
+        <li>2‑page insights report.</li>
+      </ul>
+      <h3>Evaluation (20%)</h3>
+      <table>
+        <thead><tr><th>Criterion</th><th>Weight</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Schema Quality</td><td>30%</td><td>Proper normalization, keys, indexes.</td></tr>
+          <tr><td>Query Accuracy &amp; Depth</td><td>40%</td><td>Correctness; non‑trivial analytics.</td></tr>
+          <tr><td>Insights</td><td>20%</td><td>Actionable takeaways for the business.</td></tr>
+          <tr><td>Documentation</td><td>10%</td><td>Readable scripts; clear assumptions.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Assignment 4 -->
+    <section id="a4" class="assignment">
+      <h2>Assignment 4 – Full‑Stack Development Project</h2>
+      <div class="meta">
+        <span class="chip">Due: Week 14</span>
+        <span class="chip">Weight: 40%</span>
+      </div>
+      <p><strong>Objective:</strong> Build a working e‑commerce prototype using <strong>MSSQL</strong> + <strong>Node.js/Express</strong> + a modern frontend (e.g., <strong>React/Next.js</strong>).</p>
+      <div class="grid">
+        <div>
+          <h3>Backend (Node.js + Express)</h3>
+          <ul>
+            <li>CRUD for products, users, orders; input validation.</li>
+            <li>Authentication with <strong>JWT</strong> (password hashing).</li>
+            <li>Checkout endpoint with <strong>Stripe test mode</strong>.</li>
+            <li>API docs (Postman collection + README).</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Database (MSSQL)</h3>
+          <ul>
+            <li>Implemented schema &amp; seed data.</li>
+            <li>Views or stored procedures for common reads.</li>
+            <li>Indexes for performance on listing &amp; analytics.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid">
+        <div>
+          <h3>Frontend (React/Next.js or similar)</h3>
+          <ul>
+            <li>Product list &amp; detail pages.</li>
+            <li>Cart &amp; checkout flow.</li>
+            <li>Login/register forms; basic profile page.</li>
+            <li>Responsive design.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Deployment</h3>
+          <ul>
+            <li>Host API and frontend (Azure/Render/Heroku/Vercel).</li>
+            <li>Environment variables for secrets; test accounts.</li>
+            <li>Provide <strong>live demo links</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Deliverables</h3>
+      <ul>
+        <li>GitHub repo (with clear README &amp; setup steps).</li>
+        <li>Live deployment link(s).</li>
+        <li>Documentation: ERD, API routes, screenshots.</li>
+        <li>Final presentation deck (story: Pitch → MVP → Full‑stack).</li>
+      </ul>
+
+      <h3>Evaluation (40%)</h3>
+      <table>
+        <thead><tr><th>Criterion</th><th>Weight</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Technical Execution</td><td>40%</td><td>Code quality, correctness, security, tests (if any).</td></tr>
+          <tr><td>Functionality &amp; UX</td><td>25%</td><td>End‑to‑end flow works; responsive and usable.</td></tr>
+          <tr><td>Business Alignment</td><td>15%</td><td>Implements core value proposition from pitch.</td></tr>
+          <tr><td>Presentation &amp; Teamwork</td><td>20%</td><td>Clear demo, roles, collaboration evidence.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="sum" class="assignment">
+      <h2>Summary of Deliverables</h2>
+      <ul>
+        <li><strong>Assignment 1:</strong> Pitch deck + 2‑page summary.</li>
+        <li><strong>Assignment 2:</strong> No‑code MVP link + usability reflection.</li>
+        <li><strong>Assignment 3:</strong> ERD + SQL script + 2‑page insights report.</li>
+        <li><strong>Assignment 4:</strong> Full‑stack app (repo + live link) + final deck.</li>
+      </ul>
+      <p class="muted">Tip: keep all assets in a single GitHub organization or Drive folder for easy review.</p>
+    </section>
+
+    <footer>
+      <p>© MIS 279 – Haigazian University • Prepared for student distribution</p>
+    </footer>
+  </div>
+</body>
+</html>
