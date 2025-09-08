@@ -4,63 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MIS 279 – Student Assignments</title>
-  <style>
-    :root {
-      --bg: #0b0c10;
-      --card: #121318;
-      --muted: #9aa4b2;
-      --text: #eef2f7;
-      --accent: #6ea8fe;
-      --border: #20242c;
-      --ok: #5ac18e;
-    }
-    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    .container { max-width: 1000px; margin: 48px auto; padding: 0 24px; }
-    header { margin-bottom: 24px; }
-    h1 { font-size: 2rem; margin: 0 0 8px; }
-    .subtitle { color: var(--muted); margin: 0 0 24px; }
-    .toc { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px 20px; margin-bottom: 24px; }
-    .toc h2 { font-size: 1.1rem; margin: 0 0 8px; }
-    .toc a { color: var(--accent); text-decoration: none; }
-    .toc ul { margin: 8px 0 0 20px; padding: 0; }
-
-    section.assignment { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
-    section.assignment h2 { margin-top: 0; font-size: 1.35rem; }
-    .meta { display:flex; gap:12px; flex-wrap:wrap; color: var(--muted); margin: -8px 0 8px; }
-    .chip { border:1px solid var(--border); background:#0e1016; padding:4px 10px; border-radius: 999px; font-size: .9rem; }
-
-    h3 { margin-top: 20px; font-size: 1.05rem; }
-    ul { margin-top: 8px; }
-    li { margin: 4px 0; }
-
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
-
-    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-    th, td { border: 1px solid var(--border); padding: 10px 12px; vertical-align: top; }
-    th { background: #151821; text-align: left; }
-    .muted { color: var(--muted); }
-
-    .callout { border-left: 4px solid var(--accent); background: #0e1220; padding: 12px 14px; border-radius: 8px; }
-
-    footer { color: var(--muted); text-align: center; margin: 32px 0 80px; }
-
-    /* Print */
-    @media print {
-      :root { --bg: #fff; --card:#fff; --text:#000; --muted:#444; --border:#ddd; --accent:#000; }
-      body { background:#fff; color:#000; }
-      .container { margin: 0; max-width: 100%; }
-      a { color: #000; text-decoration: underline; }
-      .toc { page-break-inside: avoid; }
-      section.assignment { page-break-inside: avoid; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
     <header>
       <h1>MIS 279 – Student Assignments</h1>
-      <p class="subtitle">Haigazian University • Department of MIS • Modernized course flow: <strong>Pitch → No‑code MVP → SQL Analytics → Full‑stack App</strong></p>
     </header>
 
     <nav class="toc">

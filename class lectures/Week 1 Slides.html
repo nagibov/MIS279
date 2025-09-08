@@ -4,42 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>MIS 279 – Week 1 Slides (HTML)</title>
-<style>
-  :root {
-    --bg: #0f172a; /* slate-900 */
-    --panel: #111827; /* gray-900 */
-    --text: #e5e7eb; /* gray-200 */
-    --muted: #94a3b8; /* slate-400 */
-    --accent: #38bdf8; /* sky-400 */
-  }
-  html, body { height: 100%; }
-  body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: var(--bg); color: var(--text); }
-  .wrap { display: grid; grid-template-rows: auto 1fr auto; min-height: 100%; }
-  header { padding: 20px 28px; border-bottom: 1px solid rgba(255,255,255,.06); background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)); }
-  header h1 { margin: 0; font-size: 20px; letter-spacing: .5px; }
-  header .sub { color: var(--muted); font-size: 13px; }
-  .deck { position: relative; overflow: hidden; }
-  .slide { width: 100%; height: calc(100vh - 160px); max-width: 1100px; margin: 24px auto; padding: 36px; box-sizing: border-box; background: var(--panel); border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.35); display: none; }
-  .slide.active { display: block; animation: fadeIn .35s ease; }
-  .title { font-size: 28px; font-weight: 800; margin: 0 0 14px; }
-  .kicker { color: var(--muted); font-size: 14px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 10px; }
-  ul { margin: 12px 0 0 20px; font-size: 18px; line-height: 1.6; }
-  li { margin: 8px 0; }
-  .footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; border-top: 1px solid rgba(255,255,255,.06); }
-  .controls { display: inline-flex; gap: 10px; }
-  button { background: rgba(56,189,248,.12); color: var(--text); border: 1px solid rgba(56,189,248,.35); border-radius: 10px; padding: 10px 14px; font-weight: 600; cursor: pointer; }
-  button:hover { background: rgba(56,189,248,.2); }
-  .hint { color: var(--muted); font-size: 13px; }
-  .progress { height: 6px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
-  .bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), #60a5fa); transition: width .25s ease; }
-  .badge { display:inline-block; font-size:12px; padding:4px 8px; background: rgba(99,102,241,.2); border:1px solid rgba(99,102,241,.4); color:#c7d2fe; border-radius:999px; margin-left:8px; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
-  @media print {
-    body { background: #fff; color: #000; }
-    header, .footer { display:none; }
-    .slide { display:block !important; height: auto; box-shadow:none; background:#fff; color:#000; page-break-inside: avoid; border:1px solid #ddd; }
-  }
-</style>
+<link rel="stylesheet" href="../styles.css">
 </head>
 <body>
   <div class="wrap">
