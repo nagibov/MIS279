@@ -163,16 +163,18 @@ tr:last-child td {
   }
 }
 
-/* Badges and pills */
+/* Badges and pills - styled as document labels, not buttons */
 .badge, .pill, .chip {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  font-size: 0.875rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
   font-weight: 600;
-  background: var(--accent-primary);
-  color: white;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
   margin: 0.25rem;
+  vertical-align: middle;
 }
 
 /* Lists */
