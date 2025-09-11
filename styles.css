@@ -84,7 +84,7 @@ a:hover {
 
 .wrap {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: 1fr auto;
   min-height: 100vh;
 }
 
@@ -211,19 +211,19 @@ li {
 
 .nav, .controls {
   text-align: center;
-  margin: 2rem 0;
+  margin: 0.5rem 0;
 }
 
 button {
   background: var(--accent-primary);
   color: white;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  margin: 0.5rem;
+  margin: 0.25rem;
   transition: background-color 0.2s ease;
 }
 
@@ -254,7 +254,10 @@ footer, .footer {
 .deck {
   background: var(--bg-primary);
   color: var(--text-primary);
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
 }
 
 .deck .slide {
@@ -264,10 +267,9 @@ footer, .footer {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 980px;
-  margin: 2rem auto;
-  padding: 3rem;
+  margin: 1rem auto;
+  padding: 1.5rem;
   border-radius: 16px;
-  min-height: calc(100vh - 200px);
   display: none;
 }
 
@@ -300,11 +302,11 @@ footer, .footer {
 
 .deck .slide ul {
   font-size: 1.5rem;
-  line-height: 1.8;
+  line-height: 1.5;
 }
 
 .deck .slide li {
-  margin: 1rem 0;
+  margin: 0.5rem 0;
 }
 
 .deck header {
@@ -321,7 +323,9 @@ footer, .footer {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.5rem 2rem;
+  padding: 0.5rem 2rem;
+  position: sticky;
+  bottom: 0;
 }
 
 .deck .progress {
