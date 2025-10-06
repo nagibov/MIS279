@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Business Model Canvas (BMC) - From Zero to Your First Canvas</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+  .canvas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 4px;
+    border: 3px solid var(--accent-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 1rem 0;
+    min-height: 300px;
+    font-size: 0.8rem;
+  }
+  
+  .canvas-block {
+    background: var(--bg-secondary);
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .canvas-block h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--accent-primary);
+    font-weight: 700;
+  }
+  
+  .canvas-block ul {
+    margin: 0;
+    padding-left: 1rem;
+    font-size: 0.75rem;
+    list-style-type: disc;
+  }
+  
+  .canvas-block li {
+    margin: 0.2rem 0;
+    line-height: 1.3;
+  }
+  
+  .value-prop {
+    grid-column: 3;
+    grid-row: 1;
+    background: #e3f2fd;
+  }
+  
+  .customer-segments {
+    grid-column: 3;
+    grid-row: 3;
+    background: #e8f5e8;
+  }
+  
+  .channels {
+    grid-column: 3;
+    grid-row: 2;
+    background: #fff3e0;
+  }
+  
+  .customer-relationships {
+    grid-column: 2;
+    grid-row: 2;
+    background: #fce4ec;
+  }
+  
+  .revenue-streams {
+    grid-column: 2;
+    grid-row: 3;
+    background: #f3e5f5;
+  }
+  
+  .key-activities {
+    grid-column: 2;
+    grid-row: 1;
+    background: #e0f2f1;
+  }
+  
+  .key-resources {
+    grid-column: 1;
+    grid-row: 2;
+    background: #e1f5fe;
+  }
+  
+  .key-partnerships {
+    grid-column: 1;
+    grid-row: 1;
+    background: #f1f8e9;
+  }
+  
+  .cost-structure {
+    grid-column: 1;
+    grid-row: 3;
+    background: #fef7e0;
+  }
+  
+  .highlight-box {
+    background: var(--bg-secondary);
+    border-left: 4px solid var(--accent-primary);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+  }
+  
+  .example-box {
+    background: #e8f5e8;
+    border: 2px solid #4caf50;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+  
+  .risk-indicator {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+  
+  .test-idea {
+    background: #fff3e0;
+    border-left: 4px solid #ff9800;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="deck" id="deck">
+
+      <!-- Slide 1: Title & Promise -->
+      <section class="slide active">
+        <div class="kicker">Business Model Canvas</div>
+        <h2 class="title">Turn Ideas Into One Page</h2>
+        <div class="highlight-box">
+          <p><strong>You'll learn:</strong> The 9 building blocks and build a complete canvas for a simple idea.</p>
+          <p><strong>Running example:</strong> <em>Campus Coffee Cart</em> - a mobile cart serving specialty coffee on campus.</p>
+        </div>
+        <ul>
+          <li>Shared language to explain how a business creates, delivers, and captures value</li>
+          <li>Practical, hands-on approach - we'll build block-by-block</li>
+          <li>By the end: each student can build a complete BMC</li>
+        </ul>
+      </section>
+
+      <!-- Slide 2: Outcomes & Agenda -->
+      <section class="slide">
+        <div class="kicker">Learning Plan</div>
+        <h2 class="title">Outcomes & Agenda (60-75 min)</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Learning Outcomes</h3>
+            <ul>
+              <li>Explain each BMC block in plain English</li>
+              <li>Fill the canvas for a real idea</li>
+              <li>Identify riskiest assumptions & design simple tests</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Agenda</h3>
+            <ul>
+              <li>Why BMC? (5 min)</li>
+              <li>The 9 blocks (10 min)</li>
+              <li>Coffee Cart: build step-by-step (25-30 min)</li>
+              <li>Common mistakes & pro tips (5 min)</li>
+              <li>Your turn: build & share (15-25 min)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Why Canvas -->
+      <section class="slide">
+        <div class="kicker">Foundation</div>
+        <h2 class="title">Why a Canvas (not a 40-page plan)?</h2>
+        <div class="highlight-box">
+          <p><strong>Because</strong> strategy changes fast. You need a one-page, visual model everyone understands.</p>
+        </div>
+        <ul>
+          <li><strong>Aligns teams</strong> with a shared language</li>
+          <li><strong>Makes assumptions visible</strong> for testing</li>
+          <li><strong>Easy to iterate & test</strong> quickly</li>
+        </ul>
+        <div class="callout">
+          💡 <strong>Key insight:</strong> The canvas doesn't replace thinking; it exposes it.
+        </div>
+      </section>
+
+      <!-- Slide 4: The 9 Building Blocks -->
+      <section class="slide">
+        <div class="kicker">Overview</div>
+        <h2 class="title">The 9 Building Blocks</h2>
+        <div class="canvas-grid" style="min-height: 250px;">
+          <div class="canvas-block key-partnerships">
+            <h4>8. Key Partnerships</h4>
+            <p>Strategic alliances</p>
+          </div>
+          <div class="canvas-block key-activities">
+            <h4>7. Key Activities</h4>
+            <p>Critical actions</p>
+          </div>
+          <div class="canvas-block value-prop">
+            <h4>2. Value Propositions</h4>
+            <p>Benefits promised</p>
+          </div>
+          <div class="canvas-block key-resources">
+            <h4>6. Key Resources</h4>
+            <p>Essential assets</p>
+          </div>
+          <div class="canvas-block customer-relationships">
+            <h4>4. Customer Relationships</h4>
+            <p>Interaction types</p>
+          </div>
+          <div class="canvas-block channels">
+            <h4>3. Channels</h4>
+            <p>Reach & delivery</p>
+          </div>
+          <div class="canvas-block cost-structure">
+            <h4>9. Cost Structure</h4>
+            <p>Fixed & variable costs</p>
+          </div>
+          <div class="canvas-block revenue-streams">
+            <h4>5. Revenue Streams</h4>
+            <p>How money flows in</p>
+          </div>
+          <div class="canvas-block customer-segments">
+            <h4>1. Customer Segments</h4>
+            <p>Who we serve</p>
+          </div>
+        </div>
+        <p><strong>Layout logic:</strong> Right side = market/value • Left side = operations • Bottom = money</p>
+      </section>
+
+      <!-- Slide 5: Running Example -->
+      <section class="slide">
+        <div class="kicker">Our Example</div>
+        <h2 class="title">Campus Coffee Cart</h2>
+        <div class="example-box">
+          <h3>💡 Idea: Campus Coffee Cart</h3>
+          <p>A small mobile cart serving high-quality coffee to students and staff between classes.</p>
+        </div>
+        <h3>Assumptions we'll test:</h3>
+        <ul>
+          <li>Students value <strong>speed + quality</strong> vs. cafeteria coffee</li>
+          <li>Ideal spots & times: <em>8-11am near humanities, 1-3pm near library</em></li>
+          <li>Price point: <strong>$2.50-$4.00</strong></li>
+        </ul>
+        <div class="callout">
+          🎯 Keep it simple and relatable; yours can be any idea.
+        </div>
+      </section>
+
+      <!-- Slide 6: Customer Segments -->
+      <section class="slide">
+        <div class="kicker">Block 1</div>
+        <h2 class="title">Customer Segments</h2>
+        <p><strong>Definition:</strong> The specific groups you serve.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Guiding Questions</h3>
+            <ul>
+              <li>Who has the problem? Who pays? Who uses?</li>
+              <li>Narrow first. Who are <em>early adopters</em>?</li>
+            </ul>
+            <div class="highlight-box">
+              <strong>Quick check:</strong> Can you list 1-2 personas with schedule & habits?
+            </div>
+          </div>
+          <div>
+            <div class="example-box">
+              <h4>☕ Coffee Cart Example</h4>
+              <ul>
+                <li><strong>Primary:</strong> Undergrad students rushing between classes</li>
+                <li><strong>Secondary:</strong> Faculty & staff</li>
+                <li><strong>Early adopters:</strong> Students near main quad 8-11am</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          ⚠️ Avoid "everyone." Name 1-2 core segments to start.
+        </div>
+      </section>
+
+      <!-- Slide 7: Value Propositions -->
+      <section class="slide">
+        <div class="kicker">Block 2</div>
+        <h2 class="title">Value Propositions</h2>
+        <p><strong>Definition:</strong> The bundle of benefits you promise to a segment.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Guiding Questions</h3>
+            <ul>
+              <li>What job are customers trying to get done?</li>
+              <li>What pains do we remove?</li>
+              <li>What gains do we create?</li>
+            </ul>
+            <div class="highlight-box">
+              <strong>Format:</strong><br>
+              "For [segment], who want [job], we provide [benefit] unlike [alternative]."
+            </div>
+          </div>
+          <div>
+            <div class="example-box">
+              <h4>☕ Coffee Cart Value Props</h4>
+              <ul>
+                <li><em>Faster than walking to the cafeteria</em></li>
+                <li><em>Better taste than vending machine coffee</em></li>
+                <li><em>Loyalty: buy 9, get 1 free (digital punch)</em></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          💡 Benefits, not features. Tie to a real job-to-be-done (caffeine + speed).
+        </div>
+      </section>
+
+      <!-- Slide 8: Channels -->
+      <section class="slide">
+        <div class="kicker">Block 3</div>
+        <h2 class="title">Channels</h2>
+        <p><strong>Definition:</strong> How you reach and deliver value.</p>
+        <div class="highlight-box">
+          <strong>Types:</strong> Awareness → Consideration → Purchase → Delivery → After-sales
+        </div>
+        <div class="example-box">
+          <h4>☕ Coffee Cart Channels</h4>
+          <ul>
+            <li><strong>Awareness:</strong> Instagram, campus posters, student clubs</li>
+            <li><strong>Purchase/Delivery:</strong> On-site cart + QR ordering</li>
+            <li><strong>After-sales:</strong> DM feedback, loyalty reminders</li>
+          </ul>
+        </div>
+        <div class="callout">
+          🎯 Be concrete: where exactly will they discover/order/receive?
+        </div>
+      </section>
+
+      <!-- Slide 9: Customer Relationships -->
+      <section class="slide">
+        <div class="kicker">Block 4</div>
+        <h2 class="title">Customer Relationships</h2>
+        <p><strong>Definition:</strong> The type of relationship per segment.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Relationship Modes</h3>
+            <ul>
+              <li>Personal assist</li>
+              <li>Self-service</li>
+              <li>Automated</li>
+              <li>Community</li>
+              <li>Co-creation</li>
+            </ul>
+          </div>
+          <div>
+            <div class="example-box">
+              <h4>☕ Coffee Cart Relationships</h4>
+              <ul>
+                <li><strong>Personal:</strong> names & regular orders</li>
+                <li><strong>Automated:</strong> SMS/WhatsApp "ready in 3 min"</li>
+                <li><strong>Community:</strong> seasonal flavors voted by students</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          💡 Relationships impact acquisition, retention, upsell.
+        </div>
+      </section>
+
+      <!-- Slide 10: Revenue Streams -->
+      <section class="slide">
+        <div class="kicker">Block 5</div>
+        <h2 class="title">Revenue Streams</h2>
+        <p><strong>Definition:</strong> How the business earns money.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Revenue Patterns</h3>
+            <ul>
+              <li>Unit sales</li>
+              <li>Subscriptions</li>
+              <li>Bundles</li>
+              <li>Ads</li>
+              <li>Licensing</li>
+              <li>Usage fees</li>
+            </ul>
+          </div>
+          <div>
+            <div class="example-box">
+              <h4>☕ Coffee Cart Pricing</h4>
+              <ul>
+                <li>Americano: $2.50</li>
+                <li>Latte: $3.50</li>
+                <li>Cold brew: $3.80</li>
+                <li>Add-ons: oat milk +$0.50, flavor +$0.30</li>
+                <li>Bundle: "Morning pass" $5/day (Mon-Fri)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          📊 Show pricing logic vs. alternatives (cafeteria, chain café, vending).
+        </div>
+      </section>
+
+      <!-- Slide 11: Key Resources -->
+      <section class="slide">
+        <div class="kicker">Block 6</div>
+        <h2 class="title">Key Resources</h2>
+        <p><strong>Definition:</strong> Assets required to deliver value.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Resource Types</h3>
+            <ul>
+              <li>Physical</li>
+              <li>Human</li>
+              <li>Intellectual</li>
+              <li>Financial</li>
+              <li>Digital</li>
+            </ul>
+          </div>
+          <div>
+            <div class="example-box">
+              <h4>☕ Coffee Cart Resources</h4>
+              <ul>
+                <li>Cart, espresso machine, grinder, water supply</li>
+                <li>Trained baristas</li>
+                <li>QR ordering page + loyalty micro-app</li>
+                <li>Startup float for inventory</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          ❓ Ask: "Without this, we cannot deliver."
+        </div>
+      </section>
+
+      <!-- Slide 12: Key Activities -->
+      <section class="slide">
+        <div class="kicker">Block 7</div>
+        <h2 class="title">Key Activities</h2>
+        <p><strong>Definition:</strong> The most important things you must do.</p>
+        <div class="example-box">
+          <h4>☕ Coffee Cart Key Activities</h4>
+          <ul>
+            <li>Sourcing beans & milk</li>
+            <li>Brewing & service during rush hours</li>
+            <li>Site selection & daily setup</li>
+            <li>Social posts & loyalty management</li>
+          </ul>
+        </div>
+        <div class="callout">
+          🎯 Keep 3-6 activities. Everything else is noise.
+        </div>
+      </section>
+
+      <!-- Slide 13: Key Partnerships -->
+      <section class="slide">
+        <div class="kicker">Block 8</div>
+        <h2 class="title">Key Partnerships</h2>
+        <p><strong>Definition:</strong> Who helps you deliver & reduce risk/cost.</p>
+        <div class="example-box">
+          <h4>☕ Coffee Cart Partners</h4>
+          <ul>
+            <li><strong>Bean roaster</strong> (quality + pricing)</li>
+            <li><strong>Campus administration</strong> (permits, locations)</li>
+            <li><strong>Payment provider</strong> (QR/terminal)</li>
+            <li><strong>Equipment service</strong> (maintenance)</li>
+          </ul>
+        </div>
+        <div class="callout">
+          ❓ Ask: "Buy vs. build?" and "Who already has what we need?"
+        </div>
+      </section>
+
+      <!-- Slide 14: Cost Structure -->
+      <section class="slide">
+        <div class="kicker">Block 9</div>
+        <h2 class="title">Cost Structure</h2>
+        <p><strong>Definition:</strong> All significant costs to run the model.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Cost Types</h3>
+            <ul>
+              <li><strong>Fixed:</strong> permits, equipment lease, cart storage</li>
+              <li><strong>Variable:</strong> beans, milk, cups, hourly staff, transaction fees</li>
+            </ul>
+          </div>
+          <div>
+            <div class="example-box">
+              <h4>☕ Coffee Cart Costs</h4>
+              <ul>
+                <li><strong>Capex:</strong> cart + machine = $5,000-$7,000</li>
+                <li><strong>Gross margin target:</strong> 65-70% per drink</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          🔗 Tie costs directly to resources/activities/partners.
+        </div>
+      </section>
+
+      <!-- Slide 15: Complete Canvas -->
+      <section class="slide">
+        <div class="kicker">Complete Example</div>
+        <h2 class="title">Campus Coffee Cart - Draft BMC</h2>
+        <div class="canvas-grid" style="font-size: 0.7rem;">
+          <div class="canvas-block key-partnerships">
+            <h4>Key Partners</h4>
+            <ul>
+              <li>Roaster</li>
+              <li>Campus admin</li>
+              <li>Payments</li>
+              <li>Equipment service</li>
+            </ul>
+          </div>
+          <div class="canvas-block key-activities">
+            <h4>Key Activities</h4>
+            <ul>
+              <li>Brew & serve rush hours</li>
+              <li>Source supplies</li>
+              <li>Site selection</li>
+              <li>Social & loyalty</li>
+            </ul>
+          </div>
+          <div class="canvas-block value-prop">
+            <h4>Value Propositions</h4>
+            <ul>
+              <li>Faster than cafeteria</li>
+              <li>Better taste than vending</li>
+              <li>Mobile near classes</li>
+              <li>Loyalty free coffee</li>
+            </ul>
+          </div>
+          <div class="canvas-block key-resources">
+            <h4>Key Resources</h4>
+            <ul>
+              <li>Cart + machine + inventory</li>
+              <li>Baristas</li>
+              <li>QR order page</li>
+              <li>Cash float</li>
+            </ul>
+          </div>
+          <div class="canvas-block customer-relationships">
+            <h4>Customer Relationships</h4>
+            <ul>
+              <li>Personal recognition</li>
+              <li>Automated "ready" messages</li>
+              <li>Student-voted flavors</li>
+            </ul>
+          </div>
+          <div class="canvas-block channels">
+            <h4>Channels</h4>
+            <ul>
+              <li>On-site cart</li>
+              <li>QR ordering</li>
+              <li>Instagram & clubs</li>
+              <li>Posters</li>
+            </ul>
+          </div>
+          <div class="canvas-block cost-structure">
+            <h4>Cost Structure</h4>
+            <ul>
+              <li><strong>Fixed:</strong> permits, equipment lease, storage</li>
+              <li><strong>Variable:</strong> beans, milk, cups, labor, fees</li>
+            </ul>
+          </div>
+          <div class="canvas-block revenue-streams">
+            <h4>Revenue Streams</h4>
+            <ul>
+              <li>Unit sales</li>
+              <li>Add-ons</li>
+              <li>Morning pass</li>
+            </ul>
+          </div>
+          <div class="canvas-block customer-segments">
+            <h4>Customer Segments</h4>
+            <ul>
+              <li><strong>Primary:</strong> students (8-11am)</li>
+              <li><strong>Secondary:</strong> staff</li>
+              <li><strong>Early adopters:</strong> near main quad</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout">
+          📝 This is a <em>first draft</em>. Next step: test assumptions with simple experiments.
+        </div>
+      </section>
+
+      <!-- Slide 16: Risky Assumptions -->
+      <section class="slide">
+        <div class="kicker">Risk Testing</div>
+        <h2 class="title">Find Your Riskiest Assumptions</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Common Risks</h3>
+            <ul>
+              <li class="risk-indicator">Demand at specific times/locations</li>
+              <li class="risk-indicator">Price elasticity</li>
+              <li class="risk-indicator">Permission to operate in hotspots</li>
+              <li class="risk-indicator">Service speed vs. queue length</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Fast Tests (this week)</h3>
+            <div class="test-idea">
+              <strong>Interviews:</strong> 10 students on morning habits
+            </div>
+            <div class="test-idea">
+              <strong>Pre-orders:</strong> Google Form + QR at hotspot
+            </div>
+            <div class="test-idea">
+              <strong>POP-UP:</strong> 1-day cart dry-run with borrowed machine
+            </div>
+            <div class="test-idea">
+              <strong>Willingness to pay:</strong> A/B prices on two days
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          🧪 Encourage cheap, fast experiments. Evidence beats opinions.
+        </div>
+      </section>
+
+      <!-- Slide 17: Common Pitfalls -->
+      <section class="slide">
+        <div class="kicker">Pro Tips</div>
+        <h2 class="title">Common Pitfalls & Pro Tips</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>⚠️ Pitfalls</h3>
+            <ul>
+              <li>"Everyone is our customer."</li>
+              <li>Writing features, not benefits.</li>
+              <li>Listing all activities; missing the 3-6 that truly matter.</li>
+              <li>Pricing by cost alone (ignore alternatives/value).</li>
+            </ul>
+          </div>
+          <div>
+            <h3>💡 Pro Tips</h3>
+            <ul>
+              <li>Start narrow, then expand.</li>
+              <li>Use sticky notes; move them as you learn.</li>
+              <li>Pair each block with <strong>1 test</strong> you can run this week.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 18: Your Turn -->
+      <section class="slide">
+        <div class="kicker">Hands-on Activity</div>
+        <h2 class="title">Your Turn (15-25 min)</h2>
+        <div class="highlight-box">
+          <h3>Pick a simple idea (solo or pairs). Examples:</h3>
+          <ul>
+            <li>Laundry locker in dorms</li>
+            <li>Campus meal-prep bowls</li>
+            <li>Note-summary subscription for a tough course</li>
+          </ul>
+        </div>
+        <h3>Instructions</h3>
+        <ol>
+          <li>Draft your <strong>Customer Segments</strong> & <strong>Value Proposition</strong> first.</li>
+          <li>Fill the remaining 7 blocks.</li>
+          <li>Star ★ your <strong>top 2 assumptions</strong> and write <strong>one test</strong> for each.</li>
+          <li>Prepare a 60-second share.</li>
+        </ol>
+        <div class="callout">
+          📋 <strong>Deliverable:</strong> One-page canvas + two test ideas.
+        </div>
+      </section>
+
+      <!-- Slide 19: Share & Feedback -->
+      <section class="slide">
+        <div class="kicker">Presentation</div>
+        <h2 class="title">Share & Feedback (5-10 min)</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Each team (60 sec):</h3>
+            <ul>
+              <li>Problem → Segment → Value</li>
+              <li>One risky assumption</li>
+              <li>One test</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Peers & coach (60 sec):</h3>
+            <ul>
+              <li>1 question</li>
+              <li>1 suggestion</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout">
+          ⏱️ Timebox hard. Celebrate clarity & evidence.
+        </div>
+      </section>
+
+      <!-- Slide 20: Quick Reference -->
+      <section class="slide">
+        <div class="kicker">Reference</div>
+        <h2 class="title">Quick Reference: The 9 Blocks</h2>
+        <div style="font-size: 0.9rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <ul>
+              <li><strong>Customer Segments:</strong> Who exactly? Early adopters?</li>
+              <li><strong>Value Propositions:</strong> Which pains/gains? Why better than alternatives?</li>
+              <li><strong>Channels:</strong> How they discover, order, receive, and give feedback.</li>
+              <li><strong>Relationships:</strong> Personal? Automated? Community?</li>
+              <li><strong>Revenue:</strong> How you charge; price logic; lifetime value.</li>
+            </ul>
+          </div>
+          <div>
+            <ul>
+              <li><strong>Key Resources:</strong> Assets you must have.</li>
+              <li><strong>Key Activities:</strong> 3-6 actions you must nail.</li>
+              <li><strong>Key Partners:</strong> Who helps reduce risk/cost?</li>
+              <li><strong>Costs:</strong> Fixed vs. variable; unit economics.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 21: Wrap-Up -->
+      <section class="slide">
+        <div class="kicker">Conclusion</div>
+        <h2 class="title">Wrap-Up</h2>
+        <div class="highlight-box">
+          <h3>🎯 You can now:</h3>
+          <ul>
+            <li>Explain the canvas</li>
+            <li>Draft a complete BMC</li>
+            <li>Plan basic tests</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <strong>Next:</strong> Build evidence. Run one experiment this week and update your canvas.
+        </div>
+        <h2 style="text-align: center; margin-top: 2rem; color: var(--accent-primary);">
+          Thank you — now build your own Canvas! 🚀
+        </h2>
+      </section>
+
+    </div>
+
+    <div class="footer">
+      <div class="controls">
+        <button id="prev" type="button" aria-label="Previous slide">◀ Prev</button>
+        <button id="next" type="button" aria-label="Next slide">Next ▶</button>
+      </div>
+      <div class="progress" style="width: 240px"><div id="bar" class="bar"></div></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const bar = document.getElementById('bar');
+  let index = 0;
+  function show(i){
+    index = Math.max(0, Math.min(slides.length-1, i));
+    slides.forEach((s, idx)=> s.classList.toggle('active', idx===index));
+    bar.style.width = (((index+1)/slides.length)*100).toFixed(1) + '%';
+    history.replaceState(null, '', '#'+(index+1));
+  }
+  function next(){ show(index+1); }
+  function prev(){ show(index-1); }
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+  // Deep link support via hash
+  const start = parseInt(location.hash.replace('#',''),10);
+  if (!isNaN(start)) show(start-1); else show(0);
+})();
+</script>
+</body>
+</html>
