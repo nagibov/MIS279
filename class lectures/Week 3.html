@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Week 3 – Data Modeling for E-commerce</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+  .entity-diagram {
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent-primary);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-align: center;
+  }
+  
+  .entity-box {
+    background: var(--bg-primary);
+    border: 2px solid var(--accent-primary);
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin: 0.5rem;
+    display: inline-block;
+    min-width: 120px;
+  }
+  
+  .entity-title {
+    font-weight: bold;
+    color: var(--accent-primary);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .entity-attributes {
+    font-size: 0.85rem;
+    text-align: left;
+  }
+  
+  .relationship-line {
+    display: inline-block;
+    width: 60px;
+    height: 2px;
+    background: var(--accent-primary);
+    margin: 0 10px;
+    position: relative;
+    top: -5px;
+  }
+  
+  .relationship-label {
+    font-size: 0.75rem;
+    color: var(--accent-primary);
+    font-weight: bold;
+  }
+  
+  .step-box {
+    background: var(--bg-secondary);
+    border-left: 4px solid var(--accent-primary);
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .step-number {
+    background: var(--accent-primary);
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 1rem;
+  }
+  
+  .best-practice {
+    background: #e8f5e8;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .warning-box {
+    background: #fff3e0;
+    border: 2px solid #ff9800;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .diagram-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  
+  .flow-arrow {
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+    font-weight: bold;
+  }
+  
+  .normalization-example {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 1rem 0;
+  }
+  
+  .before-after {
+    text-align: center;
+    font-weight: bold;
+    color: var(--accent-primary);
+  }
+  
+  .table-example {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+  }
+  
+  .table-header {
+    background: var(--bg-secondary);
+    padding: 0.5rem;
+    font-weight: bold;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .table-row {
+    padding: 0.25rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  
+  .activity-box {
+    background: #e3f2fd;
+    border: 2px solid #2196f3;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+  
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .checklist li {
+    padding: 0.25rem 0;
+  }
+  
+  .checklist li::before {
+    content: "✓";
+    color: #4caf50;
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="deck" id="deck">
+
+      <!-- Slide 1: Title & Overview -->
+      <section class="slide active">
+        <div class="kicker">Week 3</div>
+        <h2 class="title">Data Modeling for E-commerce</h2>
+        <div class="step-box">
+          <h3>🎯 Session Overview (60 minutes)</h3>
+          <ul>
+            <li><strong>Lecture 3.1:</strong> Entities & Relationships (25 min)</li>
+            <li><strong>Discussion:</strong> Q&A and Problem Solving (5 min)</li>
+            <li><strong>Lecture 3.2:</strong> ERD Workshop (25 min)</li>
+            <li><strong>Group Activity:</strong> Hands-on Practice (15 min)</li>
+          </ul>
+        </div>
+        <div class="callout">
+          💡 <strong>Goal:</strong> By the end, you'll design a complete database schema for your e-commerce idea
+        </div>
+      </section>
+
+      <!-- Slide 2: Why Data Modeling? -->
+      <section class="slide">
+        <div class="kicker">Lecture 3.1</div>
+        <h2 class="title">Why Data Modeling is Essential</h2>
+        <div class="entity-diagram">
+          <h3>🏪 Real-World Analogy: Supermarket Layout</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem;">
+            <div>
+              <h4>Physical Store</h4>
+              <ul>
+                <li>Aisles = Tables</li>
+                <li>Products = Records</li>
+                <li>Price Tags = Attributes</li>
+                <li>Checkout = Relationships</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Database Schema</h4>
+              <ul>
+                <li>Organized structure</li>
+                <li>Easy to find items</li>
+                <li>Efficient operations</li>
+                <li>Clear connections</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="best-practice">
+          <strong>Key Insight:</strong> Just like a well-organized store helps customers find what they need quickly, a well-designed database helps your application run efficiently and scale smoothly.
+        </div>
+      </section>
+
+      <!-- Slide 3: Core E-commerce Entities -->
+      <section class="slide">
+        <div class="kicker">Lecture 3.1</div>
+        <h2 class="title">Core Entities in E-commerce</h2>
+        <div class="diagram-flow">
+          <div class="entity-box">
+            <div class="entity-title">PRODUCTS</div>
+            <div class="entity-attributes">
+              • ID<br>
+              • Title<br>
+              • Price<br>
+              • Category<br>
+              • Stock<br>
+              • Discount
+            </div>
+          </div>
+          <span class="flow-arrow">↔</span>
+          <div class="entity-box">
+            <div class="entity-title">USERS</div>
+            <div class="entity-attributes">
+              • ID<br>
+              • Name<br>
+              • Email<br>
+              • Password<br>
+              • Role<br>
+              • Created_At
+            </div>
+          </div>
+          <span class="flow-arrow">↔</span>
+          <div class="entity-box">
+            <div class="entity-title">ORDERS</div>
+            <div class="entity-attributes">
+              • ID<br>
+              • User_ID<br>
+              • Total<br>
+              • Status<br>
+              • Order_Date<br>
+              • Shipping_Address
+            </div>
+          </div>
+        </div>
+        <div class="diagram-flow">
+          <div class="entity-box">
+            <div class="entity-title">PAYMENTS</div>
+            <div class="entity-attributes">
+              • ID<br>
+              • Order_ID<br>
+              • Amount<br>
+              • Method<br>
+              • Status<br>
+              • Transaction_ID
+            </div>
+          </div>
+          <span class="flow-arrow">↔</span>
+          <div class="entity-box">
+            <div class="entity-title">SHIPPING</div>
+            <div class="entity-attributes">
+              • ID<br>
+              • Order_ID<br>
+              • Carrier<br>
+              • Tracking_Number<br>
+              • Ship_Date<br>
+              • Delivery_Date
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Understanding Relationships -->
+      <section class="slide">
+        <div class="kicker">Lecture 3.1</div>
+        <h2 class="title">Database Relationships Explained</h2>
+        
+        <div class="step-box">
+          <span class="step-number">1</span>
+          <strong>One-to-Many (1:N)</strong>
+          <div class="entity-diagram">
+            <div style="display: flex; align-items: center; justify-content: center;">
+              <div class="entity-box">USER<br><small>(One)</small></div>
+              <span class="relationship-line"></span>
+              <span class="relationship-label">places</span>
+              <span class="relationship-line"></span>
+              <div class="entity-box">ORDERS<br><small>(Many)</small></div>
+            </div>
+            <p><em>Example: One customer can place multiple orders, but each order belongs to one customer.</em></p>
+          </div>
+        </div>
+
+        <div class="step-box">
+          <span class="step-number">2</span>
+          <strong>Many-to-Many (M:N)</strong>
+          <div class="entity-diagram">
+            <div style="display: flex; align-items: center; justify-content: center;">
+              <div class="entity-box">PRODUCTS<br><small>(Many)</small></div>
+              <span class="relationship-line"></span>
+              <div class="entity-box">ORDER_DETAILS<br><small>(Bridge Table)</small></div>
+              <span class="relationship-line"></span>
+              <div class="entity-box">ORDERS<br><small>(Many)</small></div>
+            </div>
+            <p><em>Example: Products appear in multiple orders, and orders can contain multiple products.</em></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Bridge Tables Explained -->
+      <section class="slide">
+        <div class="kicker">Lecture 3.1</div>
+        <h2 class="title">Why We Need Bridge Tables</h2>
+        
+        <div class="normalization-example">
+          <div>
+            <div class="before-after">❌ WRONG WAY</div>
+            <div class="table-example">
+              <div class="table-header">Orders Table (Bad Design)</div>
+              <div class="table-row">Order_ID: 1, Product_IDs: "101,102,103"</div>
+              <div class="table-row">Order_ID: 2, Product_IDs: "101,105"</div>
+            </div>
+            <div class="warning-box">
+              <strong>Problems:</strong>
+              <ul>
+                <li>Can't query individual products easily</li>
+                <li>Can't store quantities per product</li>
+                <li>Violates database normalization rules</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div>
+            <div class="before-after">✅ CORRECT WAY</div>
+            <div class="table-example">
+              <div class="table-header">Order_Details Table (Good Design)</div>
+              <div class="table-row">Order_ID: 1, Product_ID: 101, Quantity: 2</div>
+              <div class="table-row">Order_ID: 1, Product_ID: 102, Quantity: 1</div>
+              <div class="table-row">Order_ID: 1, Product_ID: 103, Quantity: 3</div>
+              <div class="table-row">Order_ID: 2, Product_ID: 101, Quantity: 1</div>
+            </div>
+            <div class="best-practice">
+              <strong>Benefits:</strong>
+              <ul>
+                <li>Easy to query and filter</li>
+                <li>Stores additional data (quantity, price)</li>
+                <li>Follows normalization principles</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Schema Best Practices -->
+      <section class="slide">
+        <div class="kicker">Lecture 3.1</div>
+        <h2 class="title">Schema Best Practices</h2>
+        
+        <div class="step-box">
+          <span class="step-number">1</span>
+          <strong>Avoid Redundancy (Normalization)</strong>
+          <p>Don't repeat the same data in multiple places. Use foreign keys to reference related data.</p>
+          <div class="normalization-example">
+            <div>
+              <div class="table-example">
+                <div class="table-header">❌ Redundant Design</div>
+                <div class="table-row">Order_ID: 1, Customer_Name: "John", Customer_Email: "john@email.com"</div>
+                <div class="table-row">Order_ID: 2, Customer_Name: "John", Customer_Email: "john@email.com"</div>
+              </div>
+            </div>
+            <div>
+              <div class="table-example">
+                <div class="table-header">✅ Normalized Design</div>
+                <div class="table-row">Orders: Order_ID: 1, Customer_ID: 101</div>
+                <div class="table-row">Customers: Customer_ID: 101, Name: "John", Email: "john@email.com"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-box">
+          <span class="step-number">2</span>
+          <strong>Use Indexes for Speed</strong>
+          <p>Add indexes on frequently searched columns (email, product_name, order_date).</p>
+        </div>
+
+        <div class="step-box">
+          <span class="step-number">3</span>
+          <strong>Foreign Keys for Integrity</strong>
+          <p>Ensure data consistency by using foreign key constraints between related tables.</p>
+        </div>
+      </section>
+
+      <!-- Slide 7: Discussion Questions -->
+      <section class="slide">
+        <div class="kicker">Discussion Time</div>
+        <h2 class="title">Let's Think About It (5 minutes)</h2>
+        
+        <div class="step-box">
+          <span class="step-number">1</span>
+          <strong>What happens if we don't normalize a product catalog?</strong>
+          <p><em>Think about: duplicate data, storage waste, update anomalies...</em></p>
+        </div>
+
+        <div class="step-box">
+          <span class="step-number">2</span>
+          <strong>Why separate "Orders" and "OrderDetails"?</strong>
+          <p><em>Consider: order-level info vs. product-level info...</em></p>
+        </div>
+
+        <div class="step-box">
+          <span class="step-number">3</span>
+          <strong>Should we store passwords in plain text?</strong>
+          <div class="warning-box">
+            <strong>NEVER!</strong> Always hash passwords using bcrypt or similar secure methods.
+          </div>
+        </div>
+
+        <div class="callout">
+          💬 <strong>Discuss with your neighbor, then we'll share insights!</strong>
+        </div>
+      </section>
+
+      <!-- Slide 8: ERD Workshop Introduction -->
+      <section class="slide">
+        <div class="kicker">Lecture 3.2</div>
+        <h2 class="title">ERD Workshop: Step-by-Step</h2>
+        
+        <div class="best-practice">
+          <h3>📚 Example: Online Bookstore</h3>
+          <p>We'll build a complete Entity Relationship Diagram together using a bookstore as our example.</p>
+        </div>
+
+        <div class="step-box">
+          <h3>Workshop Agenda (25 minutes)</h3>
+          <ul class="checklist">
+            <li>Step 1: Identify entities (5 min)</li>
+            <li>Step 2: Define attributes (5 min)</li>
+            <li>Step 3: Establish relationships (5 min)</li>
+            <li>Step 4: Normalization exercise (5 min)</li>
+            <li>Step 5: Demo with dbdiagram.io (5 min)</li>
+          </ul>
+        </div>
+
+        <div class="callout">
+          🛠️ <strong>Tools we'll use:</strong> dbdiagram.io for visual ERD creation and SQL export
+        </div>
+      </section>
+
+      <!-- Slide 9: Step 1 - Identify Entities -->
+      <section class="slide">
+        <div class="kicker">ERD Workshop</div>
+        <h2 class="title">Step 1: Identify Entities</h2>
+        
+        <div class="step-box">
+          <span class="step-number">1</span>
+          <strong>What are the main "things" in our bookstore?</strong>
+        </div>
+
+        <div class="diagram-flow">
+          <div class="entity-box">
+            <div class="entity-title">BOOKS</div>
+            <div class="entity-attributes">The products we sell</div>
+          </div>
+          <div class="entity-box">
+            <div class="entity-title">AUTHORS</div>
+            <div class="entity-attributes">Who wrote the books</div>
+          </div>
+          <div class="entity-box">
+            <div class="entity-title">CUSTOMERS</div>
+            <div class="entity-attributes">Who buys from us</div>
+          </div>
+          <div class="entity-box">
+            <div class="entity-title">ORDERS</div>
+            <div class="entity-attributes">Purchase transactions</div>
+          </div>
+          <div class="entity-box">
+            <div class="entity-title">PAYMENTS</div>
+            <div class="entity-attributes">Financial records</div>
+          </div>
+        </div>
+
+        <div class="best-practice">
+          <strong>Entity Selection Tips:</strong>
+          <ul>
+            <li>Look for <strong>nouns</strong> in your business description</li>
+            <li>Think about what you need to <strong>store information</strong> about</li>
+            <li>Consider what has <strong>independent existence</strong> in your business</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 10: Step 2 - Define Attributes -->
+      <section class="slide">
+        <div class="kicker">ERD Workshop</div>
+        <h2 class="title">Step 2: Define Attributes</h2>
+        
+        <div class="step-box">
+          <span class="step-number">2</span>
+          <strong>What information do we need about each entity?</strong>
+        </div>
+
+        <div class="entity-diagram">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div class="entity-box">
+              <div class="entity-title">BOOKS</div>
+              <div class="entity-attributes">
+                • <strong>ISBN</strong> (Primary Key)<br>
+                • Title<br>
+                • Author_ID (Foreign Key)<br>
+                • Price<br>
+                • Stock_Quantity<br>
+                • Category_ID<br>
+                • Publication_Date<br>
+                • Description
+              </div>
+            </div>
+            <div class="entity-box">
+              <div class="entity-title">AUTHORS</div>
+              <div class="entity-attributes">
+                • <strong>Author_ID</strong> (Primary Key)<br>
+                • First_Name<br>
+                • Last_Name<br>
+                • Biography<br>
+                • Birth_Date<br>
+                • Nationality
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="best-practice">
+          <strong>Attribute Guidelines:</strong>
+          <ul>
+            <li><strong>Primary Key:</strong> Unique identifier for each record</li>
+            <li><strong>Foreign Key:</strong> References primary key in another table</li>
+            <li><strong>Data Types:</strong> Choose appropriate types (INT, VARCHAR, DATE, DECIMAL)</li>
+            <li><strong>Required vs Optional:</strong> Decide what can be NULL</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 11: Step 3 - Establish Relationships -->
+      <section class="slide">
+        <div class="kicker">ERD Workshop</div>
+        <h2 class="title">Step 3: Establish Relationships</h2>
+        
+        <div class="step-box">
+          <span class="step-number">3</span>
+          <strong>How do our entities connect to each other?</strong>
+        </div>
+
+        <div class="entity-diagram">
+          <div style="text-align: center;">
+            <h4>Bookstore Relationships</h4>
+            <div style="margin: 2rem 0;">
+              <div style="display: flex; align-items: center; justify-content: center; margin: 1rem 0;">
+                <span>BOOK</span>
+                <span class="relationship-line"></span>
+                <span class="relationship-label">M:N</span>
+                <span class="relationship-line"></span>
+                <span>AUTHOR</span>
+              </div>
+              <p><em>A book can have multiple authors, an author can write multiple books</em></p>
+              
+              <div style="display: flex; align-items: center; justify-content: center; margin: 1rem 0;">
+                <span>CUSTOMER</span>
+                <span class="relationship-line"></span>
+                <span class="relationship-label">1:N</span>
+                <span class="relationship-line"></span>
+                <span>ORDER</span>
+              </div>
+              <p><em>A customer can place many orders, each order belongs to one customer</em></p>
+              
+              <div style="display: flex; align-items: center; justify-content: center; margin: 1rem 0;">
+                <span>ORDER</span>
+                <span class="relationship-line"></span>
+                <span class="relationship-label">M:N</span>
+                <span class="relationship-line"></span>
+                <span>BOOK</span>
+              </div>
+              <p><em>Resolved by ORDER_DETAILS bridge table</em></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 12: Step 4 - Normalization Exercise -->
+      <section class="slide">
+        <div class="kicker">ERD Workshop</div>
+        <h2 class="title">Step 4: Normalization Exercise</h2>
+        
+        <div class="step-box">
+          <span class="step-number">4</span>
+          <strong>Let's fix a common problem: Customer Addresses</strong>
+        </div>
+
+        <div class="normalization-example">
+          <div>
+            <div class="before-after">❌ BEFORE (Denormalized)</div>
+            <div class="table-example">
+              <div class="table-header">Orders Table</div>
+              <div class="table-row">Order_ID: 1, Customer_ID: 101</div>
+              <div class="table-row">Ship_Street: "123 Main St"</div>
+              <div class="table-row">Ship_City: "Boston"</div>
+              <div class="table-row">Ship_State: "MA"</div>
+              <div class="table-row">Ship_ZIP: "02101"</div>
+            </div>
+            <div class="warning-box">
+              <strong>Problem:</strong> If a customer moves, we have to update their address in every order record!
+            </div>
+          </div>
+          
+          <div>
+            <div class="before-after">✅ AFTER (Normalized)</div>
+            <div class="table-example">
+              <div class="table-header">Orders Table</div>
+              <div class="table-row">Order_ID: 1, Customer_ID: 101</div>
+              <div class="table-row">Shipping_Address_ID: 501</div>
+            </div>
+            <div class="table-example">
+              <div class="table-header">Addresses Table</div>
+              <div class="table-row">Address_ID: 501, Customer_ID: 101</div>
+              <div class="table-row">Street: "123 Main St", City: "Boston"</div>
+              <div class="table-row">State: "MA", ZIP: "02101"</div>
+            </div>
+            <div class="best-practice">
+              <strong>Benefit:</strong> Update address once, affects all related orders automatically!
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 13: Step 5 - dbdiagram.io Demo -->
+      <section class="slide">
+        <div class="kicker">ERD Workshop</div>
+        <h2 class="title">Step 5: Demo with dbdiagram.io</h2>
+        
+        <div class="step-box">
+          <span class="step-number">5</span>
+          <strong>Let's build our ERD visually!</strong>
+        </div>
+
+        <div class="activity-box">
+          <h3>🛠️ Live Demo Steps</h3>
+          <ol>
+            <li><strong>Visit:</strong> dbdiagram.io</li>
+            <li><strong>Create tables:</strong> Drag and drop entities</li>
+            <li><strong>Add attributes:</strong> Define columns and data types</li>
+            <li><strong>Set relationships:</strong> Draw connections between tables</li>
+            <li><strong>Export SQL:</strong> Generate CREATE TABLE statements</li>
+            <li><strong>Save diagram:</strong> Export as image or PDF</li>
+          </ol>
+        </div>
+
+        <div class="best-practice">
+          <h4>dbdiagram.io Syntax Example:</h4>
+          <pre style="background: #f5f5f5; padding: 1rem; border-radius: 4px; font-size: 0.8rem;">
+Table books {
+  isbn varchar [pk]
+  title varchar [not null]
+  author_id int [ref: > authors.author_id]
+  price decimal(10,2)
+  stock_quantity int [default: 0]
+}
+
+Table authors {
+  author_id int [pk, increment]
+  first_name varchar [not null]
+  last_name varchar [not null]
+}
+          </pre>
+        </div>
+      </section>
+
+      <!-- Slide 14: Group Activity Instructions -->
+      <section class="slide">
+        <div class="kicker">Hands-on Activity</div>
+        <h2 class="title">Your Turn: Build Your ERD (15 minutes)</h2>
+        
+        <div class="activity-box">
+          <h3>👥 Group Activity Instructions</h3>
+          <ul class="checklist">
+            <li>Form groups of 3-4 students</li>
+            <li>Choose your Week 2 business idea</li>
+            <li>Identify at least 5 core entities</li>
+            <li>Define key attributes for each entity</li>
+            <li>Draw ERD on dbdiagram.io or paper</li>
+            <li>Share with another group and explain relationships</li>
+          </ul>
+        </div>
+
+        <div class="step-box">
+          <span class="step-number">💡</span>
+          <strong>Business Idea Examples to Consider:</strong>
+          <ul>
+            <li><strong>Food Delivery:</strong> Restaurants, Customers, Orders, Drivers, Payments</li>
+            <li><strong>Course Platform:</strong> Students, Courses, Instructors, Enrollments, Assignments</li>
+            <li><strong>Rental Service:</strong> Items, Users, Bookings, Payments, Reviews</li>
+            <li><strong>Social Platform:</strong> Users, Posts, Comments, Likes, Messages</li>
+          </ul>
+        </div>
+
+        <div class="callout">
+          ⏰ <strong>Time Check:</strong> 10 minutes to build, 5 minutes to share and get feedback
+        </div>
+      </section>
+
+      <!-- Slide 15: Sharing & Feedback -->
+      <section class="slide">
+        <div class="kicker">Presentation Time</div>
+        <h2 class="title">Share Your ERD with Another Group</h2>
+        
+        <div class="step-box">
+          <span class="step-number">🗣️</span>
+          <strong>Presentation Format (2 minutes per group):</strong>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>What to Present:</h3>
+            <ul>
+              <li>Brief business idea recap</li>
+              <li>Your 5+ core entities</li>
+              <li>2-3 key relationships</li>
+              <li>One interesting design decision</li>
+            </ul>
+          </div>
+          <div>
+            <h3>What to Listen For:</h3>
+            <ul>
+              <li>Are entities clearly defined?</li>
+              <li>Do relationships make sense?</li>
+              <li>Any missing entities?</li>
+              <li>Normalization opportunities?</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="best-practice">
+          <strong>Feedback Guidelines:</strong>
+          <ul>
+            <li>Ask clarifying questions</li>
+            <li>Suggest improvements kindly</li>
+            <li>Share similar challenges from your design</li>
+            <li>Celebrate creative solutions</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 16: Homework & Deliverables -->
+      <section class="slide">
+        <div class="kicker">Assignment</div>
+        <h2 class="title">Homework Deliverables</h2>
+        
+        <div class="step-box">
+          <span class="step-number">📋</span>
+          <strong>What to Submit (Due: Next Week - Week 4):</strong>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <div class="activity-box">
+              <h3>1. ERD Diagram</h3>
+              <ul>
+                <li>Complete visual diagram</li>
+                <li>Export as image or PDF from dbdiagram.io</li>
+                <li>Include all entities and relationships</li>
+                <li>Show primary/foreign keys clearly</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="activity-box">
+              <h3>2. Written Explanation (1 page)</h3>
+              <ul>
+                <li>Justify your entity choices</li>
+                <li>Explain key relationships</li>
+                <li>Describe normalization decisions</li>
+                <li>Identify potential challenges</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="best-practice">
+          <h4>💡 Success Tips:</h4>
+          <ul>
+            <li>Start with your Week 2 business model canvas</li>
+            <li>Think about what data you need to store for each canvas block</li>
+            <li>Consider the customer journey and required data at each step</li>
+            <li>Don't over-complicate - start simple and iterate</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 17: Key Takeaways -->
+      <section class="slide">
+        <div class="kicker">Summary</div>
+        <h2 class="title">Key Takeaways</h2>
+        
+        <div class="step-box">
+          <span class="step-number">🎯</span>
+          <strong>What We've Learned Today:</strong>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div>
+            <h3>Technical Skills</h3>
+            <ul class="checklist">
+              <li>Identify business entities</li>
+              <li>Define attributes and data types</li>
+              <li>Design relationships (1:N, M:N)</li>
+              <li>Use bridge tables properly</li>
+              <li>Apply normalization principles</li>
+              <li>Create ERDs with tools</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Business Impact</h3>
+            <ul class="checklist">
+              <li>Well-structured database = smoother development</li>
+              <li>Entities = business objects</li>
+              <li>Relationships = business rules</li>
+              <li>ERDs = blueprints for MSSQL database</li>
+              <li>Solid data layer = scalable business</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout">
+          🚀 <strong>Next Week:</strong> We'll take your ERD and build a real MSSQL database in Week 4!
+        </div>
+      </section>
+
+      <!-- Slide 18: Preview Next Week -->
+      <section class="slide">
+        <div class="kicker">Looking Ahead</div>
+        <h2 class="title">Week 4 Preview: From ERD to Database</h2>
+        
+        <div class="entity-diagram">
+          <h3>🔄 The Journey Continues</h3>
+          <div class="diagram-flow">
+            <div class="entity-box">
+              <div class="entity-title">Week 3</div>
+              <div class="entity-attributes">ERD Design<br>📋 Paper/Digital</div>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="entity-box">
+              <div class="entity-title">Week 4</div>
+              <div class="entity-attributes">MSSQL Database<br>🗄️ Real Implementation</div>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="entity-box">
+              <div class="entity-title">Week 5+</div>
+              <div class="entity-attributes">Node.js API<br>🌐 Live Application</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="best-practice">
+          <h3>What to Expect in Week 4:</h3>
+          <ul>
+            <li><strong>SQL Creation:</strong> Transform your ERD into CREATE TABLE statements</li>
+            <li><strong>MSSQL Setup:</strong> Connect to database server and create your schema</li>
+            <li><strong>Data Population:</strong> Insert sample data for testing</li>
+            <li><strong>Queries:</strong> Write SELECT statements to retrieve business insights</li>
+          </ul>
+        </div>
+
+        <div class="callout">
+          💪 <strong>Get Ready:</strong> Your ERD homework will be the foundation for everything we build next!
+        </div>
+      </section>
+
+    </div>
+
+    <div class="footer">
+      <div class="controls">
+        <button id="prev" type="button" aria-label="Previous slide">◀ Prev</button>
+        <button id="next" type="button" aria-label="Next slide">Next ▶</button>
+      </div>
+      <div class="progress" style="width: 240px"><div id="bar" class="bar"></div></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const bar = document.getElementById('bar');
+  let index = 0;
+  function show(i){
+    index = Math.max(0, Math.min(slides.length-1, i));
+    slides.forEach((s, idx)=> s.classList.toggle('active', idx===index));
+    bar.style.width = (((index+1)/slides.length)*100).toFixed(1) + '%';
+    history.replaceState(null, '', '#'+(index+1));
+  }
+  function next(){ show(index+1); }
+  function prev(){ show(index-1); }
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+  // Deep link support via hash
+  const start = parseInt(location.hash.replace('#',''),10);
+  if (!isNaN(start)) show(start-1); else show(0);
+})();
+</script>
+</body>
+</html>
