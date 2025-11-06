@@ -393,7 +393,15 @@ footer, .footer {
     max-width: 100%;
   }
   
-  header, .footer, .nav, .controls {
+  header {
+    background: white;
+    color: black;
+    border-bottom: 1px solid #cccccc;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .footer, .nav, .controls {
     display: none;
   }
   
