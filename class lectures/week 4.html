@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 4 - APIs & Backend Fundamentals | MIS 276</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    .deck {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .slide {
+      padding: 3rem;
+      min-height: 90vh;
+      display: none;
+      border: 2px solid var(--border);
+      margin: 1rem;
+      border-radius: 16px;
+      background: var(--bg-primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .slide.active {
+      display: block;
+    }
+    .slide h1 {
+      color: var(--accent-primary);
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 3px solid var(--accent-primary);
+      padding-bottom: 1rem;
+    }
+    .slide h2 {
+      color: var(--accent-primary);
+      font-size: 2rem;
+      margin: 1.5rem 0 1rem;
+    }
+    .slide h3 {
+      color: var(--accent-secondary);
+      font-size: 1.5rem;
+      margin: 1.25rem 0 0.75rem;
+    }
+    .slide ul {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+    .slide li {
+      margin: 0.75rem 0;
+      padding-left: 0.5rem;
+    }
+    .slide pre {
+      background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 2rem;
+      font-size: 1rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    
+    .slide pre::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .slide pre::after {
+      content: '●●●';
+      position: absolute;
+      top: 12px;
+      left: 20px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      letter-spacing: 4px;
+    }
+    
+    .slide code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-family: 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', monospace;
+      font-size: 0.95rem;
+      color: #61dafb;
+      border: 1px solid rgba(97, 218, 251, 0.3);
+    }
+    
+    .slide pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      color: #f8f8f2;
+      font-family: 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', monospace;
+      font-size: 1rem;
+      line-height: 1.6;
+      display: block;
+      margin-top: 30px;
+    }
+    
+    /* Syntax highlighting */
+    .slide pre code .keyword {
+      color: #ff79c6;
+      font-weight: bold;
+    }
+    
+    .slide pre code .string {
+      color: #f1fa8c;
+    }
+    
+    .slide pre code .comment {
+      color: #6272a4;
+      font-style: italic;
+    }
+    
+    .slide pre code .function {
+      color: #50fa7b;
+    }
+    
+    .slide pre code .variable {
+      color: #8be9fd;
+    }
+    
+    .slide pre code .number {
+      color: #bd93f9;
+    }
+    .kicker {
+      color: var(--accent-primary);
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .notes {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 1rem;
+      color: #856404;
+    }
+    .notes::before {
+      content: "📝 Speaker Notes: ";
+      font-weight: bold;
+    }
+    .highlight {
+      background: #e3f2fd;
+      border-left: 4px solid var(--accent-primary);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+    }
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .controls button {
+      margin: 0 5px;
+      padding: 10px 15px;
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .controls button:hover {
+      background: var(--accent-secondary);
+    }
+    .slide-counter {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: var(--bg-secondary);
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      font-weight: bold;
+    }
+    
+    /* Visual Diagram Styles */
+    .visual-diagram {
+      margin: 2rem 0;
+      padding: 2rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+    }
+    
+    .flow-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .flow-container.reverse {
+      opacity: 0.6;
+    }
+    
+    .flow-item {
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      min-width: 150px;
+      text-align: center;
+    }
+    
+    .flow-item.frontend {
+      background: #e3f2fd;
+      border: 2px solid #1976d2;
+    }
+    
+    .flow-item.api {
+      background: #fff3e0;
+      border: 2px solid #f57c00;
+    }
+    
+    .flow-item.database {
+      background: #e8f5e8;
+      border: 2px solid #388e3c;
+      border-radius: 50px;
+    }
+    
+    .flow-arrow {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent-primary);
+    }
+    
+    .http-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .method-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .method {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: bold;
+      min-width: 180px;
+      text-align: center;
+      color: white;
+    }
+    
+    .method.get { background: #4caf50; }
+    .method.post { background: #2196f3; }
+    .method.put { background: #ff9800; }
+    .method.delete { background: #f44336; }
+    
+    .operation {
+      font-size: 1.1rem;
+      color: var(--accent-primary);
+      font-weight: bold;
+    }
+    
+    .result {
+      padding: 0.75rem 1rem;
+      background: #e8f5e8;
+      border-radius: 6px;
+      border: 2px solid #4caf50;
+    }
+    
+    .rest-flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .rest-step {
+      padding: 1rem 2rem;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-weight: bold;
+      min-width: 200px;
+      text-align: center;
+    }
+    
+    .rest-step.highlight {
+      background: #fff3e0;
+      border-color: #f57c00;
+    }
+    
+    .rest-step.success {
+      background: #e8f5e8;
+      border-color: #4caf50;
+    }
+    
+    .arrow-down {
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+      font-weight: bold;
+    }
+    
+    .event-loop {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .loop-step {
+      padding: 1rem 1.5rem;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-weight: bold;
+      min-width: 180px;
+      text-align: center;
+    }
+    
+    .loop-step.start {
+      background: #e3f2fd;
+      border-color: #1976d2;
+    }
+    
+    .loop-step.highlight {
+      background: #fff3e0;
+      border-color: #f57c00;
+    }
+    
+    .loop-step.success {
+      background: #e8f5e8;
+      border-color: #4caf50;
+    }
+    
+    .decision {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .decision-box {
+      padding: 1rem;
+      background: #fff3e0;
+      border: 2px solid #f57c00;
+      border-radius: 50px;
+      font-weight: bold;
+    }
+    
+    .decision-paths {
+      display: flex;
+      gap: 2rem;
+    }
+    
+    .path {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .path-label {
+      font-weight: bold;
+      color: var(--accent-primary);
+    }
+    
+    .sequence-flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .sequence-step {
+      padding: 1rem 2rem;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-weight: bold;
+      min-width: 250px;
+      text-align: center;
+    }
+    
+    .sequence-step.success {
+      background: #e8f5e8;
+      border-color: #4caf50;
+    }
+    
+    .api-flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .flow-step {
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      min-width: 200px;
+      text-align: center;
+      border: 2px solid var(--border);
+    }
+    
+    .flow-step.client {
+      background: #e3f2fd;
+      border-color: #1976d2;
+    }
+    
+    .flow-step.route {
+      background: #f3e5f5;
+      border-color: #7b1fa2;
+    }
+    
+    .flow-step.controller {
+      background: #fff3e0;
+      border-color: #f57c00;
+    }
+    
+    .flow-step.database {
+      background: #e0f2f1;
+      border-color: #00695c;
+    }
+    
+    .flow-step.success {
+      background: #e8f5e8;
+      border-color: #4caf50;
+    }
+    
+    .crud-operations {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .crud-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .crud-method {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: bold;
+      min-width: 160px;
+      text-align: center;
+      color: white;
+    }
+    
+    .crud-method.create { background: #2196f3; }
+    .crud-method.read { background: #4caf50; }
+    .crud-method.update { background: #ff9800; }
+    .crud-method.delete { background: #f44336; }
+    
+    .crud-arrow {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent-primary);
+    }
+    
+    .crud-action {
+      padding: 0.75rem 1rem;
+      background: #f5f5f5;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      font-family: monospace;
+      font-weight: bold;
+    }
+    
+    .postman-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .test-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .test-method {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: bold;
+      min-width: 180px;
+      text-align: center;
+      color: white;
+    }
+    
+    .test-method.get { background: #4caf50; }
+    .test-method.post { background: #2196f3; }
+    .test-method.put { background: #ff9800; }
+    .test-method.delete { background: #f44336; }
+    
+    .test-arrow {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent-primary);
+    }
+    
+    .test-result {
+      padding: 0.75rem 1rem;
+      background: #e8f5e8;
+      border-radius: 6px;
+      border: 2px solid #4caf50;
+      font-weight: bold;
+    }
+    
+    .export-note {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--accent-primary);
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #fff3e0;
+      border-radius: 8px;
+    }
+    .mermaid {
+      text-align: center;
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body class="deck">
+  
+  <!-- Slide 1: Title -->
+  <div class="slide active">
+    <div class="kicker">MIS 276 - Week 4</div>
+    <h1>Understanding REST APIs & Node.js</h1>
+    <h2>Learning Outcomes</h2>
+    <ul>
+      <li>Explain client–server–database roles</li>
+      <li>Describe REST conventions and HTTP verbs</li>
+      <li>Read JSON responses and status codes</li>
+      <li>Recognize Node.js + Express architecture</li>
+    </ul>
+    <div class="notes">
+      Bridge DB work (Weeks 3–4) to dynamic APIs. Keep focus on mental model before coding.
+    </div>
+  </div>
+
+  <!-- Slide 2: The Big Picture -->
+  <div class="slide">
+    <h1>The Big Picture (Architecture)</h1>
+    <div class="visual-diagram">
+      <div class="flow-container">
+        <div class="flow-item frontend">Browser / Frontend</div>
+        <div class="flow-arrow">→ HTTP/JSON →</div>
+        <div class="flow-item api">Express API (Node.js)</div>
+        <div class="flow-arrow">→ SQL queries →</div>
+        <div class="flow-item database">MSSQL Database</div>
+      </div>
+      <div class="flow-container reverse">
+        <div class="flow-item frontend"></div>
+        <div class="flow-arrow">← JSON Response ←</div>
+        <div class="flow-item api"></div>
+        <div class="flow-arrow">← Raw Data ←</div>
+        <div class="flow-item database"></div>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Key Path:</strong> Request → Route → Controller → DB → Response</li>
+      <li>Stateless, resource-based interactions</li>
+    </ul>
+    <div class="notes">
+      Emphasize separation of concerns: frontend shows; API decides; DB persists.
+    </div>
+  </div>
+
+  <!-- Slide 3: What Is an API? -->
+  <div class="slide">
+    <h1>What Is an API?</h1>
+    <div class="visual-diagram">
+      <div class="http-methods">
+        <div class="method-group">
+          <div class="method get">GET /products</div>
+          <div class="operation">→ Read Data →</div>
+          <div class="result">JSON Response</div>
+        </div>
+        <div class="method-group">
+          <div class="method post">POST /orders</div>
+          <div class="operation">→ Create Data →</div>
+          <div class="result">JSON Response</div>
+        </div>
+        <div class="method-group">
+          <div class="method put">PUT /products/42</div>
+          <div class="operation">→ Update Data →</div>
+          <div class="result">JSON Response</div>
+        </div>
+        <div class="method-group">
+          <div class="method delete">DELETE /products/42</div>
+          <div class="operation">→ Delete Data →</div>
+          <div class="result">JSON Response</div>
+        </div>
+      </div>
+    </div>
+    <ul>
+      <li>Resource-oriented URLs (nouns): <code>/products</code>, <code>/orders</code>, <code>/users</code></li>
+      <li>HTTP methods: <strong>GET</strong>, <strong>POST</strong>, <strong>PUT</strong>, <strong>DELETE</strong></li>
+      <li>Response format: <strong>JSON</strong> + <strong>status codes</strong></li>
+    </ul>
+    <div class="notes">
+      E-commerce map: product, cart, order, payment, user auth.
+    </div>
+  </div>
+
+  <!-- Slide 4: REST Principles -->
+  <div class="slide">
+    <h1>REST Principles</h1>
+    <div class="visual-diagram">
+      <div class="rest-flow">
+        <div class="rest-step">Client Request</div>
+        <div class="arrow-down">↓</div>
+        <div class="rest-step">Stateless Processing</div>
+        <div class="arrow-down">↓</div>
+        <div class="rest-step highlight">Uniform Interface</div>
+        <div class="arrow-down">↓</div>
+        <div class="rest-step">Resource Identification</div>
+        <div class="arrow-down">↓</div>
+        <div class="rest-step">Cacheable Response</div>
+        <div class="arrow-down">↓</div>
+        <div class="rest-step success">Server Response</div>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Uniform interface</strong> - Consistent way to interact with resources</li>
+      <li><strong>Stateless requests</strong> - Each request contains all needed information</li>
+      <li><strong>Layered system</strong> - Client doesn't need to know internal architecture</li>
+      <li><strong>Cacheable responses</strong> - Where appropriate for performance</li>
+      <li><strong>Consistent resource schemas</strong> - Predictable data structures</li>
+    </ul>
+    <div class="notes">
+      Ask: Why must <code>/orders/15</code> always return the same shape?
+    </div>
+  </div>
+
+  <!-- Slide 5: HTTP Status Codes -->
+  <div class="slide">
+    <h1>HTTP Status Codes Cheat Sheet</h1>
+    <div class="highlight">
+      <h3>Success Codes</h3>
+      <ul>
+        <li><strong>200 OK</strong> - Request successful</li>
+        <li><strong>201 Created</strong> - Resource created successfully</li>
+      </ul>
+    </div>
+    <div class="highlight">
+      <h3>Client Error Codes</h3>
+      <ul>
+        <li><strong>400 Bad Request</strong> - Invalid request format</li>
+        <li><strong>401 Unauthorized</strong> - Authentication required</li>
+        <li><strong>403 Forbidden</strong> - Access denied</li>
+        <li><strong>404 Not Found</strong> - Resource doesn't exist</li>
+      </ul>
+    </div>
+    <div class="highlight">
+      <h3>Server Error Codes</h3>
+      <ul>
+        <li><strong>500 Server Error</strong> - Internal server problem</li>
+      </ul>
+    </div>
+    <div class="notes">
+      Encourage using precise codes; avoids "everything is 200" anti-pattern.
+    </div>
+  </div>
+
+  <!-- Slide 6: Node.js & Express Basics -->
+  <div class="slide">
+    <h1>Node.js & Express Basics</h1>
+    <div class="visual-diagram">
+      <div class="event-loop">
+        <div class="loop-step start">Incoming Request</div>
+        <div class="arrow-down">↓</div>
+        <div class="loop-step highlight">Event Loop</div>
+        <div class="arrow-down">↓</div>
+        <div class="loop-step">Call Stack</div>
+        <div class="decision">
+          <div class="decision-box">Sync Operation?</div>
+          <div class="decision-paths">
+            <div class="path">
+              <span class="path-label">Yes →</span>
+              <div class="loop-step">Execute Immediately</div>
+              <div class="arrow-down">↓</div>
+              <div class="loop-step success">Send Response</div>
+            </div>
+            <div class="path">
+              <span class="path-label">No →</span>
+              <div class="loop-step">Thread Pool</div>
+              <div class="arrow-down">↓</div>
+              <div class="loop-step">Database Query</div>
+              <div class="arrow-down">↓</div>
+              <div class="loop-step">Callback Queue</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ul>
+      <li><strong>V8 engine</strong> - Chrome's JavaScript engine</li>
+      <li><strong>Event loop</strong> - Non-blocking I/O operations</li>
+      <li><strong>npm ecosystem</strong> - Rich package management</li>
+      <li><strong>Express</strong> - Minimal routing and middleware framework</li>
+    </ul>
+    <h3>Typical Project Structure:</h3>
+    <pre><code>project/
+  server.js
+  routes/
+  controllers/
+  db/
+  .env</code></pre>
+    <div class="notes">
+      Keep files short; move SQL to model/service layer.
+    </div>
+  </div>
+
+  <!-- Slide 7: Database Connection -->
+  <div class="slide">
+    <h1>DB Connection (MSSQL)</h1>
+    <div class="visual-diagram">
+      <div class="sequence-flow">
+        <div class="sequence-step">1. Load .env variables</div>
+        <div class="arrow-down">↓</div>
+        <div class="sequence-step">2. Create connection pool</div>
+        <div class="arrow-down">↓</div>
+        <div class="sequence-step">3. Establish secure connection</div>
+        <div class="arrow-down">↓</div>
+        <div class="sequence-step success">4. Pool ready for queries</div>
+      </div>
+    </div>
+    <pre><code><span class="comment">// db/config.js</span>
+<span class="keyword">import</span> sql <span class="keyword">from</span> <span class="string">"mssql"</span>;
+<span class="keyword">import</span> dotenv <span class="keyword">from</span> <span class="string">"dotenv"</span>;
+dotenv.<span class="function">config</span>();
+
+<span class="keyword">const</span> <span class="variable">dbConfig</span> = {
+  user: process.env.<span class="variable">DB_USER</span>,
+  password: process.env.<span class="variable">DB_PASS</span>,
+  server: process.env.<span class="variable">DB_SERVER</span>,
+  database: process.env.<span class="variable">DB_NAME</span>,
+  options: { encrypt: <span class="keyword">true</span>, trustServerCertificate: <span class="keyword">true</span> }
+};
+
+<span class="keyword">export const</span> <span class="variable">pool</span> = <span class="keyword">await</span> sql.<span class="function">connect</span>(dbConfig);
+<span class="keyword">export</span> { sql };</code></pre>
+    <div class="notes">
+      Use environment variables; never hardcode secrets.
+    </div>
+  </div>
+
+  <!-- Slide 8: Sample Query Controller -->
+  <div class="slide">
+    <h1>Sample Query (Controller)</h1>
+    <div class="visual-diagram">
+      <div class="api-flow">
+        <div class="flow-step client">Client: GET /products</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step route">Express Route</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step controller">Controller: listProducts()</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step database">Database: SELECT query</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step success">Response: 200 + JSON data</div>
+      </div>
+    </div>
+    <pre><code><span class="comment">// controllers/products.js</span>
+<span class="keyword">import</span> { pool } <span class="keyword">from</span> <span class="string">"../db/config.js"</span>;
+
+<span class="keyword">export async function</span> <span class="function">listProducts</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
+  <span class="keyword">const</span> <span class="variable">result</span> = <span class="keyword">await</span> pool.<span class="function">request</span>().<span class="function">query</span>(<span class="string">"SELECT * FROM Products"</span>);
+  res.<span class="function">status</span>(<span class="number">200</span>).<span class="function">json</span>(result.recordset);
+}</code></pre>
+    <div class="notes">
+      Return arrays for list endpoints; objects for single resources.
+    </div>
+  </div>
+
+  <!-- Slide 9: Seed SQL -->
+  <div class="slide">
+    <h1>Seed SQL (Starter Data)</h1>
+    <pre><code>-- seeds/products.sql
+INSERT INTO Products (Title, Price, Quantity)
+VALUES ('Laptop 15"', 899.99, 12),
+       ('Wireless Mouse', 24.50, 100),
+       ('USB-C Hub 7-in-1', 39.00, 50);</code></pre>
+    <div class="notes">
+      Small, realistic sample helps testing pagination and filtering.
+    </div>
+  </div>
+
+  <!-- Slide 10: Mini Exercise -->
+  <div class="slide">
+    <h1>Mini-Exercise (Hands-on)</h1>
+    <div class="highlight">
+      <h3>Goal: Confirm API → DB flow works</h3>
+      <ol>
+        <li>Create <code>GET /products</code> route</li>
+        <li>Connect to MSSQL and run query</li>
+        <li>Test with Postman; screenshot JSON</li>
+      </ol>
+      <p><strong>Deliverable:</strong> Postman result + code snippet</p>
+    </div>
+    <div class="notes">
+      Walk the room; ensure env variables are set and DB reachable.
+    </div>
+  </div>
+
+  <!-- Slide 11: Project Setup -->
+  <div class="slide">
+    <h1>Project Setup</h1>
+    <h3>Initialize & Install Dependencies:</h3>
+    <pre><code>npm init -y
+npm i express mssql dotenv cors
+npm i -D nodemon</code></pre>
+    <h3>Update package.json:</h3>
+    <pre><code>"scripts": {
+  "start": "nodemon server.js"
+}</code></pre>
+    <div class="notes">
+      If Windows + MSSQL local, confirm SQL Server Browser/ports are open.
+    </div>
+  </div>
+
+  <!-- Slide 12: Minimal Server -->
+  <div class="slide">
+    <h1>Minimal Server</h1>
+    <pre><code><span class="comment">// server.js</span>
+<span class="keyword">import</span> express <span class="keyword">from</span> <span class="string">"express"</span>;
+<span class="keyword">import</span> cors <span class="keyword">from</span> <span class="string">"cors"</span>;
+<span class="keyword">import</span> { listProducts } <span class="keyword">from</span> <span class="string">"./controllers/products.js"</span>;
+
+<span class="keyword">const</span> <span class="variable">app</span> = <span class="function">express</span>();
+app.<span class="function">use</span>(<span class="function">cors</span>());
+app.<span class="function">use</span>(express.<span class="function">json</span>());
+
+app.<span class="function">get</span>(<span class="string">"/products"</span>, listProducts);
+app.<span class="function">listen</span>(<span class="number">4000</span>, () => console.<span class="function">log</span>(<span class="string">"API on http://localhost:4000"</span>));</code></pre>
+    <div class="notes">
+      Keep the first success moment fast.
+    </div>
+  </div>
+
+  <!-- Slide 13: Create (POST) Endpoint -->
+  <div class="slide">
+    <h1>Create (POST) Endpoint</h1>
+    <pre><code><span class="keyword">import</span> { pool, sql } <span class="keyword">from</span> <span class="string">"../db/config.js"</span>;
+
+<span class="keyword">export async function</span> <span class="function">createProduct</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
+  <span class="keyword">const</span> { <span class="variable">title</span>, <span class="variable">price</span>, <span class="variable">quantity</span> } = req.body;
+  <span class="keyword">await</span> pool.<span class="function">request</span>()
+    .<span class="function">input</span>(<span class="string">"t"</span>, sql.NVarChar, title)
+    .<span class="function">input</span>(<span class="string">"p"</span>, sql.<span class="function">Decimal</span>(<span class="number">10</span>,<span class="number">2</span>), price)
+    .<span class="function">input</span>(<span class="string">"q"</span>, sql.Int, quantity)
+    .<span class="function">query</span>(<span class="string">"INSERT INTO Products(Title,Price,Quantity) VALUES(@t,@p,@q)"</span>);
+  res.<span class="function">status</span>(<span class="number">201</span>).<span class="function">json</span>({ message: <span class="string">"Created"</span> });
+}</code></pre>
+    <div class="notes">
+      Parameterize queries to prevent injection.
+    </div>
+  </div>
+
+  <!-- Slide 14: Update & Delete -->
+  <div class="slide">
+    <h1>Update & Delete (PUT/DELETE)</h1>
+    <div class="visual-diagram">
+      <div class="crud-operations">
+        <div class="crud-item">
+          <div class="crud-method create">CREATE (POST)</div>
+          <div class="crud-arrow">→</div>
+          <div class="crud-action">INSERT INTO Products</div>
+        </div>
+        <div class="crud-item">
+          <div class="crud-method read">READ (GET)</div>
+          <div class="crud-arrow">→</div>
+          <div class="crud-action">SELECT FROM Products</div>
+        </div>
+        <div class="crud-item">
+          <div class="crud-method update">UPDATE (PUT)</div>
+          <div class="crud-arrow">→</div>
+          <div class="crud-action">UPDATE Products SET</div>
+        </div>
+        <div class="crud-item">
+          <div class="crud-method delete">DELETE (DELETE)</div>
+          <div class="crud-arrow">→</div>
+          <div class="crud-action">DELETE FROM Products</div>
+        </div>
+      </div>
+    </div>
+    <pre><code><span class="keyword">export async function</span> <span class="function">updateProduct</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
+  <span class="keyword">const</span> <span class="variable">id</span> = +req.params.id;
+  <span class="keyword">const</span> { <span class="variable">title</span>, <span class="variable">price</span>, <span class="variable">quantity</span> } = req.body;
+  <span class="keyword">await</span> pool.<span class="function">request</span>()
+    .<span class="function">input</span>(<span class="string">"id"</span>, sql.Int, id)
+    .<span class="function">input</span>(<span class="string">"t"</span>, sql.NVarChar, title)
+    .<span class="function">input</span>(<span class="string">"p"</span>, sql.<span class="function">Decimal</span>(<span class="number">10</span>,<span class="number">2</span>), price)
+    .<span class="function">input</span>(<span class="string">"q"</span>, sql.Int, quantity)
+    .<span class="function">query</span>(<span class="string">"UPDATE Products SET Title=@t, Price=@p, Quantity=@q WHERE Id=@id"</span>);
+  res.<span class="function">json</span>({ message: <span class="string">"Updated"</span> });
+}
+
+<span class="keyword">export async function</span> <span class="function">deleteProduct</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
+  <span class="keyword">const</span> <span class="variable">id</span> = +req.params.id;
+  <span class="keyword">await</span> pool.<span class="function">request</span>().<span class="function">input</span>(<span class="string">"id"</span>, sql.Int, id)
+    .<span class="function">query</span>(<span class="string">"DELETE FROM Products WHERE Id=@id"</span>);
+  res.<span class="function">json</span>({ message: <span class="string">"Deleted"</span> });
+}</code></pre>
+    <div class="notes">
+      Return 404 if affectedRows=0 (extend as exercise).
+    </div>
+  </div>
+
+  <!-- Slide 15: Postman Tests -->
+  <div class="slide">
+    <h1>Postman Tests (Hands-on)</h1>
+    <div class="visual-diagram">
+      <div class="postman-flow">
+        <div class="test-group">
+          <div class="test-method get">GET /products</div>
+          <div class="test-arrow">→</div>
+          <div class="test-result">200 OK + Array</div>
+        </div>
+        <div class="test-group">
+          <div class="test-method post">POST /products</div>
+          <div class="test-arrow">→</div>
+          <div class="test-result">201 Created</div>
+        </div>
+        <div class="test-group">
+          <div class="test-method put">PUT /products/1</div>
+          <div class="test-arrow">→</div>
+          <div class="test-result">200 OK Updated</div>
+        </div>
+        <div class="test-group">
+          <div class="test-method delete">DELETE /products/1</div>
+          <div class="test-arrow">→</div>
+          <div class="test-result">200 OK Deleted</div>
+        </div>
+        <div class="export-note">
+          ↓ Export Collection ↓
+        </div>
+      </div>
+    </div>
+    <h3>Test These Endpoints:</h3>
+    <ul>
+      <li><strong>GET</strong> <code>/products</code></li>
+      <li><strong>POST</strong> <code>/products</code> (JSON body)</li>
+      <li><strong>PUT</strong> <code>/products/:id</code></li>
+      <li><strong>DELETE</strong> <code>/products/:id</code></li>
+    </ul>
+    <div class="highlight">
+      <p><strong>Deliverable:</strong> Export Postman collection</p>
+    </div>
+    <div class="notes">
+      Encourage naming requests with verbs and expected codes.
+    </div>
+  </div>
+
+  <!-- Navigation Controls -->
+  <div class="controls">
+    <button onclick="previousSlide()">← Previous</button>
+    <button onclick="nextSlide()">Next →</button>
+  </div>
+
+  <!-- Slide Counter -->
+  <div class="slide-counter">
+    <span id="current">1</span> / <span id="total">15</span>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('total').textContent = totalSlides;
+
+    function showSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (n + totalSlides) % totalSlides;
+      slides[currentSlide].classList.add('active');
+      document.getElementById('current').textContent = currentSlide + 1;
+    }
+
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+
+    function previousSlide() {
+      showSlide(currentSlide - 1);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        previousSlide();
+      } else if (e.key === 'Home') {
+        showSlide(0);
+      } else if (e.key === 'End') {
+        showSlide(totalSlides - 1);
+      }
+    });
+
+    // Initialize
+    showSlide(0);
+  </script>
+</body>
+</html>
