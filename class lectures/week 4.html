@@ -588,34 +588,34 @@
     <div class="visual-diagram">
       <div class="http-methods">
         <div class="method-group">
-          <div class="method get">GET /products</div>
-          <div class="operation">→ Read Data →</div>
+          <div class="method get">GET /books</div>
+          <div class="operation">→ Read Books →</div>
           <div class="result">JSON Response</div>
         </div>
         <div class="method-group">
           <div class="method post">POST /orders</div>
-          <div class="operation">→ Create Data →</div>
+          <div class="operation">→ Create Order →</div>
           <div class="result">JSON Response</div>
         </div>
         <div class="method-group">
-          <div class="method put">PUT /products/42</div>
-          <div class="operation">→ Update Data →</div>
+          <div class="method put">PUT /books/42</div>
+          <div class="operation">→ Update Book →</div>
           <div class="result">JSON Response</div>
         </div>
         <div class="method-group">
-          <div class="method delete">DELETE /products/42</div>
-          <div class="operation">→ Delete Data →</div>
+          <div class="method get">GET /customers</div>
+          <div class="operation">→ Read Customers →</div>
           <div class="result">JSON Response</div>
         </div>
       </div>
     </div>
     <ul>
-      <li>Resource-oriented URLs (nouns): <code>/products</code>, <code>/orders</code>, <code>/users</code></li>
+      <li>Resource-oriented URLs (nouns): <code>/books</code>, <code>/orders</code>, <code>/customers</code></li>
       <li>HTTP methods: <strong>GET</strong>, <strong>POST</strong>, <strong>PUT</strong>, <strong>DELETE</strong></li>
       <li>Response format: <strong>JSON</strong> + <strong>status codes</strong></li>
     </ul>
     <div class="notes">
-      E-commerce map: product, cart, order, payment, user auth.
+      Bookstore e-commerce: books, authors, customers, orders, payments.
     </div>
   </div>
 
@@ -751,7 +751,7 @@ dotenv.<span class="function">config</span>();
   user: process.env.<span class="variable">DB_USER</span>,
   password: process.env.<span class="variable">DB_PASS</span>,
   server: process.env.<span class="variable">DB_SERVER</span>,
-  database: process.env.<span class="variable">DB_NAME</span>,
+  database: <span class="string">"ClassDemo"</span>, <span class="comment">// Bookstore database</span>
   options: { encrypt: <span class="keyword">true</span>, trustServerCertificate: <span class="keyword">true</span> }
 };
 
@@ -767,22 +767,28 @@ dotenv.<span class="function">config</span>();
     <h1>Sample Query (Controller)</h1>
     <div class="visual-diagram">
       <div class="api-flow">
-        <div class="flow-step client">Client: GET /products</div>
+        <div class="flow-step client">Client: GET /books</div>
         <div class="arrow-down">↓</div>
         <div class="flow-step route">Express Route</div>
         <div class="arrow-down">↓</div>
-        <div class="flow-step controller">Controller: listProducts()</div>
+        <div class="flow-step controller">Controller: listBooks()</div>
         <div class="arrow-down">↓</div>
-        <div class="flow-step database">Database: SELECT query</div>
+        <div class="flow-step database">Database: JOIN Books + Authors</div>
         <div class="arrow-down">↓</div>
-        <div class="flow-step success">Response: 200 + JSON data</div>
+        <div class="flow-step success">Response: 200 + JSON book data</div>
       </div>
     </div>
-    <pre><code><span class="comment">// controllers/products.js</span>
+    <pre><code><span class="comment">// controllers/books.js</span>
 <span class="keyword">import</span> { pool } <span class="keyword">from</span> <span class="string">"../db/config.js"</span>;
 
-<span class="keyword">export async function</span> <span class="function">listProducts</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
-  <span class="keyword">const</span> <span class="variable">result</span> = <span class="keyword">await</span> pool.<span class="function">request</span>().<span class="function">query</span>(<span class="string">"SELECT * FROM Products"</span>);
+<span class="keyword">export async function</span> <span class="function">listBooks</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
+  <span class="keyword">const</span> <span class="variable">result</span> = <span class="keyword">await</span> pool.<span class="function">request</span>()
+    .<span class="function">query</span>(<span class="string">`SELECT b.BookID, b.Title, b.Price, b.Genre, b.Stock,
+             a.FirstName + ' ' + a.LastName AS Author
+      FROM Books b
+      JOIN Author_Book ab ON b.BookID = ab.BookId
+      JOIN Authors a ON ab.AuthorId = a.AuthorID
+      WHERE ab.isMain = 1`</span>);
   res.<span class="function">status</span>(<span class="number">200</span>).<span class="function">json</span>(result.recordset);
 }</code></pre>
     <div class="notes">
@@ -793,13 +799,17 @@ dotenv.<span class="function">config</span>();
   <!-- Slide 9: Seed SQL -->
   <div class="slide">
     <h1>Seed SQL (Starter Data)</h1>
-    <pre><code>-- seeds/products.sql
-INSERT INTO Products (Title, Price, Quantity)
-VALUES ('Laptop 15"', 899.99, 12),
-       ('Wireless Mouse', 24.50, 100),
-       ('USB-C Hub 7-in-1', 39.00, 50);</code></pre>
+    <pre><code><span class="comment">-- seeds/books.sql</span>
+<span class="keyword">INSERT INTO</span> Books (Title, ISBN, Genre, Price, Stock, PublishDate, Description)
+<span class="keyword">VALUES</span> (<span class="string">'1984'</span>, <span class="string">'9780451524935'</span>, <span class="string">'Dystopian'</span>, <span class="number">12.99</span>, <span class="number">50</span>, <span class="string">'1949-06-08'</span>, 
+        <span class="string">'A dystopian social science fiction novel.'</span>),
+       (<span class="string">'Animal Farm'</span>, <span class="string">'9780451526342'</span>, <span class="string">'Political Satire'</span>, <span class="number">9.99</span>, <span class="number">40</span>, 
+        <span class="string">'1945-08-17'</span>, <span class="string">'An allegorical novella.'</span>),
+       (<span class="string">'Harry Potter and the Sorcerer\'s Stone'</span>, <span class="string">'9780439554930'</span>, 
+        <span class="string">'Fantasy'</span>, <span class="number">14.99</span>, <span class="number">100</span>, <span class="string">'1997-06-26'</span>, 
+        <span class="string">'The first novel in the Harry Potter series.'</span>);</code></pre>
     <div class="notes">
-      Small, realistic sample helps testing pagination and filtering.
+      Real bookstore data helps testing complex queries with joins to Authors and Orders.
     </div>
   </div>
 
@@ -807,16 +817,16 @@ VALUES ('Laptop 15"', 899.99, 12),
   <div class="slide">
     <h1>Mini-Exercise (Hands-on)</h1>
     <div class="highlight">
-      <h3>Goal: Confirm API → DB flow works</h3>
+      <h3>Goal: Confirm API → DB flow works with Bookstore</h3>
       <ol>
-        <li>Create <code>GET /products</code> route</li>
-        <li>Connect to MSSQL and run query</li>
-        <li>Test with Postman; screenshot JSON</li>
+        <li>Create <code>GET /books</code> route with JOIN to Authors</li>
+        <li>Connect to ClassDemo database and run query</li>
+        <li>Test with Postman; screenshot JSON book data</li>
       </ol>
-      <p><strong>Deliverable:</strong> Postman result + code snippet</p>
+      <p><strong>Deliverable:</strong> Postman result showing books with author names</p>
     </div>
     <div class="notes">
-      Walk the room; ensure env variables are set and DB reachable.
+      Walk the room; ensure ClassDemo database connection works and tables exist.
     </div>
   </div>
 
@@ -842,14 +852,16 @@ npm i -D nodemon</code></pre>
     <pre><code><span class="comment">// server.js</span>
 <span class="keyword">import</span> express <span class="keyword">from</span> <span class="string">"express"</span>;
 <span class="keyword">import</span> cors <span class="keyword">from</span> <span class="string">"cors"</span>;
-<span class="keyword">import</span> { listProducts } <span class="keyword">from</span> <span class="string">"./controllers/products.js"</span>;
+<span class="keyword">import</span> { listBooks } <span class="keyword">from</span> <span class="string">"./controllers/books.js"</span>;
 
 <span class="keyword">const</span> <span class="variable">app</span> = <span class="function">express</span>();
 app.<span class="function">use</span>(<span class="function">cors</span>());
 app.<span class="function">use</span>(express.<span class="function">json</span>());
 
-app.<span class="function">get</span>(<span class="string">"/products"</span>, listProducts);
-app.<span class="function">listen</span>(<span class="number">4000</span>, () => console.<span class="function">log</span>(<span class="string">"API on http://localhost:4000"</span>));</code></pre>
+app.<span class="function">get</span>(<span class="string">"/books"</span>, listBooks);
+app.<span class="function">get</span>(<span class="string">"/orders"</span>, listOrders);
+app.<span class="function">get</span>(<span class="string">"/customers"</span>, listCustomers);
+app.<span class="function">listen</span>(<span class="number">4000</span>, () => console.<span class="function">log</span>(<span class="string">"Bookstore API on http://localhost:4000"</span>));</code></pre>
     <div class="notes">
       Keep the first success moment fast.
     </div>
@@ -860,14 +872,18 @@ app.<span class="function">listen</span>(<span class="number">4000</span>, () =>
     <h1>Create (POST) Endpoint</h1>
     <pre><code><span class="keyword">import</span> { pool, sql } <span class="keyword">from</span> <span class="string">"../db/config.js"</span>;
 
-<span class="keyword">export async function</span> <span class="function">createProduct</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
-  <span class="keyword">const</span> { <span class="variable">title</span>, <span class="variable">price</span>, <span class="variable">quantity</span> } = req.body;
+<span class="keyword">export async function</span> <span class="function">createBook</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
+  <span class="keyword">const</span> { <span class="variable">title</span>, <span class="variable">isbn</span>, <span class="variable">genre</span>, <span class="variable">price</span>, <span class="variable">stock</span>, <span class="variable">description</span> } = req.body;
   <span class="keyword">await</span> pool.<span class="function">request</span>()
-    .<span class="function">input</span>(<span class="string">"t"</span>, sql.NVarChar, title)
-    .<span class="function">input</span>(<span class="string">"p"</span>, sql.<span class="function">Decimal</span>(<span class="number">10</span>,<span class="number">2</span>), price)
-    .<span class="function">input</span>(<span class="string">"q"</span>, sql.Int, quantity)
-    .<span class="function">query</span>(<span class="string">"INSERT INTO Products(Title,Price,Quantity) VALUES(@t,@p,@q)"</span>);
-  res.<span class="function">status</span>(<span class="number">201</span>).<span class="function">json</span>({ message: <span class="string">"Created"</span> });
+    .<span class="function">input</span>(<span class="string">"title"</span>, sql.NVarChar, title)
+    .<span class="function">input</span>(<span class="string">"isbn"</span>, sql.NVarChar, isbn)
+    .<span class="function">input</span>(<span class="string">"genre"</span>, sql.NVarChar, genre)
+    .<span class="function">input</span>(<span class="string">"price"</span>, sql.<span class="function">Decimal</span>(<span class="number">10</span>,<span class="number">2</span>), price)
+    .<span class="function">input</span>(<span class="string">"stock"</span>, sql.Int, stock)
+    .<span class="function">input</span>(<span class="string">"desc"</span>, sql.NVarChar, description)
+    .<span class="function">query</span>(<span class="string">`INSERT INTO Books(Title,ISBN,Genre,Price,Stock,Description)
+             VALUES(@title,@isbn,@genre,@price,@stock,@desc)`</span>);
+  res.<span class="function">status</span>(<span class="number">201</span>).<span class="function">json</span>({ message: <span class="string">"Book created"</span> });
 }</code></pre>
     <div class="notes">
       Parameterize queries to prevent injection.
@@ -882,42 +898,44 @@ app.<span class="function">listen</span>(<span class="number">4000</span>, () =>
         <div class="crud-item">
           <div class="crud-method create">CREATE (POST)</div>
           <div class="crud-arrow">→</div>
-          <div class="crud-action">INSERT INTO Products</div>
+          <div class="crud-action">INSERT INTO Books</div>
         </div>
         <div class="crud-item">
           <div class="crud-method read">READ (GET)</div>
           <div class="crud-arrow">→</div>
-          <div class="crud-action">SELECT FROM Products</div>
+          <div class="crud-action">SELECT FROM Books JOIN Authors</div>
         </div>
         <div class="crud-item">
           <div class="crud-method update">UPDATE (PUT)</div>
           <div class="crud-arrow">→</div>
-          <div class="crud-action">UPDATE Products SET</div>
+          <div class="crud-action">UPDATE Books SET</div>
         </div>
         <div class="crud-item">
           <div class="crud-method delete">DELETE (DELETE)</div>
           <div class="crud-arrow">→</div>
-          <div class="crud-action">DELETE FROM Products</div>
+          <div class="crud-action">DELETE FROM Books</div>
         </div>
       </div>
     </div>
-    <pre><code><span class="keyword">export async function</span> <span class="function">updateProduct</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
+    <pre><code><span class="keyword">export async function</span> <span class="function">updateBook</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
   <span class="keyword">const</span> <span class="variable">id</span> = +req.params.id;
-  <span class="keyword">const</span> { <span class="variable">title</span>, <span class="variable">price</span>, <span class="variable">quantity</span> } = req.body;
+  <span class="keyword">const</span> { <span class="variable">title</span>, <span class="variable">price</span>, <span class="variable">stock</span>, <span class="variable">genre</span> } = req.body;
   <span class="keyword">await</span> pool.<span class="function">request</span>()
     .<span class="function">input</span>(<span class="string">"id"</span>, sql.Int, id)
-    .<span class="function">input</span>(<span class="string">"t"</span>, sql.NVarChar, title)
-    .<span class="function">input</span>(<span class="string">"p"</span>, sql.<span class="function">Decimal</span>(<span class="number">10</span>,<span class="number">2</span>), price)
-    .<span class="function">input</span>(<span class="string">"q"</span>, sql.Int, quantity)
-    .<span class="function">query</span>(<span class="string">"UPDATE Products SET Title=@t, Price=@p, Quantity=@q WHERE Id=@id"</span>);
-  res.<span class="function">json</span>({ message: <span class="string">"Updated"</span> });
+    .<span class="function">input</span>(<span class="string">"title"</span>, sql.NVarChar, title)
+    .<span class="function">input</span>(<span class="string">"price"</span>, sql.<span class="function">Decimal</span>(<span class="number">10</span>,<span class="number">2</span>), price)
+    .<span class="function">input</span>(<span class="string">"stock"</span>, sql.Int, stock)
+    .<span class="function">input</span>(<span class="string">"genre"</span>, sql.NVarChar, genre)
+    .<span class="function">query</span>(<span class="string">`UPDATE Books SET Title=@title, Price=@price, 
+             Stock=@stock, Genre=@genre WHERE BookID=@id`</span>);
+  res.<span class="function">json</span>({ message: <span class="string">"Book updated"</span> });
 }
 
-<span class="keyword">export async function</span> <span class="function">deleteProduct</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
+<span class="keyword">export async function</span> <span class="function">deleteBook</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
   <span class="keyword">const</span> <span class="variable">id</span> = +req.params.id;
   <span class="keyword">await</span> pool.<span class="function">request</span>().<span class="function">input</span>(<span class="string">"id"</span>, sql.Int, id)
-    .<span class="function">query</span>(<span class="string">"DELETE FROM Products WHERE Id=@id"</span>);
-  res.<span class="function">json</span>({ message: <span class="string">"Deleted"</span> });
+    .<span class="function">query</span>(<span class="string">"DELETE FROM Books WHERE BookID=@id"</span>);
+  res.<span class="function">json</span>({ message: <span class="string">"Book deleted"</span> });
 }</code></pre>
     <div class="notes">
       Return 404 if affectedRows=0 (extend as exercise).
@@ -930,39 +948,39 @@ app.<span class="function">listen</span>(<span class="number">4000</span>, () =>
     <div class="visual-diagram">
       <div class="postman-flow">
         <div class="test-group">
-          <div class="test-method get">GET /products</div>
+          <div class="test-method get">GET /books</div>
           <div class="test-arrow">→</div>
-          <div class="test-result">200 OK + Array</div>
+          <div class="test-result">200 OK + Book Array</div>
         </div>
         <div class="test-group">
-          <div class="test-method post">POST /products</div>
+          <div class="test-method post">POST /books</div>
           <div class="test-arrow">→</div>
-          <div class="test-result">201 Created</div>
+          <div class="test-result">201 Book Created</div>
         </div>
         <div class="test-group">
-          <div class="test-method put">PUT /products/1</div>
+          <div class="test-method get">GET /orders</div>
           <div class="test-arrow">→</div>
-          <div class="test-result">200 OK Updated</div>
+          <div class="test-result">200 OK + Orders</div>
         </div>
         <div class="test-group">
-          <div class="test-method delete">DELETE /products/1</div>
+          <div class="test-method get">GET /customers</div>
           <div class="test-arrow">→</div>
-          <div class="test-result">200 OK Deleted</div>
+          <div class="test-result">200 OK + Customers</div>
         </div>
         <div class="export-note">
-          ↓ Export Collection ↓
+          ↓ Export Bookstore API Collection ↓
         </div>
       </div>
     </div>
     <h3>Test These Endpoints:</h3>
     <ul>
-      <li><strong>GET</strong> <code>/products</code></li>
-      <li><strong>POST</strong> <code>/products</code> (JSON body)</li>
-      <li><strong>PUT</strong> <code>/products/:id</code></li>
-      <li><strong>DELETE</strong> <code>/products/:id</code></li>
+      <li><strong>GET</strong> <code>/books</code> - List books with authors</li>
+      <li><strong>POST</strong> <code>/books</code> - Create new book (JSON body)</li>
+      <li><strong>GET</strong> <code>/orders</code> - List customer orders</li>
+      <li><strong>GET</strong> <code>/customers</code> - List all customers</li>
     </ul>
     <div class="highlight">
-      <p><strong>Deliverable:</strong> Export Postman collection</p>
+      <p><strong>Deliverable:</strong> Export Bookstore API collection</p>
     </div>
     <div class="notes">
       Encourage naming requests with verbs and expected codes.
