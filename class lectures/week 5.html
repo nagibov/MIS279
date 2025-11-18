@@ -372,9 +372,6 @@
       <li>Create shopping cart functionality</li>
       <li>Develop essential e-commerce features</li>
     </ul>
-    <div class="notes">
-      Bridge backend APIs to user-facing interfaces. Focus on practical e-commerce patterns.
-    </div>
   </div>
 
   <!-- Slide 2: What is the Frontend? -->
@@ -408,9 +405,6 @@
         <h4>💳 Checkout</h4>
         <p>Complete purchase</p>
       </div>
-    </div>
-    <div class="notes">
-      Reference real examples: Amazon product page, Shopify themes
     </div>
   </div>
 
@@ -447,9 +441,6 @@
     <div class="highlight">
       <strong>Recommendation:</strong> Use <strong>React</strong> or <strong>Next.js</strong> for this project
     </div>
-    <div class="notes">
-      Compare frameworks based on learning curve, SEO needs, and project requirements
-    </div>
   </div>
 
   <!-- Slide 4: SEO Basics -->
@@ -474,9 +465,6 @@
 <span class="keyword">&lt;meta</span> <span class="variable">name</span>=<span class="string">"description"</span> 
       <span class="variable">content</span>=<span class="string">"Buy Nike Air Max 90 with fast delivery."</span><span class="keyword">&gt;</span>
 <span class="keyword">&lt;img</span> <span class="variable">src</span>=<span class="string">"shoe.jpg"</span> <span class="variable">alt</span>=<span class="string">"Nike Air Max 90 white"</span><span class="keyword">&gt;</span></code></pre>
-    <div class="notes">
-      Emphasize that SEO is about user experience first, search engines second
-    </div>
   </div>
 
   <!-- Slide 5: SEO for E-commerce -->
@@ -493,14 +481,43 @@
 <span class="comment">// Bad: /products?id=4829</span></code></pre>
       </li>
       <li><strong>Lazy loading images</strong> - Load images as needed</li>
-      <li><strong>Using &lt;head&gt; properly</strong> - Meta tags, Open Graph</li>
-      <li><strong>Product structured data</strong> - JSON-LD for rich results</li>
     </ul>
+    <h3>Using &lt;head&gt; Properly - Meta Tags & Open Graph:</h3>
+    <pre><code><span class="keyword">&lt;head&gt;</span>
+  <span class="keyword">&lt;title&gt;</span>Nike Air Max 90 - $129.99 | Your Store<span class="keyword">&lt;/title&gt;</span>
+  <span class="keyword">&lt;meta</span> <span class="variable">name</span>=<span class="string">"description"</span> 
+        <span class="variable">content</span>=<span class="string">"Buy Nike Air Max 90 with fast shipping. Premium quality."</span><span class="keyword">&gt;</span>
+  
+  <span class="comment">&lt;!-- Open Graph for social media --&gt;</span>
+  <span class="keyword">&lt;meta</span> <span class="variable">property</span>=<span class="string">"og:title"</span> <span class="variable">content</span>=<span class="string">"Nike Air Max 90"</span><span class="keyword">&gt;</span>
+  <span class="keyword">&lt;meta</span> <span class="variable">property</span>=<span class="string">"og:description"</span> <span class="variable">content</span>=<span class="string">"Premium sneakers at $129.99"</span><span class="keyword">&gt;</span>
+  <span class="keyword">&lt;meta</span> <span class="variable">property</span>=<span class="string">"og:image"</span> <span class="variable">content</span>=<span class="string">"https://example.com/shoe.jpg"</span><span class="keyword">&gt;</span>
+  <span class="keyword">&lt;meta</span> <span class="variable">property</span>=<span class="string">"og:type"</span> <span class="variable">content</span>=<span class="string">"product"</span><span class="keyword">&gt;</span>
+<span class="keyword">&lt;/head&gt;</span></code></pre>
+    <h3>Product Structured Data - JSON-LD for Rich Results:</h3>
+    <pre><code><span class="keyword">&lt;script</span> <span class="variable">type</span>=<span class="string">"application/ld+json"</span><span class="keyword">&gt;</span>
+{
+  <span class="string">"@context"</span>: <span class="string">"https://schema.org/"</span>,
+  <span class="string">"@type"</span>: <span class="string">"Product"</span>,
+  <span class="string">"name"</span>: <span class="string">"Nike Air Max 90"</span>,
+  <span class="string">"image"</span>: <span class="string">"https://example.com/shoe.jpg"</span>,
+  <span class="string">"description"</span>: <span class="string">"Premium quality sneakers"</span>,
+  <span class="string">"brand"</span>: { <span class="string">"@type"</span>: <span class="string">"Brand"</span>, <span class="string">"name"</span>: <span class="string">"Nike"</span> },
+  <span class="string">"offers"</span>: {
+    <span class="string">"@type"</span>: <span class="string">"Offer"</span>,
+    <span class="string">"price"</span>: <span class="string">"129.99"</span>,
+    <span class="string">"priceCurrency"</span>: <span class="string">"USD"</span>,
+    <span class="string">"availability"</span>: <span class="string">"https://schema.org/InStock"</span>
+  },
+  <span class="string">"aggregateRating"</span>: {
+    <span class="string">"@type"</span>: <span class="string">"AggregateRating"</span>,
+    <span class="string">"ratingValue"</span>: <span class="string">"4.5"</span>,
+    <span class="string">"reviewCount"</span>: <span class="string">"89"</span>
+  }
+}
+<span class="keyword">&lt;/script&gt;</span></code></pre>
     <div class="highlight">
       <p><strong>Pro Tip:</strong> Next.js handles many SEO concerns automatically with SSR</p>
-    </div>
-    <div class="notes">
-      Show examples of structured data for products (price, availability, reviews)
     </div>
   </div>
 
@@ -524,9 +541,6 @@
   <span class="keyword">&lt;/label&gt;</span>
   <span class="keyword">&lt;button</span> <span class="variable">type</span>=<span class="string">"submit"</span><span class="keyword">&gt;</span>Login<span class="keyword">&lt;/button&gt;</span>
 <span class="keyword">&lt;/form&gt;</span></code></pre>
-    <div class="notes">
-      Discuss password security, validation, and error handling
-    </div>
   </div>
 
   <!-- Slide 7: What is a Token? -->
@@ -539,6 +553,31 @@
     </div>
     <h3>Example JWT Token:</h3>
     <pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywiaWF0IjoxNjE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code></pre>
+    <h3>What Does the Token Contain?</h3>
+    <div class="highlight">
+      <p><strong>JWT has 3 parts (separated by dots):</strong></p>
+      <ul>
+        <li><strong>Header:</strong> Algorithm type (HS256, RS256)</li>
+        <li><strong>Payload:</strong> User data (userId, email, role, expiration)</li>
+        <li><strong>Signature:</strong> Encrypted hash to verify authenticity</li>
+      </ul>
+    </div>
+    <pre><code><span class="comment">// Decoded payload example:</span>
+{
+  <span class="string">"userId"</span>: <span class="number">123</span>,
+  <span class="string">"email"</span>: <span class="string">"user@example.com"</span>,
+  <span class="string">"role"</span>: <span class="string">"customer"</span>,
+  <span class="string">"iat"</span>: <span class="number">1616239022</span>,  <span class="comment">// issued at</span>
+  <span class="string">"exp"</span>: <span class="number">1616325422</span>   <span class="comment">// expires at</span>
+}</code></pre>
+    <h3>Why is it Secure?</h3>
+    <ul>
+      <li><strong>Signature verification:</strong> Server validates token wasn't tampered with</li>
+      <li><strong>Secret key:</strong> Only server knows the secret to create valid signatures</li>
+      <li><strong>Expiration:</strong> Tokens expire automatically (e.g., 24 hours)</li>
+      <li><strong>Stateless:</strong> No need to store sessions on server</li>
+      <li><strong>Cannot be modified:</strong> Any change breaks the signature</li>
+    </ul>
     <h3>Store Token on Frontend:</h3>
     <pre><code><span class="comment">// Save token after successful login</span>
 <span class="variable">localStorage</span>.<span class="function">setItem</span>(<span class="string">"token"</span>, data.token);
@@ -550,9 +589,6 @@
 <span class="function">fetch</span>(<span class="string">"/api/profile"</span>, {
   headers: { <span class="string">"Authorization"</span>: <span class="string">`Bearer ${token}`</span> }
 });</code></pre>
-    <div class="notes">
-      Explain JWT structure: header, payload, signature. Security considerations.
-    </div>
   </div>
 
   <!-- Slide 8: Login Flow -->
@@ -574,9 +610,6 @@
         <div class="arrow-down">↓</div>
         <div class="flow-step success">Include token in future requests</div>
       </div>
-    </div>
-    <div class="notes">
-      Walk through each step. Discuss what happens on success vs. failure.
     </div>
   </div>
 
@@ -607,9 +640,6 @@
   <span class="variable">localStorage</span>.<span class="function">removeItem</span>(<span class="string">"token"</span>);
   <span class="variable">window</span>.location.href = <span class="string">"/login"</span>;
 }</code></pre>
-    <div class="notes">
-      Discuss protected routes and redirecting unauthenticated users
-    </div>
   </div>
 
   <!-- Slide 10: Shopping Cart Introduction -->
@@ -636,9 +666,6 @@
   <span class="variable">localStorage</span>.<span class="function">setItem</span>(<span class="string">"cart"</span>, JSON.<span class="function">stringify</span>(<span class="variable">cart</span>));
   <span class="function">updateCartBadge</span>();
 }</code></pre>
-    <div class="notes">
-      Cart can be stored locally (localStorage) or server-side (for logged-in users)
-    </div>
   </div>
 
   <!-- Slide 11: Cart Flow Diagram -->
@@ -660,9 +687,6 @@
         <div class="arrow-down">↓</div>
         <div class="flow-step">Display cart items with totals</div>
       </div>
-    </div>
-    <div class="notes">
-      Explain synchronization between localStorage and UI state
     </div>
   </div>
 
@@ -697,9 +721,6 @@
   <span class="variable">localStorage</span>.<span class="function">setItem</span>(<span class="string">"cart"</span>, JSON.<span class="function">stringify</span>(<span class="variable">cart</span>));
   <span class="function">updateCartUI</span>();
 }</code></pre>
-    <div class="notes">
-      Discuss cart persistence, quantity management, and UI updates
-    </div>
   </div>
 
   <!-- Slide 13: Additional Essential Features -->
@@ -748,34 +769,57 @@
         <p>Cross-selling</p>
       </div>
     </div>
-    <div class="notes">
-      These features enhance user experience and increase conversion rates
-    </div>
   </div>
 
   <!-- Slide 14: Search & Filter -->
   <div class="slide">
-    <h1>🔎 Search & Filter (Beginner Example)</h1>
-    <h3>Simple Search Implementation:</h3>
-    <pre><code><span class="keyword">const</span> <span class="variable">results</span> = products.<span class="function">filter</span>(<span class="variable">product</span> => 
-  product.title.<span class="function">toLowerCase</span>().<span class="function">includes</span>(searchText.<span class="function">toLowerCase</span>())
-);</code></pre>
-    <h3>Simple Sorting:</h3>
-    <pre><code><span class="comment">// Sort by price (low to high)</span>
-products.<span class="function">sort</span>((<span class="variable">a</span>, <span class="variable">b</span>) => a.price - b.price);
+    <h1>🔎 Search & Filter (Using SQL)</h1>
+    <h3>Search Books by Title (Bookstore API):</h3>
+    <pre><code><span class="comment">// Frontend sends search query</span>
+<span class="keyword">const</span> <span class="variable">searchText</span> = <span class="string">"Harry Potter"</span>;
+<span class="function">fetch</span>(<span class="string">`/api/books/search?q=${searchText}`</span>);
 
-<span class="comment">// Sort by price (high to low)</span>
-products.<span class="function">sort</span>((<span class="variable">a</span>, <span class="variable">b</span>) => b.price - a.price);
-
-<span class="comment">// Sort by name</span>
-products.<span class="function">sort</span>((<span class="variable">a</span>, <span class="variable">b</span>) => a.title.<span class="function">localeCompare</span>(b.title));</code></pre>
+<span class="comment">// Backend SQL query (controllers/books.js)</span>
+<span class="keyword">export async function</span> <span class="function">searchBooks</span>(<span class="variable">req</span>, <span class="variable">res</span>) {
+  <span class="keyword">const</span> { <span class="variable">q</span> } = req.query;
+  <span class="keyword">const</span> <span class="variable">result</span> = <span class="keyword">await</span> pool.<span class="function">request</span>()
+    .<span class="function">input</span>(<span class="string">"search"</span>, sql.NVarChar, <span class="string">`%${q}%`</span>)
+    .<span class="function">query</span>(<span class="string">`SELECT b.BookID, b.Title, b.Price, b.Genre, 
+             a.FirstName + ' ' + a.LastName AS Author
+      FROM Books b
+      JOIN Author_Book ab ON b.BookID = ab.BookId
+      JOIN Authors a ON ab.AuthorId = a.AuthorID
+      WHERE b.Title LIKE @search OR a.LastName LIKE @search`</span>);
+  res.<span class="function">json</span>(result.recordset);
+}</code></pre>
     <h3>Filter by Price Range:</h3>
-    <pre><code><span class="keyword">const</span> <span class="variable">filtered</span> = products.<span class="function">filter</span>(<span class="variable">p</span> => 
-  p.price >= minPrice && p.price <= maxPrice
-);</code></pre>
-    <div class="notes">
-      Show real-time search and filter examples from popular e-commerce sites
-    </div>
+    <pre><code><span class="comment">// Frontend sends min/max price</span>
+<span class="function">fetch</span>(<span class="string">`/api/books?minPrice=10&maxPrice=25`</span>);
+
+<span class="comment">// Backend SQL query</span>
+<span class="keyword">const</span> { <span class="variable">minPrice</span>, <span class="variable">maxPrice</span> } = req.query;
+<span class="keyword">const</span> <span class="variable">result</span> = <span class="keyword">await</span> pool.<span class="function">request</span>()
+  .<span class="function">input</span>(<span class="string">"min"</span>, sql.<span class="function">Decimal</span>(<span class="number">10</span>,<span class="number">2</span>), minPrice)
+  .<span class="function">input</span>(<span class="string">"max"</span>, sql.<span class="function">Decimal</span>(<span class="number">10</span>,<span class="number">2</span>), maxPrice)
+  .<span class="function">query</span>(<span class="string">`SELECT * FROM Books WHERE Price BETWEEN @min AND @max`</span>);</code></pre>
+    <h3>Filter by Genre:</h3>
+    <pre><code><span class="comment">// Frontend genre filter</span>
+<span class="function">fetch</span>(<span class="string">`/api/books?genre=Fantasy`</span>);
+
+<span class="comment">// Backend SQL query</span>
+<span class="keyword">const</span> { <span class="variable">genre</span> } = req.query;
+<span class="keyword">const</span> <span class="variable">result</span> = <span class="keyword">await</span> pool.<span class="function">request</span>()
+  .<span class="function">input</span>(<span class="string">"genre"</span>, sql.NVarChar, genre)
+  .<span class="function">query</span>(<span class="string">`SELECT * FROM Books WHERE Genre = @genre ORDER BY Title`</span>);</code></pre>
+    <h3>Sort Books (SQL ORDER BY):</h3>
+    <pre><code><span class="comment">// Price: Low to High</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> Books <span class="keyword">ORDER BY</span> Price <span class="keyword">ASC</span>
+
+<span class="comment">// Price: High to Low</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> Books <span class="keyword">ORDER BY</span> Price <span class="keyword">DESC</span>
+
+<span class="comment">// Alphabetical by Title</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> Books <span class="keyword">ORDER BY</span> Title <span class="keyword">ASC</span></code></pre>
   </div>
 
   <!-- Slide 15: Wishlist Feature -->
@@ -801,9 +845,6 @@ products.<span class="function">sort</span>((<span class="variable">a</span>, <s
 <span class="keyword">function</span> <span class="function">isInWishlist</span>(<span class="variable">productId</span>) {
   <span class="keyword">return</span> <span class="variable">wishlist</span>.<span class="function">includes</span>(productId);
 }</code></pre>
-    <div class="notes">
-      Discuss syncing wishlist with backend for logged-in users
-    </div>
   </div>
 
   <!-- Slide 16: Responsive Design -->
@@ -831,9 +872,6 @@ products.<span class="function">sort</span>((<span class="variable">a</span>, <s
 }</code></pre>
     <div class="highlight">
       <p><strong>Mobile-First Approach:</strong> Design for mobile, then enhance for desktop</p>
-    </div>
-    <div class="notes">
-      Show examples of good vs. bad mobile layouts. Test on real devices.
     </div>
   </div>
 
@@ -873,9 +911,6 @@ products.<span class="function">sort</span>((<span class="variable">a</span>, <s
         <div class="flow-item" style="background: #fff3e0; border: 2px solid #f57c00;">👤 User</div>
       </div>
     </div>
-    <div class="notes">
-      Emphasize separation of concerns: presentation layer vs. business logic
-    </div>
   </div>
 
   <!-- Slide 18: Hands-on Lab 1 -->
@@ -894,9 +929,6 @@ products.<span class="function">sort</span>((<span class="variable">a</span>, <s
       </ul>
       <p><strong>Deliverable:</strong> Working product page with proper SEO tags</p>
     </div>
-    <div class="notes">
-      Students should practice HTML structure, CSS styling, and basic JavaScript
-    </div>
   </div>
 
   <!-- Slide 19: Hands-on Lab 2 -->
@@ -913,9 +945,6 @@ products.<span class="function">sort</span>((<span class="variable">a</span>, <s
         <li>Implement logout functionality</li>
       </ol>
       <p><strong>Deliverable:</strong> Working login/logout with token management</p>
-    </div>
-    <div class="notes">
-      Focus on understanding token flow, not complex validation
     </div>
   </div>
 
@@ -934,9 +963,6 @@ products.<span class="function">sort</span>((<span class="variable">a</span>, <s
         <li>Calculate and display total price</li>
       </ol>
       <p><strong>Deliverable:</strong> Fully functional shopping cart</p>
-    </div>
-    <div class="notes">
-      Encourage testing with multiple products and quantities
     </div>
   </div>
 
