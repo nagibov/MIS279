@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 5 - Frontend for E-commerce | MIS 276</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    .deck {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .slide {
+      padding: 3rem;
+      min-height: 90vh;
+      display: none;
+      border: 2px solid var(--border);
+      margin: 1rem;
+      border-radius: 16px;
+      background: var(--bg-primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .slide.active {
+      display: block;
+    }
+    .slide h1 {
+      color: var(--accent-primary);
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 3px solid var(--accent-primary);
+      padding-bottom: 1rem;
+    }
+    .slide h2 {
+      color: var(--accent-primary);
+      font-size: 2rem;
+      margin: 1.5rem 0 1rem;
+    }
+    .slide h3 {
+      color: var(--accent-secondary);
+      font-size: 1.5rem;
+      margin: 1.25rem 0 0.75rem;
+    }
+    .slide ul {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+    .slide li {
+      margin: 0.75rem 0;
+      padding-left: 0.5rem;
+    }
+    .slide pre {
+      background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 2rem;
+      font-size: 1rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    
+    .slide pre::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .slide pre::after {
+      content: '●●●';
+      position: absolute;
+      top: 12px;
+      left: 20px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      letter-spacing: 4px;
+    }
+    
+    .slide code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-family: 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', monospace;
+      font-size: 0.95rem;
+      color: #61dafb;
+      border: 1px solid rgba(97, 218, 251, 0.3);
+    }
+    
+    .slide pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      color: #f8f8f2;
+      font-family: 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', monospace;
+      font-size: 1rem;
+      line-height: 1.6;
+      display: block;
+      margin-top: 30px;
+    }
+    
+    /* Syntax highlighting */
+    .slide pre code .keyword {
+      color: #ff79c6;
+      font-weight: bold;
+    }
+    
+    .slide pre code .string {
+      color: #f1fa8c;
+    }
+    
+    .slide pre code .comment {
+      color: #6272a4;
+      font-style: italic;
+    }
+    
+    .slide pre code .function {
+      color: #50fa7b;
+    }
+    
+    .slide pre code .variable {
+      color: #8be9fd;
+    }
+    
+    .slide pre code .number {
+      color: #bd93f9;
+    }
+    .kicker {
+      color: var(--accent-primary);
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .notes {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 1rem;
+      color: #856404;
+    }
+    .notes::before {
+      content: "📝 Speaker Notes: ";
+      font-weight: bold;
+    }
+    .highlight {
+      background: #e3f2fd;
+      border-left: 4px solid var(--accent-primary);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+    }
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .controls button {
+      margin: 0 5px;
+      padding: 10px 15px;
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .controls button:hover {
+      background: var(--accent-secondary);
+    }
+    .slide-counter {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: var(--bg-secondary);
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      font-weight: bold;
+    }
+    
+    /* Visual Diagram Styles */
+    .visual-diagram {
+      margin: 2rem 0;
+      padding: 2rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+    }
+    
+    .flow-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .flow-item {
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      min-width: 150px;
+      text-align: center;
+    }
+    
+    .flow-item.frontend {
+      background: #e3f2fd;
+      border: 2px solid #1976d2;
+    }
+    
+    .flow-item.react {
+      background: #e1f5fe;
+      border: 2px solid #0288d1;
+    }
+    
+    .flow-item.nextjs {
+      background: #f3e5f5;
+      border: 2px solid #7b1fa2;
+    }
+    
+    .flow-item.vue {
+      background: #e8f5e9;
+      border: 2px solid #43a047;
+    }
+    
+    .flow-arrow {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent-primary);
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    
+    .feature-card {
+      padding: 1.5rem;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .feature-card h4 {
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .login-flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .flow-step {
+      padding: 1rem 2rem;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-weight: bold;
+      min-width: 200px;
+      text-align: center;
+    }
+    
+    .flow-step.user {
+      background: #e3f2fd;
+      border-color: #1976d2;
+    }
+    
+    .flow-step.frontend {
+      background: #f3e5f5;
+      border-color: #7b1fa2;
+    }
+    
+    .flow-step.backend {
+      background: #fff3e0;
+      border-color: #f57c00;
+    }
+    
+    .flow-step.success {
+      background: #e8f5e8;
+      border-color: #4caf50;
+    }
+    
+    .arrow-down {
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+      font-weight: bold;
+    }
+    
+    .cart-flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    
+    .comparison-table th {
+      background: var(--accent-primary);
+      color: white;
+      font-weight: bold;
+    }
+    
+    .comparison-table tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+    
+    .framework-card {
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+    }
+    
+    .framework-card.react {
+      background: #e1f5fe;
+      border-color: #0288d1;
+    }
+    
+    .framework-card.nextjs {
+      background: #f3e5f5;
+      border-color: #7b1fa2;
+    }
+    
+    .framework-card.vue {
+      background: #e8f5e9;
+      border-color: #43a047;
+    }
+  </style>
+</head>
+<body class="deck">
+  
+  <!-- Slide 1: Title -->
+  <div class="slide active">
+    <div class="kicker">MIS 276 - Week 5</div>
+    <h1>🌟 Frontend for Modern E-commerce</h1>
+    <h2>Learning Outcomes</h2>
+    <ul>
+      <li>Understand the role of frontend in e-commerce</li>
+      <li>Choose appropriate frontend frameworks</li>
+      <li>Implement SEO best practices</li>
+      <li>Build authentication and authorization flows</li>
+      <li>Create shopping cart functionality</li>
+      <li>Develop essential e-commerce features</li>
+    </ul>
+    <div class="notes">
+      Bridge backend APIs to user-facing interfaces. Focus on practical e-commerce patterns.
+    </div>
+  </div>
+
+  <!-- Slide 2: What is the Frontend? -->
+  <div class="slide">
+    <h1>🧱 What is the Frontend?</h1>
+    <p style="font-size: 1.3rem; margin-bottom: 2rem;">
+      The <strong>frontend</strong> is everything the customer sees and interacts with
+    </p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>🏠 Homepage</h4>
+        <p>First impression, featured products</p>
+      </div>
+      <div class="feature-card">
+        <h4>📦 Product Pages</h4>
+        <p>Details, images, pricing</p>
+      </div>
+      <div class="feature-card">
+        <h4>🔍 Search Bar</h4>
+        <p>Find products quickly</p>
+      </div>
+      <div class="feature-card">
+        <h4>🛒 Shopping Cart</h4>
+        <p>Review items before checkout</p>
+      </div>
+      <div class="feature-card">
+        <h4>🔐 Login/Register</h4>
+        <p>User authentication</p>
+      </div>
+      <div class="feature-card">
+        <h4>💳 Checkout</h4>
+        <p>Complete purchase</p>
+      </div>
+    </div>
+    <div class="notes">
+      Reference real examples: Amazon product page, Shopify themes
+    </div>
+  </div>
+
+  <!-- Slide 3: Choosing a Framework -->
+  <div class="slide">
+    <h1>🌐 Choosing a Frontend Framework</h1>
+    <div class="framework-card react">
+      <h3>⚛️ React</h3>
+      <ul>
+        <li>Most popular JavaScript library</li>
+        <li>Component-based architecture</li>
+        <li>Large ecosystem and community</li>
+        <li>Great for dynamic UIs</li>
+      </ul>
+    </div>
+    <div class="framework-card nextjs">
+      <h3>▲ Next.js</h3>
+      <ul>
+        <li>React framework with built-in SEO</li>
+        <li>Server-side rendering (SSR)</li>
+        <li>File-based routing</li>
+        <li>Perfect for e-commerce</li>
+      </ul>
+    </div>
+    <div class="framework-card vue">
+      <h3>🟢 Vue.js</h3>
+      <ul>
+        <li>Simple and clean syntax</li>
+        <li>Easy to learn</li>
+        <li>Great documentation</li>
+        <li>Flexible and lightweight</li>
+      </ul>
+    </div>
+    <div class="highlight">
+      <strong>Recommendation:</strong> Use <strong>React</strong> or <strong>Next.js</strong> for this project
+    </div>
+    <div class="notes">
+      Compare frameworks based on learning curve, SEO needs, and project requirements
+    </div>
+  </div>
+
+  <!-- Slide 4: SEO Basics -->
+  <div class="slide">
+    <h1>🔍 SEO Basics (Simple & Practical)</h1>
+    <h3>What is SEO?</h3>
+    <div class="highlight">
+      <p style="font-size: 1.3rem; font-weight: bold;">
+        "How Google finds your store and shows your products"
+      </p>
+    </div>
+    <h3>Basic SEO Rules:</h3>
+    <ul>
+      <li>Good <strong>page titles</strong> (unique, descriptive)</li>
+      <li>Good <strong>meta descriptions</strong> (compelling summaries)</li>
+      <li><strong>Alt text</strong> for images (accessibility + SEO)</li>
+      <li><strong>Fast loading</strong> pages (performance matters)</li>
+      <li><strong>Clear page structure</strong> (H1, H2, semantic HTML)</li>
+    </ul>
+    <h3>Example:</h3>
+    <pre><code><span class="keyword">&lt;title&gt;</span>Nike Air Max 90 – Online Store<span class="keyword">&lt;/title&gt;</span>
+<span class="keyword">&lt;meta</span> <span class="variable">name</span>=<span class="string">"description"</span> 
+      <span class="variable">content</span>=<span class="string">"Buy Nike Air Max 90 with fast delivery."</span><span class="keyword">&gt;</span>
+<span class="keyword">&lt;img</span> <span class="variable">src</span>=<span class="string">"shoe.jpg"</span> <span class="variable">alt</span>=<span class="string">"Nike Air Max 90 white"</span><span class="keyword">&gt;</span></code></pre>
+    <div class="notes">
+      Emphasize that SEO is about user experience first, search engines second
+    </div>
+  </div>
+
+  <!-- Slide 5: SEO for E-commerce -->
+  <div class="slide">
+    <h1>🧱 SEO for E-commerce</h1>
+    <h3>Essential SEO Skills:</h3>
+    <ul>
+      <li><strong>Product titles with keywords</strong>
+        <pre><code><span class="comment">// Good: "iPhone 15 Pro Max 256GB Blue"</span>
+<span class="comment">// Bad: "Product #12345"</span></code></pre>
+      </li>
+      <li><strong>Search-friendly URLs</strong>
+        <pre><code><span class="comment">// Good: /products/nike-air-max-90</span>
+<span class="comment">// Bad: /products?id=4829</span></code></pre>
+      </li>
+      <li><strong>Lazy loading images</strong> - Load images as needed</li>
+      <li><strong>Using &lt;head&gt; properly</strong> - Meta tags, Open Graph</li>
+      <li><strong>Product structured data</strong> - JSON-LD for rich results</li>
+    </ul>
+    <div class="highlight">
+      <p><strong>Pro Tip:</strong> Next.js handles many SEO concerns automatically with SSR</p>
+    </div>
+    <div class="notes">
+      Show examples of structured data for products (price, availability, reviews)
+    </div>
+  </div>
+
+  <!-- Slide 6: Login & Signup -->
+  <div class="slide">
+    <h1>🔒 Login & Signup (Beginner Version)</h1>
+    <h3>Why Login is Needed:</h3>
+    <ul>
+      <li>Save user cart across sessions</li>
+      <li>Track order history</li>
+      <li>Store delivery addresses</li>
+      <li>Save wishlists and preferences</li>
+      <li>Provide personalized recommendations</li>
+    </ul>
+    <h3>Login Form Must Include:</h3>
+    <pre><code><span class="keyword">&lt;form&gt;</span>
+  <span class="keyword">&lt;input</span> <span class="variable">type</span>=<span class="string">"email"</span> <span class="variable">placeholder</span>=<span class="string">"Email"</span> <span class="variable">required</span> <span class="keyword">/&gt;</span>
+  <span class="keyword">&lt;input</span> <span class="variable">type</span>=<span class="string">"password"</span> <span class="variable">placeholder</span>=<span class="string">"Password"</span> <span class="variable">required</span> <span class="keyword">/&gt;</span>
+  <span class="keyword">&lt;label&gt;</span>
+    <span class="keyword">&lt;input</span> <span class="variable">type</span>=<span class="string">"checkbox"</span> <span class="keyword">/&gt;</span> Remember me
+  <span class="keyword">&lt;/label&gt;</span>
+  <span class="keyword">&lt;button</span> <span class="variable">type</span>=<span class="string">"submit"</span><span class="keyword">&gt;</span>Login<span class="keyword">&lt;/button&gt;</span>
+<span class="keyword">&lt;/form&gt;</span></code></pre>
+    <div class="notes">
+      Discuss password security, validation, and error handling
+    </div>
+  </div>
+
+  <!-- Slide 7: What is a Token? -->
+  <div class="slide">
+    <h1>🔑 What is a Token?</h1>
+    <div class="highlight">
+      <p style="font-size: 1.4rem; font-weight: bold;">
+        A <strong>token</strong> is like a digital ticket proving the user is logged in
+      </p>
+    </div>
+    <h3>Example JWT Token:</h3>
+    <pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywiaWF0IjoxNjE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code></pre>
+    <h3>Store Token on Frontend:</h3>
+    <pre><code><span class="comment">// Save token after successful login</span>
+<span class="variable">localStorage</span>.<span class="function">setItem</span>(<span class="string">"token"</span>, data.token);
+
+<span class="comment">// Retrieve token for API requests</span>
+<span class="keyword">const</span> <span class="variable">token</span> = <span class="variable">localStorage</span>.<span class="function">getItem</span>(<span class="string">"token"</span>);
+
+<span class="comment">// Include in API request headers</span>
+<span class="function">fetch</span>(<span class="string">"/api/profile"</span>, {
+  headers: { <span class="string">"Authorization"</span>: <span class="string">`Bearer ${token}`</span> }
+});</code></pre>
+    <div class="notes">
+      Explain JWT structure: header, payload, signature. Security considerations.
+    </div>
+  </div>
+
+  <!-- Slide 8: Login Flow -->
+  <div class="slide">
+    <h1>🔄 Login Flow (Visual Diagram)</h1>
+    <div class="visual-diagram">
+      <div class="login-flow">
+        <div class="flow-step user">User enters email + password</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step frontend">Frontend: POST /auth/login</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step backend">Backend validates credentials</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step backend">Backend generates JWT token</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step frontend">Frontend receives token</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step success">Save token in localStorage</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step success">Include token in future requests</div>
+      </div>
+    </div>
+    <div class="notes">
+      Walk through each step. Discuss what happens on success vs. failure.
+    </div>
+  </div>
+
+  <!-- Slide 9: Login State Management -->
+  <div class="slide">
+    <h1>🧠 Login State Management</h1>
+    <h3>How Frontend Remembers the User:</h3>
+    <ul>
+      <li><strong>localStorage</strong> - Simple, persistent storage</li>
+      <li><strong>React Context</strong> - Share state across components</li>
+      <li><strong>Redux / Zustand</strong> - Advanced state management</li>
+      <li><strong>Cookies</strong> - HTTP-only for security (advanced)</li>
+    </ul>
+    <h3>Simple Auth Check:</h3>
+    <pre><code><span class="comment">// Check if user is logged in</span>
+<span class="keyword">const</span> <span class="variable">token</span> = <span class="variable">localStorage</span>.<span class="function">getItem</span>(<span class="string">"token"</span>);
+
+<span class="keyword">if</span> (token) {
+  <span class="comment">// Show logged-in menu</span>
+  <span class="function">showUserMenu</span>();
+} <span class="keyword">else</span> {
+  <span class="comment">// Show login button</span>
+  <span class="function">showLoginButton</span>();
+}
+
+<span class="comment">// Logout function</span>
+<span class="keyword">function</span> <span class="function">logout</span>() {
+  <span class="variable">localStorage</span>.<span class="function">removeItem</span>(<span class="string">"token"</span>);
+  <span class="variable">window</span>.location.href = <span class="string">"/login"</span>;
+}</code></pre>
+    <div class="notes">
+      Discuss protected routes and redirecting unauthenticated users
+    </div>
+  </div>
+
+  <!-- Slide 10: Shopping Cart Introduction -->
+  <div class="slide">
+    <h1>🛒 Introduction to Shopping Cart</h1>
+    <div class="highlight">
+      <p style="font-size: 1.4rem; font-weight: bold;">
+        The cart is just a <strong>list of items</strong> the user wants to buy
+      </p>
+    </div>
+    <h3>Essential Cart Features:</h3>
+    <ul>
+      <li>Add item to cart</li>
+      <li>Remove item from cart</li>
+      <li>Change quantity</li>
+      <li>Save cart between page refreshes</li>
+      <li>Show cart summary (total items, total price)</li>
+    </ul>
+    <h3>Simple Example:</h3>
+    <pre><code><span class="keyword">let</span> <span class="variable">cart</span> = [];
+
+<span class="keyword">function</span> <span class="function">addToCart</span>(<span class="variable">product</span>) {
+  <span class="variable">cart</span>.<span class="function">push</span>({...<span class="variable">product</span>, qty: <span class="number">1</span>});
+  <span class="variable">localStorage</span>.<span class="function">setItem</span>(<span class="string">"cart"</span>, JSON.<span class="function">stringify</span>(<span class="variable">cart</span>));
+  <span class="function">updateCartBadge</span>();
+}</code></pre>
+    <div class="notes">
+      Cart can be stored locally (localStorage) or server-side (for logged-in users)
+    </div>
+  </div>
+
+  <!-- Slide 11: Cart Flow Diagram -->
+  <div class="slide">
+    <h1>🧺 Cart Flow Diagram</h1>
+    <div class="visual-diagram">
+      <div class="cart-flow">
+        <div class="flow-step">Product Page</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step">User clicks "Add to Cart"</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step frontend">Update cart state in frontend</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step success">Save to localStorage</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step success">Update cart badge (item count)</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step">Navigate to Cart Page</div>
+        <div class="arrow-down">↓</div>
+        <div class="flow-step">Display cart items with totals</div>
+      </div>
+    </div>
+    <div class="notes">
+      Explain synchronization between localStorage and UI state
+    </div>
+  </div>
+
+  <!-- Slide 12: Cart Implementation -->
+  <div class="slide">
+    <h1>🛒 Cart Implementation</h1>
+    <pre><code><span class="comment">// Load cart from localStorage on page load</span>
+<span class="keyword">const</span> <span class="variable">cart</span> = JSON.<span class="function">parse</span>(<span class="variable">localStorage</span>.<span class="function">getItem</span>(<span class="string">"cart"</span>)) || [];
+
+<span class="comment">// Add item to cart</span>
+<span class="keyword">function</span> <span class="function">addToCart</span>(<span class="variable">product</span>) {
+  <span class="keyword">const</span> <span class="variable">existing</span> = <span class="variable">cart</span>.<span class="function">find</span>(<span class="variable">item</span> => item.id === product.id);
+  
+  <span class="keyword">if</span> (existing) {
+    existing.qty += <span class="number">1</span>; <span class="comment">// Increment quantity</span>
+  } <span class="keyword">else</span> {
+    <span class="variable">cart</span>.<span class="function">push</span>({...<span class="variable">product</span>, qty: <span class="number">1</span>}); <span class="comment">// Add new item</span>
+  }
+  
+  <span class="function">saveCart</span>();
+}
+
+<span class="comment">// Remove item from cart</span>
+<span class="keyword">function</span> <span class="function">removeFromCart</span>(<span class="variable">productId</span>) {
+  <span class="keyword">const</span> <span class="variable">index</span> = <span class="variable">cart</span>.<span class="function">findIndex</span>(<span class="variable">item</span> => item.id === productId);
+  <span class="variable">cart</span>.<span class="function">splice</span>(index, <span class="number">1</span>);
+  <span class="function">saveCart</span>();
+}
+
+<span class="comment">// Save cart to localStorage</span>
+<span class="keyword">function</span> <span class="function">saveCart</span>() {
+  <span class="variable">localStorage</span>.<span class="function">setItem</span>(<span class="string">"cart"</span>, JSON.<span class="function">stringify</span>(<span class="variable">cart</span>));
+  <span class="function">updateCartUI</span>();
+}</code></pre>
+    <div class="notes">
+      Discuss cart persistence, quantity management, and UI updates
+    </div>
+  </div>
+
+  <!-- Slide 13: Additional Essential Features -->
+  <div class="slide">
+    <h1>💡 Additional Essential Features</h1>
+    <h3>Must-Have Frontend Features for E-commerce:</h3>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>🔍 Product Search</h4>
+        <p>Find items quickly</p>
+      </div>
+      <div class="feature-card">
+        <h4>🎛️ Filters</h4>
+        <p>Price, brand, rating</p>
+      </div>
+      <div class="feature-card">
+        <h4>📊 Sorting</h4>
+        <p>Price, newest, popular</p>
+      </div>
+      <div class="feature-card">
+        <h4>❤️ Wishlist</h4>
+        <p>Save favorite items</p>
+      </div>
+      <div class="feature-card">
+        <h4>🖼️ Image Gallery</h4>
+        <p>Product photos & zoom</p>
+      </div>
+      <div class="feature-card">
+        <h4>⭐ Reviews</h4>
+        <p>Customer ratings</p>
+      </div>
+      <div class="feature-card">
+        <h4>📱 Responsive Design</h4>
+        <p>Mobile-friendly</p>
+      </div>
+      <div class="feature-card">
+        <h4>⏳ Loading States</h4>
+        <p>User feedback</p>
+      </div>
+      <div class="feature-card">
+        <h4>❌ Error Messages</h4>
+        <p>Clear feedback</p>
+      </div>
+      <div class="feature-card">
+        <h4>🔗 Related Products</h4>
+        <p>Cross-selling</p>
+      </div>
+    </div>
+    <div class="notes">
+      These features enhance user experience and increase conversion rates
+    </div>
+  </div>
+
+  <!-- Slide 14: Search & Filter -->
+  <div class="slide">
+    <h1>🔎 Search & Filter (Beginner Example)</h1>
+    <h3>Simple Search Implementation:</h3>
+    <pre><code><span class="keyword">const</span> <span class="variable">results</span> = products.<span class="function">filter</span>(<span class="variable">product</span> => 
+  product.title.<span class="function">toLowerCase</span>().<span class="function">includes</span>(searchText.<span class="function">toLowerCase</span>())
+);</code></pre>
+    <h3>Simple Sorting:</h3>
+    <pre><code><span class="comment">// Sort by price (low to high)</span>
+products.<span class="function">sort</span>((<span class="variable">a</span>, <span class="variable">b</span>) => a.price - b.price);
+
+<span class="comment">// Sort by price (high to low)</span>
+products.<span class="function">sort</span>((<span class="variable">a</span>, <span class="variable">b</span>) => b.price - a.price);
+
+<span class="comment">// Sort by name</span>
+products.<span class="function">sort</span>((<span class="variable">a</span>, <span class="variable">b</span>) => a.title.<span class="function">localeCompare</span>(b.title));</code></pre>
+    <h3>Filter by Price Range:</h3>
+    <pre><code><span class="keyword">const</span> <span class="variable">filtered</span> = products.<span class="function">filter</span>(<span class="variable">p</span> => 
+  p.price >= minPrice && p.price <= maxPrice
+);</code></pre>
+    <div class="notes">
+      Show real-time search and filter examples from popular e-commerce sites
+    </div>
+  </div>
+
+  <!-- Slide 15: Wishlist Feature -->
+  <div class="slide">
+    <h1>❤️ Wishlist Implementation</h1>
+    <h3>Simple Wishlist Logic:</h3>
+    <pre><code><span class="keyword">let</span> <span class="variable">wishlist</span> = JSON.<span class="function">parse</span>(<span class="variable">localStorage</span>.<span class="function">getItem</span>(<span class="string">"wishlist"</span>)) || [];
+
+<span class="keyword">function</span> <span class="function">addToWishlist</span>(<span class="variable">productId</span>) {
+  <span class="keyword">if</span> (!<span class="variable">wishlist</span>.<span class="function">includes</span>(productId)) {
+    <span class="variable">wishlist</span>.<span class="function">push</span>(productId);
+    <span class="variable">localStorage</span>.<span class="function">setItem</span>(<span class="string">"wishlist"</span>, JSON.<span class="function">stringify</span>(<span class="variable">wishlist</span>));
+    <span class="function">updateWishlistUI</span>();
+  }
+}
+
+<span class="keyword">function</span> <span class="function">removeFromWishlist</span>(<span class="variable">productId</span>) {
+  <span class="variable">wishlist</span> = <span class="variable">wishlist</span>.<span class="function">filter</span>(<span class="variable">id</span> => id !== productId);
+  <span class="variable">localStorage</span>.<span class="function">setItem</span>(<span class="string">"wishlist"</span>, JSON.<span class="function">stringify</span>(<span class="variable">wishlist</span>));
+  <span class="function">updateWishlistUI</span>();
+}
+
+<span class="keyword">function</span> <span class="function">isInWishlist</span>(<span class="variable">productId</span>) {
+  <span class="keyword">return</span> <span class="variable">wishlist</span>.<span class="function">includes</span>(productId);
+}</code></pre>
+    <div class="notes">
+      Discuss syncing wishlist with backend for logged-in users
+    </div>
+  </div>
+
+  <!-- Slide 16: Responsive Design -->
+  <div class="slide">
+    <h1>📱 Responsive Design (Mobile Friendly)</h1>
+    <h3>Essential CSS Rules:</h3>
+    <pre><code><span class="comment">/* Responsive images */</span>
+<span class="variable">img</span> {
+  max-width: <span class="number">100%</span>;
+  height: <span class="keyword">auto</span>;
+}
+
+<span class="comment">/* Mobile-first grid */</span>
+<span class="variable">.product-grid</span> {
+  display: grid;
+  grid-template-columns: <span class="function">repeat</span>(<span class="keyword">auto-fit</span>, <span class="function">minmax</span>(<span class="number">250px</span>, <span class="number">1fr</span>));
+  gap: <span class="number">1rem</span>;
+}
+
+<span class="comment">/* Media query for larger screens */</span>
+<span class="keyword">@media</span> (max-width: <span class="number">768px</span>) {
+  <span class="variable">.product-grid</span> {
+    grid-template-columns: <span class="number">1fr</span>; <span class="comment">/* Single column on mobile */</span>
+  }
+}</code></pre>
+    <div class="highlight">
+      <p><strong>Mobile-First Approach:</strong> Design for mobile, then enhance for desktop</p>
+    </div>
+    <div class="notes">
+      Show examples of good vs. bad mobile layouts. Test on real devices.
+    </div>
+  </div>
+
+  <!-- Slide 17: Full Frontend Architecture -->
+  <div class="slide">
+    <h1>🧩 Full Frontend Architecture Overview</h1>
+    <div class="visual-diagram">
+      <div class="flow-container">
+        <div class="flow-item frontend">Frontend (React/Next.js)</div>
+      </div>
+      <div class="flow-container" style="justify-content: space-around; margin-top: 2rem;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+          <div class="arrow-down">↓</div>
+          <div class="flow-item react">Auth API</div>
+          <small>Login + Token</small>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+          <div class="arrow-down">↓</div>
+          <div class="flow-item nextjs">Product API</div>
+          <small>Fetch Products</small>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+          <div class="arrow-down">↓</div>
+          <div class="flow-item vue">Cart API</div>
+          <small>Cart Updates</small>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+          <div class="arrow-down">↓</div>
+          <div class="flow-item react">Order API</div>
+          <small>Payment Info</small>
+        </div>
+      </div>
+      <div class="flow-container" style="margin-top: 2rem;">
+        <div class="arrow-down">↓ Display Products & UI ↓</div>
+      </div>
+      <div class="flow-container">
+        <div class="flow-item" style="background: #fff3e0; border: 2px solid #f57c00;">👤 User</div>
+      </div>
+    </div>
+    <div class="notes">
+      Emphasize separation of concerns: presentation layer vs. business logic
+    </div>
+  </div>
+
+  <!-- Slide 18: Hands-on Lab 1 -->
+  <div class="slide">
+    <h1>🧪 Lab 1: Build a Product Page</h1>
+    <div class="highlight">
+      <h3>Task: Create a Product Detail Page</h3>
+      <p>Build a page that displays:</p>
+      <ul>
+        <li>Product title</li>
+        <li>Product description</li>
+        <li>Price</li>
+        <li>Product image</li>
+        <li>"Add to Cart" button</li>
+        <li>SEO meta tags</li>
+      </ul>
+      <p><strong>Deliverable:</strong> Working product page with proper SEO tags</p>
+    </div>
+    <div class="notes">
+      Students should practice HTML structure, CSS styling, and basic JavaScript
+    </div>
+  </div>
+
+  <!-- Slide 19: Hands-on Lab 2 -->
+  <div class="slide">
+    <h1>🔐 Lab 2: Build a Login Form</h1>
+    <div class="highlight">
+      <h3>Task: Create Authentication Flow</h3>
+      <p>Steps:</p>
+      <ol>
+        <li>Create simple login form (email + password)</li>
+        <li>Send POST request to <code>/auth/login</code></li>
+        <li>Receive and save JWT token</li>
+        <li>Display logged-in state (show username)</li>
+        <li>Implement logout functionality</li>
+      </ol>
+      <p><strong>Deliverable:</strong> Working login/logout with token management</p>
+    </div>
+    <div class="notes">
+      Focus on understanding token flow, not complex validation
+    </div>
+  </div>
+
+  <!-- Slide 20: Hands-on Lab 3 -->
+  <div class="slide">
+    <h1>🛒 Lab 3: Build Shopping Cart</h1>
+    <div class="highlight">
+      <h3>Task: Implement Cart Functionality</h3>
+      <p>Steps:</p>
+      <ol>
+        <li>Add "Add to Cart" button on product pages</li>
+        <li>Store cart items in localStorage</li>
+        <li>Display cart badge with item count</li>
+        <li>Create cart page showing all items</li>
+        <li>Implement remove and quantity update</li>
+        <li>Calculate and display total price</li>
+      </ol>
+      <p><strong>Deliverable:</strong> Fully functional shopping cart</p>
+    </div>
+    <div class="notes">
+      Encourage testing with multiple products and quantities
+    </div>
+  </div>
+
+  <!-- Slide 21: Summary -->
+  <div class="slide">
+    <h1>🎯 Summary - What We Learned</h1>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>🌐 Frontend Basics</h4>
+        <p>Understanding user interfaces</p>
+      </div>
+      <div class="feature-card">
+        <h4>⚛️ Frameworks</h4>
+        <p>React, Next.js, Vue</p>
+      </div>
+      <div class="feature-card">
+        <h4>🔍 SEO</h4>
+        <p>Search engine optimization</p>
+      </div>
+      <div class="feature-card">
+        <h4>🔐 Authentication</h4>
+        <p>Login & token management</p>
+      </div>
+      <div class="feature-card">
+        <h4>🛒 Shopping Cart</h4>
+        <p>Cart implementation</p>
+      </div>
+      <div class="feature-card">
+        <h4>💡 Features</h4>
+        <p>Search, filter, wishlist</p>
+      </div>
+      <div class="feature-card">
+        <h4>📱 Responsive</h4>
+        <p>Mobile-friendly design</p>
+      </div>
+      <div class="feature-card">
+        <h4>🧩 Architecture</h4>
+        <p>Complete frontend structure</p>
+      </div>
+    </div>
+    <div class="highlight">
+      <p style="font-size: 1.2rem; font-weight: bold; text-align: center;">
+        You now have the foundation to build modern e-commerce frontends! 🚀
+      </p>
+    </div>
+  </div>
+
+  <!-- Navigation Controls -->
+  <div class="controls">
+    <button onclick="previousSlide()">← Previous</button>
+    <button onclick="nextSlide()">Next →</button>
+  </div>
+
+  <!-- Slide Counter -->
+  <div class="slide-counter">
+    <span id="current">1</span> / <span id="total">21</span>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('total').textContent = totalSlides;
+
+    function showSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (n + totalSlides) % totalSlides;
+      slides[currentSlide].classList.add('active');
+      document.getElementById('current').textContent = currentSlide + 1;
+    }
+
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+
+    function previousSlide() {
+      showSlide(currentSlide - 1);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        previousSlide();
+      } else if (e.key === 'Home') {
+        showSlide(0);
+      } else if (e.key === 'End') {
+        showSlide(totalSlides - 1);
+      }
+    });
+
+    // Initialize
+    showSlide(0);
+  </script>
+</body>
+</html>
