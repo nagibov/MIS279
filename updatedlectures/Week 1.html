@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MIS 276 – Week 1: Foundations of E-Commerce</title>
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="deck" id="deck">
+
+    <!-- ================================================== -->
+    <!-- 1. TITLE                                            -->
+    <!-- ================================================== -->
+    <section class="slide divider active">
+      <div class="kicker">MIS 276 · E-Commerce &amp; Digital Business</div>
+      <span class="lecture-num">Week 1</span>
+      <h2 class="title">Foundations of E-Commerce</h2>
+      <p class="subtitle">What digital commerce is, how it evolved, how it makes money —<br/>and how to research a market before you build anything.</p>
+      <p class="small">Lecture 1.1 · What is E-Commerce? &nbsp;&nbsp;|&nbsp;&nbsp; Lecture 1.2 · Market Research</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 2. DIVIDER 1.1                                      -->
+    <!-- ================================================== -->
+    <section class="slide divider">
+      <div class="kicker">Lecture 1.1</div>
+      <h2 class="title">What is E-Commerce?</h2>
+      <p class="subtitle">Definition &amp; scope · Evolution &amp; milestones · Business models &amp; metrics</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 3. WHAT IS E-COMMERCE (original structure)          -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1</div>
+      <h2 class="title">What is E-Commerce?</h2>
+      <ul class="points">
+        <li data-build><strong>Definition &amp; scope</strong> — buying and selling of goods, services, and information over digital networks, plus everything that supports it: payments, logistics, marketing, data.</li>
+        <li data-build><strong>Why MIS?</strong> — e-commerce lives exactly where business models meet technology execution. Someone has to translate "we sell coffee subscriptions" into systems that actually work.</li>
+        <li data-build><strong>Our course journey</strong> — Pitch → No-code MVP → Full-stack build (MSSQL + Node.js). By the end you will have shipped a real store, three different ways.</li>
+      </ul>
+      <div class="callout" data-build>💡 <strong>Rule of thumb:</strong> if a transaction touches a screen at any point — discovery, order, payment, or delivery tracking — e-commerce thinking applies.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 4. EXAMPLE: TOUCHPOINTS DIAGRAM                     -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Example</div>
+      <h2 class="title">One Customer, Many Touchpoints</h2>
+      <p class="subtitle">Modern commerce is not "a website" — it is every digital surface where a sale can start or finish.</p>
+      <svg class="diagram" viewBox="0 0 960 400" role="img" aria-label="Customer surrounded by commerce touchpoints">
+        <!-- center customer -->
+        <circle cx="480" cy="200" r="62" fill="var(--blue-100)" stroke="var(--blue-900)" stroke-width="2.5"/>
+        <text x="480" y="192" text-anchor="middle" font-size="30">🧑‍💻</text>
+        <text x="480" y="224" text-anchor="middle" class="svg-label" font-size="16">Customer</text>
+
+        <g data-build>
+          <line class="draw" pathLength="1" x1="428" y1="162" x2="240" y2="92" stroke="var(--blue-600)" stroke-width="2.5"/>
+          <rect class="svg-node" x="90" y="42" width="230" height="66" rx="12"/>
+          <text x="205" y="70" text-anchor="middle" class="svg-label" font-size="17">🌐 Web storefront</text>
+          <text x="205" y="93" text-anchor="middle" class="svg-sub" font-size="13">Shopify store, custom site</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="532" y1="162" x2="716" y2="92" stroke="var(--blue-600)" stroke-width="2.5"/>
+          <rect class="svg-node" x="640" y="42" width="230" height="66" rx="12"/>
+          <text x="755" y="70" text-anchor="middle" class="svg-label" font-size="17">📱 Mobile app</text>
+          <text x="755" y="93" text-anchor="middle" class="svg-sub" font-size="13">Push offers, 1-tap reorder</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="418" y1="212" x2="252" y2="268" stroke="var(--blue-600)" stroke-width="2.5"/>
+          <rect class="svg-node" x="70" y="248" width="250" height="66" rx="12"/>
+          <text x="195" y="276" text-anchor="middle" class="svg-label" font-size="17">📸 Social commerce</text>
+          <text x="195" y="299" text-anchor="middle" class="svg-sub" font-size="13">Instagram Shop, TikTok Shop, WhatsApp</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="542" y1="212" x2="708" y2="268" stroke="var(--blue-600)" stroke-width="2.5"/>
+          <rect class="svg-node" x="640" y="248" width="240" height="66" rx="12"/>
+          <text x="760" y="276" text-anchor="middle" class="svg-label" font-size="17">🏪 Marketplaces</text>
+          <text x="760" y="299" text-anchor="middle" class="svg-sub" font-size="13">Amazon, noon, eBay, Etsy</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="480" y1="262" x2="480" y2="330" stroke="var(--blue-600)" stroke-width="2.5"/>
+          <rect class="svg-node" x="345" y="330" width="270" height="60" rx="12"/>
+          <text x="480" y="355" text-anchor="middle" class="svg-label" font-size="17">🤖 AI &amp; chat assistants</text>
+          <text x="480" y="376" text-anchor="middle" class="svg-sub" font-size="13">"Reorder my usual" — conversational buying</text>
+        </g>
+      </svg>
+      <div class="callout green" data-build>🎯 <strong>Discussion:</strong> where did <em>you</em> last buy something online — and which touchpoint started that purchase? It's rarely the website itself.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 5. EXAMPLE: ANATOMY OF ONE CLICK                    -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Example</div>
+      <h2 class="title">Anatomy of One Click: "Buy Now"</h2>
+      <p class="subtitle">In under 3 seconds, this entire chain runs. Every box is a system someone in MIS designs, connects, or maintains.</p>
+      <svg class="diagram" viewBox="0 0 960 360" role="img" aria-label="Pipeline of systems behind a purchase click">
+        <!-- Row 1 -->
+        <g data-build>
+          <rect class="svg-node" x="20" y="40" width="270" height="80" rx="12"/>
+          <text x="155" y="72" text-anchor="middle" class="svg-label" font-size="17">1 · 🛒 Storefront</text>
+          <text x="155" y="97" text-anchor="middle" class="svg-sub" font-size="13">Click captured, cart validated</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="290" y1="80" x2="340" y2="80" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB)"/>
+          <rect class="svg-node" x="345" y="40" width="270" height="80" rx="12"/>
+          <text x="480" y="72" text-anchor="middle" class="svg-label" font-size="17">2 · ⚙️ App server</text>
+          <text x="480" y="97" text-anchor="middle" class="svg-sub" font-size="13">Checks stock, price, shipping rules</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="615" y1="80" x2="665" y2="80" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB)"/>
+          <rect class="svg-node" x="670" y="40" width="270" height="80" rx="12"/>
+          <text x="805" y="72" text-anchor="middle" class="svg-label" font-size="17">3 · 💳 Payment gateway</text>
+          <text x="805" y="97" text-anchor="middle" class="svg-sub" font-size="13">Stripe / PayPal — tokenizes the card</text>
+        </g>
+        <!-- Row 2 (right to left) -->
+        <g data-build>
+          <line class="draw" pathLength="1" x1="805" y1="120" x2="805" y2="185" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB)"/>
+          <rect class="svg-node" x="670" y="190" width="270" height="80" rx="12"/>
+          <text x="805" y="222" text-anchor="middle" class="svg-label" font-size="17">4 · 🏦 Card network &amp; bank</text>
+          <text x="805" y="247" text-anchor="middle" class="svg-sub" font-size="13">Fraud checks → approve / decline</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="665" y1="230" x2="620" y2="230" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB)"/>
+          <rect class="svg-node" x="345" y="190" width="270" height="80" rx="12"/>
+          <text x="480" y="222" text-anchor="middle" class="svg-label" font-size="17">5 · 🗄️ Order database</text>
+          <text x="480" y="247" text-anchor="middle" class="svg-sub" font-size="13">Order saved, inventory decremented</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="340" y1="230" x2="295" y2="230" stroke="var(--green)" stroke-width="3" marker-end="url(#arrG)"/>
+          <rect x="20" y="190" width="270" height="80" rx="12" fill="var(--green-100)" stroke="var(--green)" stroke-width="2"/>
+          <text x="155" y="222" text-anchor="middle" class="svg-label" font-size="17">6 · ✅ Fulfilment kicks off</text>
+          <text x="155" y="247" text-anchor="middle" class="svg-sub" font-size="13">Email receipt, warehouse pick, tracking</text>
+        </g>
+        <g data-build>
+          <rect x="180" y="300" width="600" height="46" rx="10" fill="var(--blue-100)" stroke="#c6dcf5"/>
+          <text x="480" y="329" text-anchor="middle" font-size="16" fill="var(--blue-900)" font-weight="700">⏱️ Total elapsed time: ~2–3 seconds. Total systems involved: 6+.</text>
+        </g>
+        <defs>
+          <marker id="arrB" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="var(--blue-600)"/></marker>
+          <marker id="arrG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="var(--green)"/></marker>
+        </defs>
+      </svg>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 6. COURSE JOURNEY ROADMAP                           -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · This Course</div>
+      <h2 class="title">Your Journey: Idea → Real Store</h2>
+      <p class="subtitle">Three phases. Each one produces something you can show — and each is a skill employers actually hire for.</p>
+      <div class="grid three">
+        <div class="card accent-blue" data-build>
+          <span class="tag">Phase 1</span>
+          <h3>🎤 Pitch</h3>
+          <ul>
+            <li>Market research &amp; gap analysis</li>
+            <li>Business Model Canvas</li>
+            <li>Value proposition + pitch deck</li>
+          </ul>
+          <p class="small"><em>Deliverable: a pitch that survives questions.</em></p>
+        </div>
+        <div class="card accent-amber" data-build>
+          <span class="tag amber">Phase 2</span>
+          <h3>🧩 No-Code MVP</h3>
+          <ul>
+            <li>Launch a working store fast</li>
+            <li>Real products, real checkout flow</li>
+            <li>Test demand before writing code</li>
+          </ul>
+          <p class="small"><em>Deliverable: a live store a stranger could buy from.</em></p>
+        </div>
+        <div class="card accent-green" data-build>
+          <span class="tag green">Phase 3</span>
+          <h3>💻 Full-Stack Build</h3>
+          <ul>
+            <li>MSSQL database design</li>
+            <li>Node.js API (products, orders)</li>
+            <li>Front-end wired to your own backend</li>
+          </ul>
+          <p class="small"><em>Deliverable: a store you built from scratch.</em></p>
+        </div>
+      </div>
+      <div class="callout" data-build>🧭 <strong>Why this order?</strong> Real founders do it the same way: validate cheaply first, invest in engineering only once the idea deserves it.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 7. EVOLUTION TIMELINE                               -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1</div>
+      <h2 class="title">Evolution &amp; Milestones</h2>
+      <p class="subtitle">Each decade solved one big blocker — and unlocked the next wave of commerce.</p>
+      <svg class="diagram" viewBox="0 0 960 340" role="img" aria-label="Timeline of e-commerce eras">
+        <line x1="40" y1="170" x2="920" y2="170" stroke="var(--border)" stroke-width="4"/>
+        <g data-build>
+          <circle cx="140" cy="170" r="12" fill="var(--blue-900)"/>
+          <rect class="svg-node" x="40" y="40" width="200" height="96" rx="12"/>
+          <text x="140" y="68" text-anchor="middle" class="svg-label" font-size="18">1990s</text>
+          <text x="140" y="92" text-anchor="middle" class="svg-sub" font-size="13">First online stores</text>
+          <text x="140" y="112" text-anchor="middle" class="svg-sub" font-size="13">SSL 🔒 · first shopping carts</text>
+          <text x="140" y="215" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">Blocker solved: trust of</text>
+          <text x="140" y="233" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">sending a card number</text>
+        </g>
+        <g data-build>
+          <circle cx="380" cy="170" r="12" fill="var(--blue-600)"/>
+          <rect class="svg-node" x="280" y="40" width="200" height="96" rx="12"/>
+          <text x="380" y="68" text-anchor="middle" class="svg-label" font-size="18">2000s</text>
+          <text x="380" y="92" text-anchor="middle" class="svg-sub" font-size="13">Marketplaces &amp; payments</text>
+          <text x="380" y="112" text-anchor="middle" class="svg-sub" font-size="13">PayPal · eBay · fraud standards</text>
+          <text x="380" y="215" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">Blocker solved: paying</text>
+          <text x="380" y="233" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">strangers safely</text>
+        </g>
+        <g data-build>
+          <circle cx="620" cy="170" r="12" fill="#63b3ed"/>
+          <rect class="svg-node" x="520" y="40" width="200" height="96" rx="12"/>
+          <text x="620" y="68" text-anchor="middle" class="svg-label" font-size="18">2010s</text>
+          <text x="620" y="92" text-anchor="middle" class="svg-sub" font-size="13">Mobile &amp; social selling</text>
+          <text x="620" y="112" text-anchor="middle" class="svg-sub" font-size="13">Apps · Instagram · logistics platforms</text>
+          <text x="620" y="215" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">Blocker solved: buying</text>
+          <text x="620" y="233" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">anywhere, anytime</text>
+        </g>
+        <g data-build>
+          <circle cx="850" cy="170" r="12" fill="var(--purple)"/>
+          <rect class="svg-node" x="750" y="40" width="190" height="96" rx="12"/>
+          <text x="845" y="68" text-anchor="middle" class="svg-label" font-size="18">2020s</text>
+          <text x="845" y="92" text-anchor="middle" class="svg-sub" font-size="13">AI reco &amp; search · AR try-on</text>
+          <text x="845" y="112" text-anchor="middle" class="svg-sub" font-size="13">Subscriptions · same-day delivery</text>
+          <text x="845" y="215" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">Blocker being solved:</text>
+          <text x="845" y="233" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">too much choice</text>
+        </g>
+        <g data-build>
+          <rect x="180" y="270" width="600" height="46" rx="10" fill="var(--blue-100)" stroke="#c6dcf5"/>
+          <text x="480" y="299" text-anchor="middle" font-size="16" fill="var(--blue-900)" font-weight="700">Pattern: every era = a trust or friction problem, solved by technology.</text>
+        </g>
+      </svg>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 8. SSL/TLS DEEP DIVE (flagship animation)           -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Deep Dive</div>
+      <h2 class="title">SSL/TLS: The Handshake That Made E-Commerce Possible</h2>
+      <p class="subtitle">1994's problem: anyone on the network could read your card number. The fix — in 6 steps:</p>
+      <svg class="diagram" viewBox="0 0 960 470" role="img" aria-label="Animated SSL TLS handshake sequence diagram">
+        <!-- actors -->
+        <rect class="svg-node" x="40" y="14" width="200" height="52" rx="12"/>
+        <text x="140" y="47" text-anchor="middle" class="svg-label" font-size="17">💻 Your browser</text>
+        <rect class="svg-node" x="720" y="14" width="200" height="52" rx="12"/>
+        <text x="820" y="47" text-anchor="middle" class="svg-label" font-size="17">🖥️ Shop server</text>
+        <line x1="140" y1="66" x2="140" y2="450" stroke="var(--border)" stroke-width="2" stroke-dasharray="6 6"/>
+        <line x1="820" y1="66" x2="820" y2="450" stroke="var(--border)" stroke-width="2" stroke-dasharray="6 6"/>
+        <!-- eavesdropper -->
+        <text x="480" y="52" text-anchor="middle" font-size="26">🕵️</text>
+        <text x="480" y="72" text-anchor="middle" class="svg-sub" font-size="12">eavesdropper on the network</text>
+
+        <!-- 1. ClientHello -->
+        <g data-build>
+          <line class="draw" pathLength="1" x1="150" y1="115" x2="805" y2="115" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB2)"/>
+          <text x="480" y="102" text-anchor="middle" font-size="15" fill="var(--blue-900)" font-weight="700">1 · ClientHello — "here are the ciphers I speak" + random number</text>
+        </g>
+        <!-- 2. ServerHello + cert -->
+        <g data-build>
+          <line class="draw" pathLength="1" x1="810" y1="175" x2="155" y2="175" stroke="var(--blue-900)" stroke-width="3" marker-end="url(#arrD2)"/>
+          <text x="480" y="162" text-anchor="middle" font-size="15" fill="var(--blue-900)" font-weight="700">2 · ServerHello + Certificate 🪪 (contains the server's public key)</text>
+        </g>
+        <!-- 3. cert check -->
+        <g data-build>
+          <rect x="55" y="200" width="330" height="52" rx="10" fill="var(--amber-100)" stroke="var(--amber)" stroke-width="2"/>
+          <text x="220" y="222" text-anchor="middle" font-size="14" fill="var(--ink)" font-weight="700">3 · Browser verifies certificate ✅</text>
+          <text x="220" y="242" text-anchor="middle" font-size="12.5" fill="var(--muted)">signed by a trusted Certificate Authority?</text>
+        </g>
+        <!-- 4. key exchange -->
+        <g data-build>
+          <line class="draw" pathLength="1" x1="150" y1="295" x2="805" y2="295" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB2)"/>
+          <text x="480" y="282" text-anchor="middle" font-size="15" fill="var(--blue-900)" font-weight="700">4 · Key exchange 🔐 — secret locked with the server's <tspan font-style="italic">public</tspan> key</text>
+          <text x="480" y="316" text-anchor="middle" font-size="12.5" fill="var(--muted)">only the server's private key can unlock it — the spy sees gibberish</text>
+        </g>
+        <!-- 5. session keys -->
+        <g data-build>
+          <text x="140" y="360" text-anchor="middle" font-size="26">🔑</text>
+          <text x="820" y="360" text-anchor="middle" font-size="26">🔑</text>
+          <text x="480" y="358" text-anchor="middle" font-size="15" fill="var(--blue-900)" font-weight="700">5 · Both sides derive the same session keys — never sent over the wire</text>
+        </g>
+        <!-- 6. encrypted channel -->
+        <g data-build>
+          <rect x="150" y="395" width="660" height="44" rx="22" fill="var(--green-100)" stroke="var(--green)" stroke-width="2.5"/>
+          <text x="480" y="423" text-anchor="middle" font-size="16" fill="var(--green)" font-weight="800">6 · 🔒 HTTPS — everything from here is encrypted: card numbers, passwords, orders</text>
+          <line x1="455" y1="30" x2="505" y2="58" stroke="var(--red)" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <defs>
+          <marker id="arrB2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="var(--blue-600)"/></marker>
+          <marker id="arrD2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="var(--blue-900)"/></marker>
+        </defs>
+      </svg>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 9. ERA EXAMPLE: 1990s                               -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Era Example — 1990s</div>
+      <h2 class="title">1995: Selling Books to Strangers</h2>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>📚 Amazon's opening move</h3>
+          <p>Jeff Bezos picked <strong>books</strong> deliberately: millions of titles (no physical store could stock them all), standard products (no need to touch before buying), easy to ship.</p>
+          <p class="small">Lesson: the first product should fit the <em>channel's</em> strengths, not just your passion.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>🛒 The first shopping carts</h3>
+          <p>Before cart software, ordering online meant emailing a list or filling a raw form. The "cart + checkout" pattern we still use was <strong>invented</strong> in this era — and hasn't fundamentally changed since.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card accent-red" data-build>
+          <h3>😨 The fear</h3>
+          <p>"Type my credit card into a <em>computer</em>? Never." Surveys in the mid-90s showed security as the #1 reason people refused to buy online.</p>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>🔒 The fix</h3>
+          <p>Netscape ships SSL in 1994 (the handshake you just saw). The padlock icon becomes the most valuable UI element in commerce history.</p>
+        </div>
+      </div>
+      <div class="callout" data-build>🔁 <strong>Same story today:</strong> every new channel (social checkout, AI agents buying for you) replays this exact trust curve — fear → security tech → mass adoption.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 10. ERA EXAMPLE: 2000s                              -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Era Example — 2000s</div>
+      <h2 class="title">PayPal &amp; the Stranger-Payment Problem</h2>
+      <p class="subtitle">eBay connected millions of buyers and sellers — who had zero reason to trust each other.</p>
+      <div class="grid three">
+        <div class="card accent-red" data-build>
+          <h3>The problem</h3>
+          <p>Mail a cheque to a stranger and hope a Beanie Baby arrives? Sellers shipped and got stiffed; buyers paid and got nothing.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>The wedge</h3>
+          <p>PayPal sat <strong>in the middle</strong>: buyer pays PayPal, PayPal pays seller. Add buyer protection, dispute resolution, and fraud detection on top.</p>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>The result</h3>
+          <p>Trust became a <strong>product feature</strong>. eBay bought PayPal for $1.5B in 2002. Every gateway since (Stripe, Checkout.com) sells the same thing: trust as a service.</p>
+        </div>
+      </div>
+      <div class="callout amber" data-build>⚔️ <strong>Fun fact:</strong> PayPal's early fraud losses nearly killed it — the anti-fraud tooling they built to survive became the industry's playbook (and its alumni later founded Tesla, LinkedIn, YouTube… the "PayPal Mafia").</div>
+      <div class="callout" data-build>🧠 <strong>For your project:</strong> you will never build payments from scratch — you'll integrate a gateway. Knowing <em>why</em> they exist tells you what to check when choosing one: fraud tools, dispute handling, payout speed, fees.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 11. ERA EXAMPLE: 2010s                              -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Era Example — 2010s</div>
+      <h2 class="title">The Phone Becomes the Mall</h2>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>📱 Mobile commerce</h3>
+          <p>Smartphones + 1-click wallets (Apple Pay, Google Pay) collapse checkout from 10 form fields to a thumbprint. Cart abandonment drops when friction drops.</p>
+          <p class="small">Design consequence: mobile-first layouts, big buttons, guest checkout.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>🤳 Social selling</h3>
+          <p>Discovery moves from search ("I need shoes") to feeds ("I didn't know I wanted these shoes"). Influencers become storefronts; Instagram adds in-app checkout.</p>
+          <p class="small">China leapfrogs everyone: WeChat merges chat + wallet + shop in one app.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>🚚 Logistics platforms</h3>
+          <p>Fulfilment by Amazon, Shopify + third-party logistics: a solo founder can now offer 2-day shipping like a giant. Delivery speed becomes a marketing feature.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>📊 The numbers flip</h3>
+          <p>By late 2010s, <strong>more than half</strong> of e-commerce traffic worldwide is mobile. If your store demo isn't tested on a phone, it isn't tested.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12. ERA EXAMPLE: 2020s                              -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Era Example — 2020s</div>
+      <h2 class="title">AI Commerce: Too Much Choice, Solved</h2>
+      <div class="grid two">
+        <div class="card accent-purple" data-build>
+          <h3>🎯 Recommendation &amp; search</h3>
+          <p>~35% of Amazon purchases start from "recommended for you". AI search understands "warm jacket for Beirut winter under $80" — not just keywords.</p>
+        </div>
+        <div class="card accent-purple" data-build>
+          <h3>🕶️ AR try-ons</h3>
+          <p>IKEA Place puts the sofa in your living room; sunglasses try-on cuts returns. Returns are the silent killer of online margins — AR attacks them directly.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card accent-purple" data-build>
+          <h3>🔁 Subscriptions everywhere</h3>
+          <p>Razors, coffee, pet food, software. Predictable recurring revenue is so valuable that one-time-purchase brands re-engineer themselves around it. (More math on this in a few slides.)</p>
+        </div>
+        <div class="card accent-purple" data-build>
+          <h3>⚡ Same-day &amp; q-commerce</h3>
+          <p>Dark stores + route optimization = groceries in 20 minutes. Speed expectations set by the biggest players become the baseline everyone is judged against.</p>
+        </div>
+      </div>
+      <div class="callout" data-build>🤔 <strong>Discussion:</strong> which of these four could a <em>student project</em> realistically use? (Hint: recommendation via simple "customers also bought" queries is absolutely in reach of your MSSQL phase.)</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 13. BUSINESS MODELS OVERVIEW                        -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1</div>
+      <h2 class="title">Business Models</h2>
+      <ul class="points">
+        <li data-build><strong>Who sells to whom:</strong> B2C, B2B, C2C, D2C — and hybrids that mix them.</li>
+        <li data-build><strong>How money recurs:</strong> one-time sales vs subscriptions &amp; memberships (recurring revenue).</li>
+        <li data-build><strong>Marketplaces:</strong> you sell <em>access</em>, not products — network effects, take rates, compliance.</li>
+        <li data-build><strong>How we keep score:</strong> CAC, LTV, AOV, conversion rate, churn.</li>
+      </ul>
+      <div class="callout" data-build>🧭 <strong>Why this matters now:</strong> your Phase-1 pitch must name its model and its metrics. "We'll sell stuff online" is not a business model.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 14. MODEL GALLERY                                   -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Examples</div>
+      <h2 class="title">Model Gallery: Who Sells to Whom</h2>
+      <div class="grid four">
+        <div class="card" data-build>
+          <span class="tag">B2C</span>
+          <h3>Business → Consumer</h3>
+          <p><strong>Amazon retail, Zara.com, noon</strong></p>
+          <p class="small">High volume, low order value, marketing-driven. Wins on convenience &amp; price.</p>
+        </div>
+        <div class="card" data-build>
+          <span class="tag amber">B2B</span>
+          <h3>Business → Business</h3>
+          <p><strong>Alibaba, Amazon Business</strong></p>
+          <p class="small">Fewer, bigger orders. Quotes, credit terms, approval workflows. Boring = profitable.</p>
+        </div>
+        <div class="card" data-build>
+          <span class="tag green">C2C</span>
+          <h3>Consumer → Consumer</h3>
+          <p><strong>eBay, Facebook Marketplace, Vinted</strong></p>
+          <p class="small">Platform owns trust &amp; payments; users own inventory. Zero stock risk.</p>
+        </div>
+        <div class="card" data-build>
+          <span class="tag red">D2C</span>
+          <h3>Direct → Consumer</h3>
+          <p><strong>Warby Parker, Dollar Shave Club</strong></p>
+          <p class="small">Brand skips retailers, owns the customer relationship &amp; the data.</p>
+        </div>
+      </div>
+      <div class="callout" data-build>💈 <strong>Mini-case — Dollar Shave Club:</strong> a $4,500 YouTube video + subscription razors vs Gillette's retail empire. Acquired by Unilever for <strong>$1B</strong> five years later. The moat wasn't razors — it was the direct customer relationship + recurring revenue.</div>
+      <div class="callout green" data-build>🎯 <strong>Quick check:</strong> a university student selling thrifted clothes via Instagram DMs — which model is that? What would change if she moved to a marketplace app?</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 15. SUBSCRIPTIONS & RECURRING REVENUE               -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Examples</div>
+      <h2 class="title">Subscriptions: Why Investors Love Recurring Revenue</h2>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>🛍️ One-time model</h3>
+          <p class="big">Sell 200 orders → $7,000</p>
+          <p>Next month starts at <strong>$0</strong>. Every sale must be re-won with new marketing spend.</p>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>🔁 Subscription model</h3>
+          <p class="big">200 subscribers × $35 → $7,000/mo</p>
+          <p>Next month starts at <strong>~$6,650</strong> (assuming 5% churn). Marketing adds on top of a base that compounds.</p>
+        </div>
+      </div>
+      <table class="tbl" data-build>
+        <tr><th>Example</th><th>What recurs</th><th>The hook</th></tr>
+        <tr><td>Amazon Prime</td><td>Membership fee</td><td>Free shipping makes every other purchase easier</td></tr>
+        <tr><td>Netflix</td><td>Access</td><td>Cancel-anytime lowers the barrier to start</td></tr>
+        <tr><td>HelloFresh / coffee clubs</td><td>Physical goods</td><td>Removes a recurring chore (deciding + shopping)</td></tr>
+      </table>
+      <div class="callout amber" data-build>⚠️ <strong>The catch — churn:</strong> subscriptions leak. At 5% monthly churn you lose half your base in ~13 months. Retention (not acquisition) is where subscription businesses live or die.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 16. MARKETPLACE FLYWHEEL                            -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Examples</div>
+      <h2 class="title">Marketplaces: The Network-Effect Flywheel</h2>
+      <div class="grid two">
+        <svg class="diagram" viewBox="0 0 460 400" role="img" aria-label="Marketplace flywheel diagram" style="max-width:460px">
+          <circle cx="230" cy="200" r="66" fill="var(--blue-100)" stroke="var(--blue-900)" stroke-width="2.5"/>
+          <text x="230" y="196" text-anchor="middle" class="svg-label" font-size="16">🏪 Marketplace</text>
+          <text x="230" y="218" text-anchor="middle" class="svg-sub" font-size="12">(takes a % cut)</text>
+          <g data-build>
+            <rect class="svg-node" x="135" y="16" width="190" height="52" rx="12"/>
+            <text x="230" y="48" text-anchor="middle" class="svg-label" font-size="14">1 · More sellers join</text>
+            <path class="draw" pathLength="1" d="M 330 55 Q 400 110 385 185" fill="none" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB3)"/>
+          </g>
+          <g data-build>
+            <rect class="svg-node" x="290" y="190" width="165" height="64" rx="12"/>
+            <text x="372" y="216" text-anchor="middle" class="svg-label" font-size="13.5">2 · More selection,</text>
+            <text x="372" y="236" text-anchor="middle" class="svg-label" font-size="13.5">better prices</text>
+            <path class="draw" pathLength="1" d="M 380 260 Q 370 330 300 352" fill="none" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB3)"/>
+          </g>
+          <g data-build>
+            <rect class="svg-node" x="130" y="330" width="200" height="52" rx="12"/>
+            <text x="230" y="362" text-anchor="middle" class="svg-label" font-size="14">3 · More buyers come</text>
+            <path class="draw" pathLength="1" d="M 125 350 Q 60 320 72 245" fill="none" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB3)"/>
+          </g>
+          <g data-build>
+            <rect class="svg-node" x="5" y="185" width="165" height="64" rx="12"/>
+            <text x="87" y="211" text-anchor="middle" class="svg-label" font-size="13.5">4 · More sales</text>
+            <text x="87" y="231" text-anchor="middle" class="svg-label" font-size="13.5">per seller</text>
+            <path class="draw" pathLength="1" d="M 80 180 Q 85 90 128 58" fill="none" stroke="var(--blue-600)" stroke-width="3" marker-end="url(#arrB3)"/>
+          </g>
+          <defs>
+            <marker id="arrB3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="var(--blue-600)"/></marker>
+          </defs>
+        </svg>
+        <div>
+          <div class="card" data-build>
+            <h3>💰 Take rates (the platform's cut)</h3>
+            <table class="tbl">
+              <tr><th>Platform</th><th>Approx. take</th></tr>
+              <tr><td>Etsy</td><td>~6.5% + fees</td></tr>
+              <tr><td>Amazon (typical)</td><td>~15%</td></tr>
+              <tr><td>App stores</td><td>15–30%</td></tr>
+              <tr><td>Food delivery</td><td>up to ~30%</td></tr>
+            </table>
+          </div>
+          <div class="card accent-amber" data-build style="margin-top:1rem">
+            <h3>⚖️ The compliance load</h3>
+            <p class="small">Who's liable for counterfeits? Who collects tax? Who verifies sellers? Marketplaces earn their take rate by absorbing these problems.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout" data-build>🐔🥚 <strong>The cold-start problem:</strong> the flywheel is brutal to start — no buyers without sellers, no sellers without buyers. Classic fix: fake one side first (Airbnb seeded listings by hand; marketplaces subsidize early sellers).</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 17. KEY METRICS DEFINITIONS                         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1</div>
+      <h2 class="title">How We Keep Score: The 5 Core Metrics</h2>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>CAC</h3>
+          <p><strong>Customer Acquisition Cost</strong></p>
+          <p class="small">Marketing spend ÷ new customers won. "What does one new customer cost me?"</p>
+        </div>
+        <div class="card" data-build>
+          <h3>LTV</h3>
+          <p><strong>Lifetime Value</strong></p>
+          <p class="small">Profit a customer generates over their whole relationship with you.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>AOV</h3>
+          <p><strong>Average Order Value</strong></p>
+          <p class="small">Revenue ÷ number of orders. Raised by bundles, upsells, free-shipping thresholds.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>Conversion rate</h3>
+          <p class="small">Orders ÷ visitors. E-commerce typically lands around <strong>1–3%</strong> — yes, 97+ of every 100 visitors leave without buying.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Churn</h3>
+          <p class="small">% of customers/subscribers lost per period. The gravity that recurring-revenue businesses fight forever.</p>
+        </div>
+      </div>
+      <div class="callout green" data-build>🏆 <strong>The one ratio to remember:</strong> <strong>LTV : CAC ≥ 3</strong> is the classic health bar. Below 3, you're buying customers for more than they're worth. Let's compute it on a real example →</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 18. METRICS WORKED EXAMPLE                          -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.1 · Worked Example</div>
+      <h2 class="title">"Beirut Beans" — One Month, All 5 Metrics</h2>
+      <p class="subtitle">A small online coffee store. Follow the numbers as they build:</p>
+      <table class="tbl">
+        <tr><th style="width:30%">Step</th><th>Calculation</th><th style="width:22%">Result</th></tr>
+        <tr data-build><td>🧲 Traffic</td><td>$2,000 ads bring 10,000 visitors</td><td><strong>10,000 visits</strong></td></tr>
+        <tr data-build><td>🛒 Conversion</td><td>200 orders ÷ 10,000 visitors</td><td><strong>2%</strong> ✅ (normal)</td></tr>
+        <tr data-build><td>💵 AOV</td><td>$7,000 revenue ÷ 200 orders</td><td><strong>$35</strong></td></tr>
+        <tr data-build><td>🧮 CAC</td><td>$2,000 ÷ 100 <em>new</em> customers (rest were returning)</td><td><strong>$20</strong></td></tr>
+        <tr data-build><td>💎 LTV</td><td>$35 × 4 orders/yr × 2 yrs × 40% margin</td><td><strong>$112</strong></td></tr>
+        <tr data-build><td>🏆 LTV : CAC</td><td>$112 ÷ $20</td><td><strong>5.6 : 1</strong> 🎉 healthy</td></tr>
+      </table>
+      <div class="callout amber" data-build>🔧 <strong>Now play manager:</strong> which single lever would you pull first — cheaper ads (CAC ↓), bundles (AOV ↑), better checkout (conversion ↑), or a loyalty program (LTV ↑)? Defend your choice — there's no single right answer, only trade-offs.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 19. DIVIDER 1.2                                     -->
+    <!-- ================================================== -->
+    <section class="slide divider">
+      <div class="kicker">Lecture 1.2</div>
+      <h2 class="title">Market Research</h2>
+      <p class="subtitle">De-risk before you build · Tools &amp; signals · Hands-on: find a market gap</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 20. WHY IT MATTERS                                  -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.2</div>
+      <h2 class="title">Market Research: Why It Matters</h2>
+      <ul class="points">
+        <li data-build><strong>De-risk with data before building</strong> — the #1 reason startups fail is "no market need", not bad code.</li>
+        <li data-build><strong>Quantify demand</strong> — how many people search for this? Is it growing or fading? Seasonal or steady?</li>
+        <li data-build><strong>Find underserved segments</strong> — the gap is rarely "no one sells X"; it's "no one sells X <em>for this group, this way</em>".</li>
+        <li data-build><strong>Translate findings into a value proposition</strong> — research isn't a report, it's the raw material of your pitch.</li>
+      </ul>
+      <div class="callout" data-build>💸 <strong>The economics:</strong> a week of research costs you $0 and some Google time. Building the wrong product costs months. This is the cheapest insurance you will ever buy.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 21. EXAMPLE: BUILD-FIRST VS RESEARCH-FIRST          -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.2 · Example</div>
+      <h2 class="title">Tale of Two Launches</h2>
+      <div class="grid two">
+        <div class="card accent-red" data-build>
+          <h3>❌ Juicero (2016)</h3>
+          <ul>
+            <li>Raised <strong>$120M</strong> to build a $699 Wi-Fi juice press</li>
+            <li>Engineering-first: 4 years, custom hardware, an app</li>
+            <li>Journalists discovered you could squeeze the juice packs <strong>by hand</strong></li>
+            <li>Dead within 16 months of launch</li>
+          </ul>
+          <p class="small"><em>Nobody asked: "would people pay for this?"</em></p>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>✅ Zappos (1999)</h3>
+          <ul>
+            <li>Question: "will people buy shoes online without trying them?"</li>
+            <li>Test: photograph shoes at local stores, list them online</li>
+            <li>When an order came in, founder <strong>bought the pair at retail</strong> and shipped it — losing money per sale, on purpose</li>
+            <li>Demand proven → then build inventory &amp; systems → sold to Amazon for <strong>$1.2B</strong></li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" data-build>🧪 <strong>The pattern:</strong> Zappos spent <em>days</em> to learn what Juicero never learned in 4 years. Your Phase-2 no-code MVP is exactly this kind of test — demand first, engineering second.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 22. CORE TOOLS & SIGNALS                            -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.2</div>
+      <h2 class="title">Core Tools &amp; Signals</h2>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>📈 Google Trends</h3>
+          <p class="small"><strong>Signal:</strong> demand direction &amp; seasonality. Free. Compare terms, filter by country, spot rising queries.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>🌍 Similarweb</h3>
+          <p class="small"><strong>Signal:</strong> competitor traffic — volume, sources (search? social? ads?), top countries, engagement.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>📊 Statista / Think with Google</h3>
+          <p class="small"><strong>Signal:</strong> market size &amp; consumer behavior reports — the numbers that make your pitch credible.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>👂 Social listening</h3>
+          <p class="small"><strong>Signal:</strong> pain points in the wild — Reddit threads, TikTok comments, Instagram DMs. Complaints = opportunities.</p>
+        </div>
+      </div>
+      <div class="callout amber" data-build>🧭 <strong>Rule:</strong> one tool is an anecdote, two tools agreeing is a signal, three is a thesis. Never pitch on a single data source.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 23. EXAMPLE: GOOGLE TRENDS READ                     -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.2 · Example</div>
+      <h2 class="title">Reading a Trends Chart Like an Analyst</h2>
+      <p class="subtitle">Mock comparison, 24 months of search interest:</p>
+      <svg class="diagram" viewBox="0 0 960 340" role="img" aria-label="Mock Google Trends line chart">
+        <!-- axes -->
+        <line x1="70" y1="20" x2="70" y2="270" stroke="var(--border)" stroke-width="2"/>
+        <line x1="70" y1="270" x2="920" y2="270" stroke="var(--border)" stroke-width="2"/>
+        <text x="40" y="30" class="svg-sub" font-size="12">100</text>
+        <text x="45" y="150" class="svg-sub" font-size="12">50</text>
+        <text x="52" y="272" class="svg-sub" font-size="12">0</text>
+        <text x="90" y="292" class="svg-sub" font-size="12">Jan Y1</text>
+        <text x="450" y="292" class="svg-sub" font-size="12">Jan Y2</text>
+        <text x="860" y="292" class="svg-sub" font-size="12">Dec Y2</text>
+        <!-- line A: air fryer - rising with Dec spikes -->
+        <g data-build>
+          <polyline class="draw" pathLength="1" fill="none" stroke="var(--blue-600)" stroke-width="3.5"
+            points="70,220 140,215 210,205 280,208 350,195 420,120 460,185 530,178 600,165 670,168 740,150 810,60 880,130 920,125"/>
+          <text x="235" y="185" font-size="15" fill="var(--blue-600)" font-weight="700">— "air fryer"</text>
+        </g>
+        <g data-build>
+          <circle cx="420" cy="120" r="7" fill="none" stroke="var(--red)" stroke-width="3"/>
+          <circle cx="810" cy="60" r="7" fill="none" stroke="var(--red)" stroke-width="3"/>
+          <text x="418" y="100" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">holiday spike 🎁</text>
+          <text x="800" y="40" text-anchor="middle" font-size="13" fill="var(--red)" font-weight="700">bigger spike = growth</text>
+        </g>
+        <!-- line B: bread maker - fading fad -->
+        <g data-build>
+          <polyline class="draw" pathLength="1" fill="none" stroke="var(--amber)" stroke-width="3.5" stroke-dasharray="none"
+            points="70,90 140,75 210,110 280,140 350,170 420,180 460,200 530,215 600,225 670,232 740,238 810,235 880,245 920,248"/>
+          <text x="120" y="60" font-size="15" fill="var(--amber)" font-weight="700">— "bread maker"</text>
+        </g>
+        <g data-build>
+          <text x="620" y="255" font-size="13" fill="var(--amber)" font-weight="700">fad decaying after its 2020 peak 📉</text>
+        </g>
+        <g data-build>
+          <rect x="140" y="308" width="680" height="30" rx="8" fill="var(--blue-100)" stroke="#c6dcf5"/>
+          <text x="480" y="328" text-anchor="middle" font-size="14" fill="var(--blue-900)" font-weight="700">Same chart, three reads: direction (trend), rhythm (seasonality), and momentum (spike height).</text>
+        </g>
+      </svg>
+      <div class="callout" data-build>⚠️ <strong>Trap to avoid:</strong> Trends shows <em>relative</em> interest (0–100), not search volume. A "100" for a tiny niche can be 500 searches/month. Always pair it with a sizing source (Statista).</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 24. EXAMPLE: COMPETITOR AUDIT                       -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.2 · Example</div>
+      <h2 class="title">A 10-Minute Competitor Audit (Similarweb)</h2>
+      <p class="subtitle">Mock data — two skincare shops that look identical from the outside:</p>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>🧴 GlowShop.com</h3>
+          <p class="big">1.2M visits/mo</p>
+          <ul>
+            <li>🔎 62% from <strong>paid ads</strong></li>
+            <li>⏱️ 1.1 min avg visit · 71% bounce</li>
+            <li>🌍 Top geo: US, UK</li>
+          </ul>
+          <p class="small"><strong>Read:</strong> buying traffic. Stop the ads, the business stops. Vulnerable.</p>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>🌿 DermaDaily.com</h3>
+          <p class="big">300K visits/mo</p>
+          <ul>
+            <li>🔎 58% <strong>organic search</strong> + 22% direct</li>
+            <li>⏱️ 4.3 min avg visit · 38% bounce</li>
+            <li>🌍 Top geo: US, Canada, UAE</li>
+          </ul>
+          <p class="small"><strong>Read:</strong> loyal audience that searches for them by name. Durable.</p>
+        </div>
+      </div>
+      <div class="callout" data-build>🕵️ <strong>The insight a beginner misses:</strong> the <em>smaller</em> site is the stronger business. Traffic quality beats traffic quantity — and traffic <em>sources</em> tell you which fights you can actually win as a newcomer (hint: don't out-bid GlowShop on ads).</div>
+      <div class="callout green" data-build>🎯 <strong>For your audit:</strong> capture for each competitor — monthly visits, top 3 traffic sources, top geos, and one thing their customers complain about (check reviews).</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 25. ACTIVITY                                        -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 1.2 · Hands-On</div>
+      <h2 class="title">Activity: Find a Market Gap</h2>
+      <div class="grid two">
+        <div>
+          <ul class="points">
+            <li data-build><strong>1 · Pick a category</strong> — fashion, food, tech, or services. Pick one you actually know.</li>
+            <li data-build><strong>2 · Google Trends</strong> — compare your top 3 terms; note direction &amp; seasonality.</li>
+            <li data-build><strong>3 · Audit 2 competitors</strong> — Similarweb: traffic sources &amp; geos (like the last slide).</li>
+            <li data-build><strong>4 · Mine 3 pain points</strong> — reviews, Reddit, TikTok comments. Real quotes, not guesses.</li>
+            <li data-build><strong>5 · Write 1 hypothesis</strong> — and prep a 2-minute pitch for next class.</li>
+          </ul>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>📝 Hypothesis template</h3>
+          <p style="font-size:1.1rem; line-height:1.7">"<strong>[Segment]</strong> struggles with <strong>[pain point]</strong> when buying <strong>[category]</strong>. We believe a store offering <strong>[your angle]</strong> would win them, because <strong>[evidence from ≥2 tools]</strong>."</p>
+          <p class="small">A hypothesis you can't test is an opinion. Make every blank specific.</p>
+        </div>
+      </div>
+      <div class="callout amber" data-build>⏰ <strong>Grading the pitch:</strong> 2 minutes, max 3 visuals — one Trends screenshot, one competitor fact, one customer quote. Evidence beats enthusiasm.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 26. WRAP-UP                                         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Week 1 · Wrap-Up</div>
+      <h2 class="title">What You Now Know</h2>
+      <ul class="points">
+        <li data-build>🌐 E-commerce = every digital surface where a sale can start or finish — and the systems behind one click.</li>
+        <li data-build>🔒 Each era solved a <strong>trust/friction blocker</strong> — SSL's handshake literally made online payment possible.</li>
+        <li data-build>🏷️ Business models are choices: who you sell to, whether revenue recurs, whether you own inventory or a network.</li>
+        <li data-build>📏 Five metrics keep score — and <strong>LTV : CAC ≥ 3</strong> is the health bar.</li>
+        <li data-build>🔬 Research first: cheap data beats expensive guesses (Zappos &gt; Juicero).</li>
+      </ul>
+      <div class="callout green" data-build>🎯 <strong>Due next class:</strong> your 2-minute market-gap pitch. Bring evidence from at least two tools.</div>
+      <div class="callout" data-build>➡️ <strong>Next week:</strong> from gap to business — the Business Model Canvas.</div>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    <div class="controls">
+      <button id="prev" type="button" class="nav-btn ghost" aria-label="Previous">◀ Prev</button>
+      <button id="next" type="button" class="nav-btn" aria-label="Next">Next ▶</button>
+    </div>
+    <div class="stepdots" id="stepdots" title="Reveal steps on this slide"></div>
+    <div class="progress"><div id="bar" class="bar"></div></div>
+    <div class="counter" id="counter">1 / 1</div>
+    <button id="fs" type="button" class="nav-btn ghost" aria-label="Fullscreen" title="Fullscreen (F)">⛶</button>
+  </div>
+</div>
+
+<script src="deck.js"></script>
+</body>
+</html>
