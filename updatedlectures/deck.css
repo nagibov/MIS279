@@ -330,3 +330,24 @@ button.nav-btn.ghost { background: var(--bg-soft); color: var(--blue-900); borde
 /* full canvas with zone tints: headings take the zone color, body text stays readable */
 .bmc-full.tinted .b h4 { color: inherit; }
 .bmc-full.tinted .b ul { color: var(--ink-2); }
+
+/* ---------- slide-jump menu ---------- */
+.slide-menu {
+  position: fixed; right: 1rem; bottom: 64px; z-index: 50;
+  width: 360px; max-height: min(70vh, 560px); overflow-y: auto;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
+  box-shadow: var(--shadow); padding: .4rem;
+}
+.slide-menu-item {
+  display: flex; gap: .6rem; align-items: baseline; width: 100%;
+  background: none; border: none; text-align: left; cursor: pointer;
+  padding: .42rem .6rem; border-radius: 8px;
+  font-family: inherit; font-size: .92rem; color: var(--ink-2);
+}
+.slide-menu-item:hover { background: var(--blue-100); color: var(--blue-900); }
+.slide-menu-item .num { min-width: 1.7rem; color: var(--muted); font-size: .8rem; font-weight: 700; }
+.slide-menu-item.section { font-weight: 800; color: var(--blue-900); }
+.slide-menu-item.section:not(:first-child) { border-top: 1px solid var(--border); border-radius: 0 0 8px 8px; margin-top: .25rem; }
+.slide-menu-item.current { background: var(--blue-900); color: #fff; }
+.slide-menu-item.current .num { color: #cfe1f5; }
+@media print { .slide-menu { display: none; } }

@@ -54,7 +54,42 @@
     else document.documentElement.requestFullscreen();
   });
 
+  // Slide menu: jump directly to any slide (M to toggle, Esc to close)
+  const menuBtn = document.createElement('button');
+  menuBtn.type = 'button';
+  menuBtn.className = 'nav-btn ghost';
+  menuBtn.id = 'menu';
+  menuBtn.title = 'Jump to slide (M)';
+  menuBtn.textContent = 'Slides';
+  counter.parentNode.insertBefore(menuBtn, counter);
+
+  const panel = document.createElement('div');
+  panel.className = 'slide-menu';
+  panel.hidden = true;
+  slides.forEach((s, i) => {
+    const t = s.querySelector('.title');
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'slide-menu-item' + (s.classList.contains('divider') ? ' section' : '');
+    item.innerHTML = '<span class="num">' + (i + 1) + '</span><span>' + (t ? t.textContent.trim() : 'Slide ' + (i + 1)) + '</span>';
+    item.addEventListener('click', () => { show(i, false); closeMenu(); });
+    panel.appendChild(item);
+  });
+  document.body.appendChild(panel);
+
+  function openMenu() {
+    panel.hidden = false;
+    panel.querySelectorAll('.slide-menu-item').forEach((el, i) => el.classList.toggle('current', i === index));
+    const cur = panel.querySelector('.current');
+    if (cur) cur.scrollIntoView({ block: 'nearest' });
+  }
+  function closeMenu() { panel.hidden = true; }
+  menuBtn.addEventListener('click', e => { e.stopPropagation(); panel.hidden ? openMenu() : closeMenu(); });
+  document.addEventListener('click', e => { if (!panel.hidden && !panel.contains(e.target)) closeMenu(); });
+
   document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeMenu(); return; }
+    if (e.key === 'm' || e.key === 'M') { panel.hidden ? openMenu() : closeMenu(); return; }
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
     if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
     if (e.key === 'Home') show(0, false);
@@ -71,15 +106,15 @@
 /* ---------- BMC mini-canvas renderer (Week 2) ---------- */
 (function () {
   const BLOCKS = [
-    { k: 'kp',   n: 'Key Partners',        ic: '🤝' },
-    { k: 'ka',   n: 'Key Activities',      ic: '⚙️' },
-    { k: 'kr',   n: 'Key Resources',       ic: '🧰' },
-    { k: 'vp',   n: 'Value Propositions',  ic: '💎' },
-    { k: 'cr',   n: 'Relationships',       ic: '❤️' },
-    { k: 'ch',   n: 'Channels',            ic: '📣' },
-    { k: 'cs',   n: 'Customer Segments',   ic: '👥' },
-    { k: 'cost', n: 'Cost Structure',      ic: '📉' },
-    { k: 'rev',  n: 'Revenue Streams',     ic: '💰' }
+    { k: 'kp',   n: 'Key Partners' },
+    { k: 'ka',   n: 'Key Activities' },
+    { k: 'kr',   n: 'Key Resources' },
+    { k: 'vp',   n: 'Value Propositions' },
+    { k: 'cr',   n: 'Relationships' },
+    { k: 'ch',   n: 'Channels' },
+    { k: 'cs',   n: 'Customer Segments' },
+    { k: 'cost', n: 'Cost Structure' },
+    { k: 'rev',  n: 'Revenue Streams' }
   ];
   document.querySelectorAll('.bmc-mini').forEach(el => {
     const done = (el.dataset.done || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -88,7 +123,7 @@
     BLOCKS.forEach(b => {
       const d = document.createElement('div');
       d.className = 'b ' + b.k + (done.includes(b.k) ? ' done' : '') + (b.k === now ? ' now' : '');
-      d.innerHTML = '<span class="ic">' + (done.includes(b.k) ? '✅' : b.ic) + '</span>' + b.n;
+      d.innerHTML = (done.includes(b.k) ? '<span class="ic">✓</span>' : '') + b.n;
       el.appendChild(d);
     });
   });
