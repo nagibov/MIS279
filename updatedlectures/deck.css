@@ -291,3 +291,42 @@ button.nav-btn.ghost { background: var(--bg-soft); color: var(--blue-900); borde
 
 /* compact mini-canvas when placed inside a content grid column */
 .grid .bmc-mini .b { font-size: .66rem; padding: .3rem .4rem; min-height: 38px; overflow-wrap: anywhere; }
+
+/* ---------- zone-highlight animation for the map slide ---------- */
+.bmc.zones .b {
+  transition: background .45s ease, color .45s ease, border-color .45s ease, box-shadow .45s ease;
+}
+@keyframes zonepop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+.slide:has(.z-market.on) .bmc.zones .cr,
+.slide:has(.z-market.on) .bmc.zones .ch,
+.slide:has(.z-market.on) .bmc.zones .cs {
+  background: var(--blue-100); border-color: var(--blue-600); color: var(--blue-900);
+  box-shadow: 0 0 0 3px rgba(43, 108, 176, .18);
+  animation: zonepop .6s ease;
+}
+.slide:has(.z-ops.on) .bmc.zones .kp,
+.slide:has(.z-ops.on) .bmc.zones .ka,
+.slide:has(.z-ops.on) .bmc.zones .kr {
+  background: var(--purple-100); border-color: var(--purple); color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(107, 70, 193, .16);
+  animation: zonepop .6s ease;
+}
+.slide:has(.z-money.on) .bmc.zones .cost,
+.slide:has(.z-money.on) .bmc.zones .rev {
+  background: var(--amber-100); border-color: var(--amber); color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(183, 121, 31, .16);
+  animation: zonepop .6s ease;
+}
+.slide:has(.z-vp.on) .bmc.zones .vp {
+  background: var(--bg); border-color: var(--blue-900); color: var(--blue-900);
+  box-shadow: 0 0 0 4px rgba(26, 54, 93, .28);
+  animation: zonepop .7s ease;
+}
+
+/* full canvas with zone tints: headings take the zone color, body text stays readable */
+.bmc-full.tinted .b h4 { color: inherit; }
+.bmc-full.tinted .b ul { color: var(--ink-2); }
