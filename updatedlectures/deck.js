@@ -67,3 +67,29 @@
   if (!isNaN(start) && start >= 1 && start <= slides.length) show(start - 1, false);
   else show(0, false);
 })();
+
+/* ---------- BMC mini-canvas renderer (Week 2) ---------- */
+(function () {
+  const BLOCKS = [
+    { k: 'kp',   n: 'Key Partners',        ic: '🤝' },
+    { k: 'ka',   n: 'Key Activities',      ic: '⚙️' },
+    { k: 'kr',   n: 'Key Resources',       ic: '🧰' },
+    { k: 'vp',   n: 'Value Propositions',  ic: '💎' },
+    { k: 'cr',   n: 'Relationships',       ic: '❤️' },
+    { k: 'ch',   n: 'Channels',            ic: '📣' },
+    { k: 'cs',   n: 'Customer Segments',   ic: '👥' },
+    { k: 'cost', n: 'Cost Structure',      ic: '📉' },
+    { k: 'rev',  n: 'Revenue Streams',     ic: '💰' }
+  ];
+  document.querySelectorAll('.bmc-mini').forEach(el => {
+    const done = (el.dataset.done || '').split(',').map(s => s.trim()).filter(Boolean);
+    const now = (el.dataset.now || '').trim();
+    el.classList.add('bmc');
+    BLOCKS.forEach(b => {
+      const d = document.createElement('div');
+      d.className = 'b ' + b.k + (done.includes(b.k) ? ' done' : '') + (b.k === now ? ' now' : '');
+      d.innerHTML = '<span class="ic">' + (done.includes(b.k) ? '✅' : b.ic) + '</span>' + b.n;
+      el.appendChild(d);
+    });
+  });
+})();
