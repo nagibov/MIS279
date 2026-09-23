@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MIS 276 – Week 3: Data Modeling for E-Commerce</title>
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="deck" id="deck">
+
+    <!-- ================================================== -->
+    <!-- 1. TITLE                                            -->
+    <!-- ================================================== -->
+    <section class="slide divider active">
+      <div class="kicker">MIS 276 · E-Commerce &amp; Digital Business</div>
+      <span class="lecture-num">Week 3</span>
+      <h2 class="title">Data Modeling for E-Commerce</h2>
+      <p class="subtitle">From one-page canvas to a database blueprint —<br/>entities, relationships, and your first ERD.</p>
+      <p class="small">Lecture 3.1 · Entities &amp; Relationships &nbsp;&nbsp;|&nbsp;&nbsp; Lecture 3.2 · ERD Workshop</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 2. DIVIDER 3.1                                      -->
+    <!-- ================================================== -->
+    <section class="slide divider">
+      <div class="kicker">Lecture 3.1</div>
+      <h2 class="title">Entities &amp; Relationships</h2>
+      <p class="subtitle">Why data modeling matters · Tables, records, keys · 1:N and M:N · Bridge tables &amp; normalization</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 3. HOOK: ONE TAP = DATA EVERYWHERE                  -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1 · The Hook</div>
+      <h2 class="title">One Tap on the Coffee Cart App…</h2>
+      <p class="subtitle">A student preorders a latte. For that single tap to work, the app has to <em>remember</em>:</p>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>Who ordered</h3>
+          <p class="small">Name, account, saved payment method, loyalty punches so far</p>
+        </div>
+        <div class="card" data-build>
+          <h3>What they ordered</h3>
+          <p class="small">Which drink, which add-ons, today's price, is it still in stock</p>
+        </div>
+        <div class="card" data-build>
+          <h3>The order itself</h3>
+          <p class="small">When, for pickup where, total, status: received → brewing → ready</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>The money</h3>
+          <p class="small">Payment amount, method, transaction reference, success or failure</p>
+        </div>
+        <div class="card" data-build>
+          <h3>The cart</h3>
+          <p class="small">Where the cart is right now, and its schedule for the day</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>The app's memory is a database.</strong> Today we learn to design that memory — before writing a single line of code. This design is called a <strong>data model</strong>.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 4. WHY DATA MODELING                                -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1</div>
+      <h2 class="title">Why Data Modeling Is Essential</h2>
+      <ul class="points">
+        <li data-build><strong>Cheap now, expensive later</strong> — changing a diagram costs minutes; restructuring a live database with real orders costs weeks.</li>
+        <li data-build><strong>The schema outlives the code</strong> — apps get rewritten; the data and its structure carry on for years.</li>
+        <li data-build><strong>Structure = speed</strong> — a well-modeled database answers "top-selling product this month?" in one query.</li>
+      </ul>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>Think of a supermarket</h3>
+          <ul>
+            <li>Aisles = tables</li>
+            <li>Products on shelves = records</li>
+            <li>Price tags = attributes</li>
+            <li>Store signs = keys and indexes</li>
+          </ul>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>A well-organized store…</h3>
+          <ul>
+            <li>Customers find things fast</li>
+            <li>Restocking is systematic</li>
+            <li>Nothing is shelved twice</li>
+            <li>New aisles fit the pattern</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Key insight:</strong> a messy store loses customers; a messy schema loses developers — and eventually, data.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 5. VOCABULARY: TABLE ANATOMY                        -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1 · Vocabulary</div>
+      <h2 class="title">The Anatomy of a Table</h2>
+      <table class="tbl" style="font-family: Consolas, monospace; font-size: .95rem;">
+        <tr><th>BookID</th><th>Title</th><th>Price</th><th>Stock</th></tr>
+        <tr><td><strong>1</strong></td><td>1984</td><td>12.99</td><td>50</td></tr>
+        <tr><td><strong>3</strong></td><td>Harry Potter and the Sorcerer's Stone</td><td>14.99</td><td>100</td></tr>
+        <tr><td><strong>5</strong></td><td>Murder on the Orient Express</td><td>11.99</td><td>30</td></tr>
+      </table>
+      <div class="grid four">
+        <div class="card accent-blue" data-build>
+          <h3>Entity → table</h3>
+          <p class="small">A "thing" the business must remember. This whole table is the entity <strong>Books</strong>.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Attribute → column</h3>
+          <p class="small">One fact about the entity: Title, Price, Stock. Each has a data type.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Record → row</h3>
+          <p class="small">One concrete instance: the book <em>1984</em>, priced 12.99, 50 in stock.</p>
+        </div>
+        <div class="card accent-amber" data-build>
+          <h3>Primary key</h3>
+          <p class="small"><strong>BookID</strong> — a value that uniquely identifies each row, forever. Never reused, never changed.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Why not use Title as the key?</strong> Two books can share a title, and titles get retyped with typos. Keys must be unique and stable — that's why we invent an ID.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 6. CORE E-COMMERCE ENTITIES                         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1</div>
+      <h2 class="title">The Core Entities of Any Online Store</h2>
+      <div class="grid three">
+        <div class="etable" data-build>
+          <div class="ehead">Products</div>
+          <div class="erow">ProductID <span class="key pk">PK</span></div>
+          <div class="erow">Title, Price</div>
+          <div class="erow">Stock, Category</div>
+        </div>
+        <div class="etable" data-build>
+          <div class="ehead">Users</div>
+          <div class="erow">UserID <span class="key pk">PK</span></div>
+          <div class="erow">Name, Email</div>
+          <div class="erow">PasswordHash, Role</div>
+        </div>
+        <div class="etable" data-build>
+          <div class="ehead">Orders</div>
+          <div class="erow">OrderID <span class="key pk">PK</span></div>
+          <div class="erow">UserID <span class="key fk">FK</span></div>
+          <div class="erow">Total, Status, Date</div>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="etable" data-build>
+          <div class="ehead">Payments</div>
+          <div class="erow">PaymentID <span class="key pk">PK</span></div>
+          <div class="erow">OrderID <span class="key fk">FK</span></div>
+          <div class="erow">Amount, Method, Status</div>
+        </div>
+        <div class="etable" data-build>
+          <div class="ehead">Shipping</div>
+          <div class="erow">ShipmentID <span class="key pk">PK</span></div>
+          <div class="erow">OrderID <span class="key fk">FK</span></div>
+          <div class="erow">Carrier, TrackingNo, Dates</div>
+        </div>
+      </div>
+      <div class="callout amber" data-build><strong>Two details worth noticing:</strong> Users stores a Password<strong>Hash</strong>, never the password (more on that soon) — and Orders points at Users with a <strong>foreign key</strong>: a column holding another table's primary key. That pointer is what "relationship" means.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 7. RELATIONSHIP 1:N                                 -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1 · Relationships</div>
+      <h2 class="title">One-to-Many (1:N) — the Workhorse</h2>
+      <svg class="diagram" viewBox="0 0 960 250" role="img" aria-label="One to many relationship between customers and orders">
+        <g data-build>
+          <rect class="svg-node" x="110" y="60" width="240" height="100" rx="10"/>
+          <rect x="110" y="60" width="240" height="30" rx="10" fill="var(--blue-900)"/>
+          <text x="230" y="81" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">CUSTOMERS</text>
+          <text x="130" y="115" font-size="13" fill="var(--ink)" font-family="Consolas, monospace">CustomerID  (PK)</text>
+          <text x="130" y="140" font-size="13" fill="var(--muted)" font-family="Consolas, monospace">Name, Email…</text>
+        </g>
+        <g data-build>
+          <rect class="svg-node" x="610" y="60" width="240" height="100" rx="10"/>
+          <rect x="610" y="60" width="240" height="30" rx="10" fill="var(--blue-900)"/>
+          <text x="730" y="81" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">ORDERS</text>
+          <text x="630" y="115" font-size="13" fill="var(--ink)" font-family="Consolas, monospace">OrderID  (PK)</text>
+          <text x="630" y="140" font-size="13" fill="var(--blue-600)" font-family="Consolas, monospace">CustomerID  (FK) ◀</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="352" y1="110" x2="608" y2="110" stroke="var(--blue-600)" stroke-width="2.5" marker-start="url(#one1)" marker-end="url(#crow1)"/>
+          <text x="480" y="98" text-anchor="middle" font-size="14" fill="var(--blue-900)" font-weight="700">places</text>
+          <text x="390" y="135" font-size="12.5" fill="var(--muted)">one</text>
+          <text x="545" y="135" font-size="12.5" fill="var(--muted)">many</text>
+        </g>
+        <g data-build>
+          <rect x="180" y="190" width="600" height="42" rx="10" fill="var(--blue-100)" stroke="#c6dcf5"/>
+          <text x="480" y="216" text-anchor="middle" font-size="14.5" fill="var(--blue-900)" font-weight="700">Read it aloud: "ONE customer places MANY orders; each order belongs to ONE customer."</text>
+        </g>
+        <defs>
+          <marker id="crow1" markerWidth="18" markerHeight="18" refX="16" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M16,0 L0,8 L16,16 M0,8 L16,8" fill="none" stroke="var(--blue-600)" stroke-width="1.8"/>
+          </marker>
+          <marker id="one1" markerWidth="16" markerHeight="18" refX="6" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M6,1 L6,15 M11,1 L11,15" fill="none" stroke="var(--blue-600)" stroke-width="1.8"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="callout" data-build><strong>How it's built:</strong> the "many" side carries the foreign key. Orders stores <em>CustomerID</em> — the customer's table knows nothing about orders. The fork symbol (crow's foot) always sits on the "many" end.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 8. RELATIONSHIP M:N PROBLEM                         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1 · Relationships</div>
+      <h2 class="title">Many-to-Many (M:N) — the Troublemaker</h2>
+      <p class="subtitle">An order contains many books; a book appears in many orders. Where does the foreign key go?</p>
+      <svg class="diagram" viewBox="0 0 960 230" role="img" aria-label="Many to many problem between orders and books">
+        <g data-build>
+          <rect class="svg-node" x="110" y="50" width="240" height="90" rx="10"/>
+          <rect x="110" y="50" width="240" height="30" rx="10" fill="var(--blue-900)"/>
+          <text x="230" y="71" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">ORDERS</text>
+          <text x="130" y="105" font-size="13" fill="var(--ink)" font-family="Consolas, monospace">OrderID  (PK)</text>
+          <text x="130" y="128" font-size="13" fill="var(--red)" font-family="Consolas, monospace">BookID…? which one?</text>
+        </g>
+        <g data-build>
+          <rect class="svg-node" x="610" y="50" width="240" height="90" rx="10"/>
+          <rect x="610" y="50" width="240" height="30" rx="10" fill="var(--blue-900)"/>
+          <text x="730" y="71" text-anchor="middle" fill="#fff" font-weight="700" font-size="15">BOOKS</text>
+          <text x="630" y="105" font-size="13" fill="var(--ink)" font-family="Consolas, monospace">BookID  (PK)</text>
+          <text x="630" y="128" font-size="13" fill="var(--red)" font-family="Consolas, monospace">OrderID…? which one?</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="352" y1="95" x2="608" y2="95" stroke="var(--red)" stroke-width="2.5" marker-start="url(#crowR)" marker-end="url(#crowR)"/>
+          <text x="480" y="82" text-anchor="middle" font-size="14" fill="var(--red)" font-weight="700">many ↔ many</text>
+        </g>
+        <g data-build>
+          <rect x="140" y="170" width="680" height="44" rx="10" fill="var(--red-100)" stroke="#f3c1c1"/>
+          <text x="480" y="192" text-anchor="middle" font-size="14" fill="var(--red)" font-weight="700">Neither side can hold the foreign key — one column can't point at many rows.</text>
+          <text x="480" y="209" text-anchor="middle" font-size="13" fill="var(--ink-2)">And there's nowhere to store Quantity: it belongs to the pair, not to either table.</text>
+        </g>
+        <defs>
+          <marker id="crowR" markerWidth="18" markerHeight="18" refX="16" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M16,0 L0,8 L16,16 M0,8 L16,8" fill="none" stroke="var(--red)" stroke-width="1.8"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="callout green" data-build><strong>The fix has a name:</strong> a bridge table (also called junction or associative table). Next slide.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 9. BRIDGE TABLE FIX                                 -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1 · Relationships</div>
+      <h2 class="title">The Bridge Table: One M:N → Two 1:N</h2>
+      <svg class="diagram" viewBox="0 0 960 190" role="img" aria-label="Bridge table OrderBooks between Orders and Books">
+        <rect class="svg-node" x="40" y="45" width="215" height="90" rx="10"/>
+        <rect x="40" y="45" width="215" height="28" rx="10" fill="var(--blue-900)"/>
+        <text x="147" y="65" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">ORDERS</text>
+        <text x="58" y="97" font-size="12.5" fill="var(--ink)" font-family="Consolas, monospace">OrderID (PK)</text>
+        <rect class="svg-node" x="705" y="45" width="215" height="90" rx="10"/>
+        <rect x="705" y="45" width="215" height="28" rx="10" fill="var(--blue-900)"/>
+        <text x="812" y="65" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">BOOKS</text>
+        <text x="723" y="97" font-size="12.5" fill="var(--ink)" font-family="Consolas, monospace">BookID (PK)</text>
+        <g data-build>
+          <rect x="360" y="35" width="240" height="120" rx="10" fill="var(--green-100)" stroke="var(--green)" stroke-width="2.5"/>
+          <rect x="360" y="35" width="240" height="28" rx="10" fill="var(--green)"/>
+          <text x="480" y="55" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">ORDERBOOKS (bridge)</text>
+          <text x="378" y="86" font-size="12.5" fill="var(--ink)" font-family="Consolas, monospace">OrderID (FK) · BookID (FK)</text>
+          <text x="378" y="110" font-size="12.5" fill="var(--ink)" font-family="Consolas, monospace">Quantity</text>
+          <text x="378" y="132" font-size="12.5" fill="var(--ink)" font-family="Consolas, monospace">UnitPrice</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="257" y1="90" x2="358" y2="90" stroke="var(--blue-600)" stroke-width="2.5" marker-start="url(#one2)" marker-end="url(#crow2)"/>
+          <line class="draw" pathLength="1" x1="703" y1="90" x2="602" y2="90" stroke="var(--blue-600)" stroke-width="2.5" marker-start="url(#one2)" marker-end="url(#crow2)"/>
+        </g>
+        <defs>
+          <marker id="crow2" markerWidth="18" markerHeight="18" refX="16" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M16,0 L0,8 L16,16 M0,8 L16,8" fill="none" stroke="var(--blue-600)" stroke-width="1.8"/>
+          </marker>
+          <marker id="one2" markerWidth="16" markerHeight="18" refX="6" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M6,1 L6,15 M11,1 L11,15" fill="none" stroke="var(--blue-600)" stroke-width="1.8"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="grid two">
+        <div class="card accent-red" data-build>
+          <h3>Without a bridge (wrong)</h3>
+          <p class="small" style="font-family: Consolas, monospace">Orders: OrderID: 1, BookIDs: "1,2,3"</p>
+          <ul>
+            <li>Can't query or count individual books</li>
+            <li>Nowhere to put quantity per book</li>
+            <li>Foreign keys can't be enforced</li>
+          </ul>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>With OrderBooks (right)</h3>
+          <p class="small" style="font-family: Consolas, monospace">1, 1, qty 2 · 1, 2, qty 2 · 1, 3, qty 1</p>
+          <ul>
+            <li>One row per order-book pair</li>
+            <li>Quantity and UnitPrice live on the pair</li>
+            <li>Both links are simple, enforceable 1:N</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Rule:</strong> every M:N in your design becomes a bridge table with two foreign keys — plus any facts that belong to the <em>pair</em>.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 9b. CARDINALITY QUIZ                                -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1 · Quick Quiz</div>
+      <h2 class="title">Call It: 1:N or M:N?</h2>
+      <p class="subtitle">Shout the answer before it appears. Use the two-question test: "can one A have many Bs — and one B many As?"</p>
+      <div class="grid two">
+        <div class="card">
+          <h3>Customer ↔ Review</h3>
+          <p class="small" data-build><span class="tag green">1 : N</span> A customer writes many reviews; each review has one author. FK <span style="font-family:Consolas, monospace">CustomerID</span> on Reviews.</p>
+        </div>
+        <div class="card">
+          <h3>Student ↔ Course</h3>
+          <p class="small" data-build><span class="tag red">M : N</span> Bridge table <strong>Enrollments</strong> — which naturally carries the pair's own fact: the <strong>grade</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Order ↔ Invoice</h3>
+          <p class="small" data-build><span class="tag amber">1 : 1</span> The rare third type. Often merged into one table — kept separate when one half is sensitive or huge.</p>
+        </div>
+        <div class="card">
+          <h3>Product ↔ Category</h3>
+          <p class="small" data-build><span class="tag">It depends!</span> One category per product → 1:N. Products in several categories → M:N + bridge. The <em>business rule</em> decides.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>The lesson in that last one:</strong> cardinality is not a math fact — it encodes <em>your</em> business rules. Two stores can model the same pair differently, and both can be right.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 10. NORMALIZATION                                   -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1</div>
+      <h2 class="title">Normalization: Every Fact Lives in Exactly One Place</h2>
+      <div class="grid two">
+        <div class="card accent-red" data-build>
+          <h3>Redundant (before)</h3>
+          <p class="small" style="font-family: Consolas, monospace">
+            Order 1 · John · john@mail.com<br/>
+            Order 2 · John · john@mail.com<br/>
+            Order 3 · John · jhon@mail.com ← typo
+          </p>
+          <ul>
+            <li>John's email is stored 3 times</li>
+            <li>He updates it → you must fix every row</li>
+            <li>Miss one → two "truths" in the database</li>
+          </ul>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>Normalized (after)</h3>
+          <p class="small" style="font-family: Consolas, monospace">
+            Orders: 1 · CustomerID 101<br/>
+            Orders: 2 · CustomerID 101<br/>
+            Customers: 101 · John · john@mail.com
+          </p>
+          <ul>
+            <li>The email exists once, in Customers</li>
+            <li>Update it once — every order "sees" it</li>
+            <li>Orders just point with a foreign key</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>The smell test:</strong> if the same fact is typed into more than one row, your design has a normalization problem. Extract it into its own table and point at it.</div>
+      <div class="callout amber" data-build><strong>It's a trade-off, not a religion:</strong> more tables = more joins. For this course, normalize customer data, product data, and anything users can edit. (You'll meet deliberate <em>de</em>normalization when you study performance.)</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 10b. FIND THE FLAWS                                 -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1 · Design Review</div>
+      <h2 class="title">Find the Flaws: a Table Someone Actually Proposed</h2>
+      <div class="grid two" style="grid-template-columns: 1fr 1.15fr;">
+        <pre class="code">Table Orders {
+  OrderID          int
+  CustomerName     varchar
+  CustomerEmail    varchar
+  CustomerPassword varchar
+  BookTitles       varchar
+                   // "1984, Dune, …"
+  Total            float
+}</pre>
+        <div class="grid two" style="gap: .75rem; margin: 0; align-content: start;">
+          <div class="card accent-red" data-build>
+            <h3>Flaw 1 · No primary key</h3>
+            <p class="small">OrderID isn't declared PK — nothing stops two orders with the same ID.</p>
+          </div>
+          <div class="card accent-red" data-build>
+            <h3>Flaw 2 · Duplicated facts</h3>
+            <p class="small">Customer name and email retyped on every order → the John problem. Extract to Customers + FK.</p>
+          </div>
+          <div class="card accent-red" data-build>
+            <h3>Flaw 3 · The comma-list</h3>
+            <p class="small">BookTitles is a hidden M:N crying for a bridge — storing fragile titles instead of stable IDs.</p>
+          </div>
+          <div class="card accent-red" data-build>
+            <h3>Flaw 4 · float + password?!</h3>
+            <p class="small">float rounds pennies away — money is decimal. And a password doesn't belong on Orders at all — hashed, in Users, only.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Score yourself:</strong> each flaw takes 30 seconds to fix on a diagram today — and a migration project to fix in production next year. That asymmetry is the whole argument for this lecture.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 11. BEST PRACTICES                                  -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1</div>
+      <h2 class="title">Schema Best Practices</h2>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>1 · Every table gets a primary key</h3>
+          <p class="small">Usually an auto-incrementing integer ID. Uniqueness on business fields (Email, ISBN) is added as a separate <strong>unique constraint</strong>.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>2 · Foreign keys, enforced</h3>
+          <p class="small">Declare them as constraints so the database itself refuses an order pointing at a customer who doesn't exist. Integrity by law, not by hope.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>3 · Index what you search</h3>
+          <p class="small">Email lookups at login, product searches by title, orders by date — indexes make these fast. (Primary keys are indexed automatically.)</p>
+        </div>
+        <div class="card" data-build>
+          <h3>4 · Types and defaults that defend you</h3>
+          <p class="small">DECIMAL for money (never FLOAT), NOT NULL where a value must exist, defaults like Status = 'Pending' and CreatedAt = now.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Naming convention (ours for this course):</strong> tables plural (<span style="font-family:Consolas, monospace">Books</span>), keys as <span style="font-family:Consolas, monospace">TableNameID</span>, no spaces, consistent casing. Boring names are a feature.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12. DISCUSSION                                      -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.1 · Discussion</div>
+      <h2 class="title">Talk It Through (5 Minutes)</h2>
+      <div class="grid three">
+        <div class="card accent-blue" data-build>
+          <h3>Question 1</h3>
+          <p>What breaks if we <strong>don't normalize</strong> a product catalog?</p>
+          <p class="small"><em>Think: duplicated prices, update anomalies, storage…</em></p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Question 2</h3>
+          <p>Why separate <strong>Orders</strong> from <strong>OrderBooks</strong>?</p>
+          <p class="small"><em>Think: order-level facts vs line-level facts…</em></p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Question 3</h3>
+          <p>Should we store <strong>passwords</strong> as plain text?</p>
+          <p class="small"><em>Careful — this one has only one right answer.</em></p>
+        </div>
+      </div>
+      <div class="callout amber" data-build><strong>On question 3 — never.</strong> Store a one-way <strong>hash</strong> (bcrypt). Even the database administrator shouldn't be able to read a password. One data breach with plain-text passwords can end a company — and its founder's reputation.</div>
+      <div class="callout" data-build>Pair up, take the first two questions, then we compare answers.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 13. DIVIDER 3.2                                     -->
+    <!-- ================================================== -->
+    <section class="slide divider">
+      <div class="kicker">Lecture 3.2</div>
+      <h2 class="title">ERD Workshop: The Online Bookstore</h2>
+      <p class="subtitle">Five steps from business description to complete diagram —<br/>and this exact schema becomes the database you'll build in Week 4 and code against in Week 5.</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 14. WORKSHOP ROADMAP                                -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2</div>
+      <h2 class="title">The 5-Step Method</h2>
+      <ul class="points">
+        <li data-build><strong>Step 1 · Identify entities</strong> — hunt the nouns in the business description.</li>
+        <li data-build><strong>Step 2 · Define attributes</strong> — what must we remember about each? Pick keys and types.</li>
+        <li data-build><strong>Step 3 · Establish relationships</strong> — 1:N or M:N? Bridges where needed.</li>
+        <li data-build><strong>Step 4 · Normalize</strong> — hunt repeated facts and extract them.</li>
+        <li data-build><strong>Step 5 · Draw it for real</strong> — dbdiagram.io, then export SQL.</li>
+      </ul>
+      <div class="callout" data-build><strong>Why a bookstore?</strong> It's the classic teaching domain: rich enough to need bridges (books have multiple authors!), small enough to finish in one session — and it's the sample project in our course repository.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 15. STEP 1: IDENTIFY ENTITIES                       -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · Step 1</div>
+      <h2 class="title">Identify Entities: Hunt the Nouns</h2>
+      <div class="card" style="font-size: 1.25rem; line-height: 1.9;">
+        "An online bookstore sells <mark class="hl" data-build>books</mark>, each written by one or more <mark class="hl" data-build>authors</mark>. <mark class="hl" data-build>Customers</mark> create accounts and place <mark class="hl" data-build>orders</mark> containing one or more books. Every order is settled by a <mark class="hl" data-build>payment</mark>."
+      </div>
+      <div class="grid two">
+        <div class="card accent-green" data-build>
+          <h3>Our five entities</h3>
+          <p style="font-family: Consolas, monospace; font-size: 1.05rem;">Books · Authors · Customers · Orders · Payments</p>
+          <p class="small">(Two bridge tables will appear in Step 3 — we don't know that yet.)</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Selection tips</h3>
+          <ul>
+            <li>Entities are <strong>nouns</strong> with independent existence</li>
+            <li>You must need to <strong>store facts</strong> about it</li>
+            <li>"Account" here is not separate — it's part of Customer</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Not every noun survives:</strong> "bookstore" is the business itself, not data. "Stock" is an attribute of Books, not an entity. When in doubt ask: <em>would it get its own rows?</em></div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 16. STEP 2: DEFINE ATTRIBUTES                       -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · Step 2</div>
+      <h2 class="title">Define Attributes — and Choose Keys</h2>
+      <div class="grid two">
+        <div class="etable" data-build>
+          <div class="ehead">Books</div>
+          <div class="erow">BookID <span class="key pk">PK</span><span class="muted">int, auto</span></div>
+          <div class="erow">Title <span class="muted">nvarchar(255), not null</span></div>
+          <div class="erow">ISBN <span class="key uq">UNIQUE</span><span class="muted">nvarchar(20)</span></div>
+          <div class="erow">Genre <span class="muted">nvarchar(100)</span></div>
+          <div class="erow">Price <span class="muted">decimal(10,2), not null</span></div>
+          <div class="erow">Stock <span class="muted">int, default 0</span></div>
+          <div class="erow">PublishDate, Description</div>
+        </div>
+        <div>
+          <div class="etable" data-build>
+            <div class="ehead">Authors</div>
+            <div class="erow">AuthorID <span class="key pk">PK</span><span class="muted">int, auto</span></div>
+            <div class="erow">FirstName, LastName <span class="muted">not null</span></div>
+            <div class="erow">Bio, BirthDate, Nationality</div>
+          </div>
+          <div class="card accent-blue" data-build style="margin-top: 1rem;">
+            <h3>Choosing wisely</h3>
+            <ul>
+              <li><strong>PK:</strong> invented ID, auto-increment</li>
+              <li><strong>ISBN:</strong> unique, but <em>not</em> the PK — it's long, and typos happen</li>
+              <li><strong>decimal(10,2)</strong> for money — never float</li>
+              <li><strong>NULL policy:</strong> what's truly optional? Bio yes, Title no</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Class challenge:</strong> draft the attributes for Customers before the next slide. What must be unique? What can be empty?</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 17. STEP 3: RELATIONSHIPS                           -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · Step 3</div>
+      <h2 class="title">Establish Relationships</h2>
+      <table class="tbl">
+        <tr><th style="width:34%">Pair</th><th style="width:14%">Type</th><th>Reasoning</th></tr>
+        <tr data-build><td>Customers → Orders</td><td><strong>1 : N</strong></td><td>A customer places many orders; each order has one customer. FK on Orders.</td></tr>
+        <tr data-build><td>Orders → Payments</td><td><strong>1 : N</strong></td><td>An order can have several payment attempts (failed, retried). FK on Payments.</td></tr>
+        <tr data-build><td>Orders ↔ Books</td><td><strong>M : N</strong></td><td>Orders hold many books, books appear in many orders → bridge <strong>OrderBooks</strong> (+ Quantity, UnitPrice).</td></tr>
+        <tr data-build><td>Books ↔ Authors</td><td><strong>M : N</strong></td><td>Co-authored books, prolific authors → bridge <strong>Author_Book</strong> (+ isMain flag).</td></tr>
+      </table>
+      <div class="callout" data-build><strong>The decision procedure:</strong> for any pair A–B ask two questions. "Can one A have many Bs?" and "Can one B have many As?" One yes = 1:N (FK on the many side). Two yeses = M:N (bridge). Two nos = maybe they're the same table.</div>
+      <div class="callout green" data-build><strong>Notice:</strong> our five entities became <strong>seven tables</strong>. Bridges always reveal themselves in this step — that's normal, not a mistake.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 18. STEP 4: NORMALIZATION EXERCISE                  -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · Step 4</div>
+      <h2 class="title">Normalization Check: the Shipping Address</h2>
+      <p class="subtitle">A classic trap — someone proposes storing the delivery address on every order:</p>
+      <div class="grid two">
+        <div class="card accent-red" data-build>
+          <h3>Before</h3>
+          <p class="small" style="font-family: Consolas, monospace;">
+            Orders: OrderID 1, CustomerID 101,<br/>
+            Street "123 Elm St", City "New York"…<br/>
+            Orders: OrderID 2, CustomerID 101,<br/>
+            Street "123 Elm St", City "New York"…
+          </p>
+          <p class="small">Customer moves → their address is wrong on every historical order… or do we <em>want</em> history?</p>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>After</h3>
+          <p class="small" style="font-family: Consolas, monospace;">
+            Addresses: AddressID 501, CustomerID 101,<br/>
+            Street, City, Country<br/>
+            Orders: OrderID 1, ShippingAddressID 501
+          </p>
+          <p class="small">Addresses live once; orders point at them. A customer can keep several (home, office).</p>
+        </div>
+      </div>
+      <div class="callout amber" data-build><strong>The subtle part — worth a debate:</strong> should editing an address rewrite where old orders <em>were</em> shipped? If not, orders should point at an address row that is never edited, only replaced. Data modeling is full of business questions wearing technical clothes.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 19. STEP 5: DBDIAGRAM.IO                            -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · Step 5</div>
+      <h2 class="title">Draw It for Real: dbdiagram.io</h2>
+      <div class="grid two" style="grid-template-columns: 1fr 1.2fr;">
+        <div>
+          <div class="card" data-build>
+            <h3>Live demo</h3>
+            <ul>
+              <li>Open <strong>dbdiagram.io</strong> (free, no install)</li>
+              <li>Type the schema in its text syntax →</li>
+              <li>The diagram draws itself as you type</li>
+              <li>Export: PNG/PDF for your homework, <strong>SQL</strong> for Week 4</li>
+            </ul>
+          </div>
+          <div class="callout" data-build style="margin-top: 1rem;"><strong>Why text beats dragging boxes:</strong> it's faster, it's versionable, and the export gives you real CREATE TABLE statements.</div>
+        </div>
+        <pre class="code" data-build>Table Books {
+  BookID    int          [pk, increment]
+  Title     nvarchar(255) [not null]
+  ISBN      nvarchar(20)  [unique, not null]
+  Price     decimal(10,2) [not null]
+  Stock     int           [default: 0]
+}
+
+Table Orders {
+  OrderID     int [pk, increment]
+  CustomerID  int [ref: &gt; Customers.CustomerID]
+  TotalAmount decimal(10,2)
+  Status      nvarchar(50) [default: 'Pending']
+}
+
+Table OrderBooks {
+  OrderBookID int [pk, increment]
+  OrderID     int [ref: &gt; Orders.OrderID]
+  BookID      int [ref: &gt; Books.BookID]
+  Quantity    int
+  UnitPrice   decimal(10,2)
+}</pre>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 20. PAYOFF: COMPLETE ERD                            -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · The Payoff</div>
+      <h2 class="title">The Complete Bookstore ERD</h2>
+      <svg class="diagram" viewBox="0 0 960 480" role="img" aria-label="Complete entity relationship diagram of the bookstore schema">
+        <!-- tables (static) -->
+        <g>
+          <rect class="svg-node" x="20" y="140" width="190" height="112" rx="10"/>
+          <rect x="20" y="140" width="190" height="26" rx="10" fill="var(--blue-900)"/>
+          <text x="115" y="158" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">CUSTOMERS</text>
+          <text x="34" y="186" font-size="11.5" fill="var(--ink)" font-family="Consolas, monospace">CustomerID (PK)</text>
+          <text x="34" y="205" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">FirstName, LastName</text>
+          <text x="34" y="224" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">Email (unique), Phone</text>
+          <text x="34" y="243" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">Address, City, Country</text>
+        </g>
+        <g>
+          <rect class="svg-node" x="280" y="55" width="190" height="130" rx="10"/>
+          <rect x="280" y="55" width="190" height="26" rx="10" fill="var(--blue-900)"/>
+          <text x="375" y="73" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">ORDERS</text>
+          <text x="294" y="101" font-size="11.5" fill="var(--ink)" font-family="Consolas, monospace">OrderID (PK)</text>
+          <text x="294" y="120" font-size="11.5" fill="var(--blue-600)" font-family="Consolas, monospace">CustomerID (FK)</text>
+          <text x="294" y="139" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">OrderDate, TotalAmount</text>
+          <text x="294" y="158" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">Status ('Pending')</text>
+        </g>
+        <g>
+          <rect class="svg-node" x="280" y="330" width="190" height="112" rx="10"/>
+          <rect x="280" y="330" width="190" height="26" rx="10" fill="var(--blue-900)"/>
+          <text x="375" y="348" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">PAYMENTS</text>
+          <text x="294" y="376" font-size="11.5" fill="var(--ink)" font-family="Consolas, monospace">PaymentID (PK)</text>
+          <text x="294" y="395" font-size="11.5" fill="var(--blue-600)" font-family="Consolas, monospace">OrderID (FK)</text>
+          <text x="294" y="414" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">Amount, Method</text>
+          <text x="294" y="433" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">TransactionRef, Status</text>
+        </g>
+        <g>
+          <rect x="530" y="55" width="180" height="130" rx="10" fill="var(--green-100)" stroke="var(--green)" stroke-width="2"/>
+          <rect x="530" y="55" width="180" height="26" rx="10" fill="var(--green)"/>
+          <text x="620" y="73" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">ORDERBOOKS</text>
+          <text x="544" y="101" font-size="11.5" fill="var(--ink)" font-family="Consolas, monospace">OrderBookID (PK)</text>
+          <text x="544" y="120" font-size="11.5" fill="var(--blue-600)" font-family="Consolas, monospace">OrderID (FK), BookID (FK)</text>
+          <text x="544" y="139" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">Quantity (&gt; 0)</text>
+          <text x="544" y="158" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">UnitPrice</text>
+        </g>
+        <g>
+          <rect class="svg-node" x="760" y="55" width="180" height="140" rx="10"/>
+          <rect x="760" y="55" width="180" height="26" rx="10" fill="var(--blue-900)"/>
+          <text x="850" y="73" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">BOOKS</text>
+          <text x="774" y="101" font-size="11.5" fill="var(--ink)" font-family="Consolas, monospace">BookID (PK)</text>
+          <text x="774" y="120" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">Title, ISBN (unique)</text>
+          <text x="774" y="139" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">Genre, Price, Stock</text>
+          <text x="774" y="158" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">PublishDate, Descr.</text>
+        </g>
+        <g>
+          <rect x="530" y="330" width="180" height="105" rx="10" fill="var(--green-100)" stroke="var(--green)" stroke-width="2"/>
+          <rect x="530" y="330" width="180" height="26" rx="10" fill="var(--green)"/>
+          <text x="620" y="348" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">AUTHOR_BOOK</text>
+          <text x="544" y="376" font-size="11.5" fill="var(--ink)" font-family="Consolas, monospace">Author_BookID (PK)</text>
+          <text x="544" y="395" font-size="11.5" fill="var(--blue-600)" font-family="Consolas, monospace">BookId (FK), AuthorId (FK)</text>
+          <text x="544" y="414" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">isMain (bit)</text>
+        </g>
+        <g>
+          <rect class="svg-node" x="760" y="330" width="180" height="112" rx="10"/>
+          <rect x="760" y="330" width="180" height="26" rx="10" fill="var(--blue-900)"/>
+          <text x="850" y="348" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">AUTHORS</text>
+          <text x="774" y="376" font-size="11.5" fill="var(--ink)" font-family="Consolas, monospace">AuthorID (PK)</text>
+          <text x="774" y="395" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">FirstName, LastName</text>
+          <text x="774" y="414" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">Bio, BirthDate</text>
+          <text x="774" y="433" font-size="11.5" fill="var(--muted)" font-family="Consolas, monospace">Nationality</text>
+        </g>
+        <!-- relationships (build) -->
+        <g data-build>
+          <line class="draw" pathLength="1" x1="212" y1="185" x2="278" y2="140" stroke="var(--blue-600)" stroke-width="2.2" marker-start="url(#one3)" marker-end="url(#crow3)"/>
+          <text x="215" y="130" font-size="12" fill="var(--blue-900)" font-weight="700">places</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="375" y1="187" x2="375" y2="328" stroke="var(--blue-600)" stroke-width="2.2" marker-start="url(#one3)" marker-end="url(#crow3)"/>
+          <text x="385" y="262" font-size="12" fill="var(--blue-900)" font-weight="700">paid by</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="472" y1="120" x2="528" y2="120" stroke="var(--blue-600)" stroke-width="2.2" marker-start="url(#one3)" marker-end="url(#crow3)"/>
+          <text x="466" y="105" font-size="12" fill="var(--blue-900)" font-weight="700">contains</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="758" y1="120" x2="712" y2="120" stroke="var(--blue-600)" stroke-width="2.2" marker-start="url(#one3)" marker-end="url(#crow3)"/>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="820" y1="197" x2="700" y2="328" stroke="var(--blue-600)" stroke-width="2.2" marker-start="url(#one3)" marker-end="url(#crow3)"/>
+          <text x="730" y="255" font-size="12" fill="var(--blue-900)" font-weight="700">written by</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="758" y1="385" x2="712" y2="385" stroke="var(--blue-600)" stroke-width="2.2" marker-start="url(#one3)" marker-end="url(#crow3)"/>
+        </g>
+        <g data-build>
+          <rect x="20" y="30" width="190" height="60" rx="10" fill="var(--blue-100)" stroke="#c6dcf5"/>
+          <text x="115" y="55" text-anchor="middle" font-size="12.5" fill="var(--blue-900)" font-weight="700">5 entities + 2 bridges</text>
+          <text x="115" y="74" text-anchor="middle" font-size="12.5" fill="var(--blue-900)" font-weight="700">= 7 tables, 6 relationships</text>
+        </g>
+        <defs>
+          <marker id="crow3" markerWidth="18" markerHeight="18" refX="16" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M16,0 L0,8 L16,16 M0,8 L16,8" fill="none" stroke="var(--blue-600)" stroke-width="1.7"/>
+          </marker>
+          <marker id="one3" markerWidth="16" markerHeight="18" refX="6" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M6,1 L6,15 M11,1 L11,15" fill="none" stroke="var(--blue-600)" stroke-width="1.7"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="callout green" data-build><strong>This is not a textbook example.</strong> This exact schema is <span style="font-family:Consolas, monospace">sqlSchema.sql</span> in our course repository — in Week 4 you run it in MSSQL, in Week 5 your Node.js API queries it.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 20b. THE SCHEMA IN MOTION                           -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · The Schema in Motion</div>
+      <h2 class="title">Watch One Real Order Flow Through It</h2>
+      <p class="subtitle">Emma Johnson (a real row in our sample data) taps "Buy" on an 8-book order. Follow the writes:</p>
+      <div class="grid three">
+        <div class="etable">
+          <div class="ehead">1 · Customers (read)</div>
+          <div class="erow" data-build style="background: var(--blue-100);">10 · Emma Johnson</div>
+          <div class="erow" data-build style="background: var(--blue-100);">emma.johnson@example.com</div>
+        </div>
+        <div class="etable">
+          <div class="ehead">2 · Orders (+1 row)</div>
+          <div class="erow" data-build style="background: var(--green-100);">OrderID 10 · CustomerID 10</div>
+          <div class="erow" data-build style="background: var(--green-100);">115.43 · 'Pending'</div>
+        </div>
+        <div class="etable">
+          <div class="ehead">3 · OrderBooks (+8 rows)</div>
+          <div data-build>
+            <div class="erow" style="background: var(--green-100);">10 · Book 2 · qty 2 · @9.99</div>
+            <div class="erow" style="background: var(--green-100);">10 · Book 3 · qty 2 · @14.99</div>
+            <div class="erow" style="background: var(--green-100);">10 · Book 5 · qty 2 · @11.99</div>
+            <div class="erow" style="background: var(--green-100);">… 5 more rows</div>
+          </div>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="etable">
+          <div class="ehead">4 · Books (stock updated)</div>
+          <div data-build>
+            <div class="erow" style="background: var(--amber-100);">Animal Farm: Stock 40 → 38</div>
+            <div class="erow" style="background: var(--amber-100);">Sorcerer's Stone: Stock 100 → 98</div>
+          </div>
+        </div>
+        <div class="etable">
+          <div class="ehead">5 · Payments (+1 row)</div>
+          <div data-build>
+            <div class="erow" style="background: var(--green-100);">PaymentID 10 · OrderID 10</div>
+            <div class="erow" style="background: var(--green-100);">115.43 · Credit Card · TXN2010</div>
+          </div>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>One tap → one read and a dozen writes across 5 tables</strong> — every row tied to the others by keys, so nothing is orphaned and everything is queryable. When you write these INSERTs yourself in Week 4, you'll have already watched them happen.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 21. PRO DETAILS                                     -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · Design Details</div>
+      <h2 class="title">Four Details That Separate Pros from Beginners</h2>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>1 · UnitPrice lives on OrderBooks</h3>
+          <p class="small">Books.Price is <em>today's</em> price. The bridge stores the price <em>at the moment of sale</em> — so raising a price tomorrow doesn't silently rewrite last month's revenue. History must be immutable.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>2 · isMain on Author_Book</h3>
+          <p class="small">Bridge tables aren't just glue — they can carry facts about the pair. "Tales of the Unknown" has three authors; isMain marks who goes first on the cover.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>3 · Unique ≠ primary key</h3>
+          <p class="small">Email and ISBN get UNIQUE constraints, but the PK stays a plain integer. Business identifiers change (people retype emails); primary keys never should.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>4 · Defaults &amp; checks as guardrails</h3>
+          <p class="small">Status defaults to 'Pending', CreatedAt to now, and a CHECK enforces Quantity &gt; 0. The schema quietly refuses bad data even when the app has a bug.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>The common thread:</strong> the database defends itself. Assume every app that touches it will someday have a bug — because it will.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 22. CANVAS → ENTITIES                               -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · Back to Your Project</div>
+      <h2 class="title">From Your Canvas to Your Entities</h2>
+      <p class="subtitle">Your Week 2 Business Model Canvas already contains your data model — read it column by column:</p>
+      <table class="tbl">
+        <tr><th style="width:30%">Canvas block</th><th>Becomes data about…</th><th style="width:32%">Coffee Cart example</th></tr>
+        <tr data-build><td>Customer Segments</td><td>who buys</td><td>Users (accounts, loyalty punches)</td></tr>
+        <tr data-build><td>Value Propositions</td><td>what you offer</td><td>Menu items, add-ons, prices</td></tr>
+        <tr data-build><td>Channels</td><td>how orders arrive</td><td>Orders (+ source: app / walk-up)</td></tr>
+        <tr data-build><td>Customer Relationships</td><td>history &amp; loyalty</td><td>PunchCards, FlavorVotes</td></tr>
+        <tr data-build><td>Revenue Streams</td><td>the money</td><td>Orders, OrderItems, Payments, Passes</td></tr>
+        <tr data-build><td>Key Activities / Resources</td><td>the operation</td><td>CartSchedule (where the cart is when!), Inventory</td></tr>
+      </table>
+      <div class="callout" data-build><strong>Notice CartSchedule:</strong> the roaming cart's location plan is an entity nobody puts on a generic template — it comes straight from <em>our</em> value proposition ("the cart finds you"). Your model should have one table like that: unmistakably yours.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 23. ACTIVITY                                        -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 3.2 · Hands-On</div>
+      <h2 class="title">Your Turn: Draft Your ERD (15 Minutes)</h2>
+      <div class="grid two">
+        <div>
+          <ul class="points">
+            <li data-build><strong>1 · Teams of 3–4</strong> — same teams as your canvas.</li>
+            <li data-build><strong>2 · Hunt the nouns</strong> in your own business idea → at least 5 entities.</li>
+            <li data-build><strong>3 · Attributes &amp; keys</strong> for your two most important entities.</li>
+            <li data-build><strong>4 · Relationships</strong> — run the two-question test on every pair; add bridges.</li>
+            <li data-build><strong>5 · Sketch it</strong> — dbdiagram.io or paper, either is fine today.</li>
+          </ul>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Stuck for entities? Steal these patterns</h3>
+          <ul>
+            <li><strong>Food delivery:</strong> Restaurants, Dishes, Customers, Orders, Drivers</li>
+            <li><strong>Course platform:</strong> Students, Courses, Enrollments (bridge!), Assignments</li>
+            <li><strong>Rental service:</strong> Items, Users, Bookings, Payments, Reviews</li>
+          </ul>
+          <p class="small">Every one of these hides at least one M:N. Find it.</p>
+        </div>
+      </div>
+      <div class="callout amber" data-build><strong>Time box:</strong> 10 minutes drafting, then swap with the next team for 5 minutes — they must find one missing entity or one wrong cardinality in your diagram. Fresh eyes catch what yours can't.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 24. HOMEWORK                                        -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Assignment · Due Week 4</div>
+      <h2 class="title">Homework: Your Complete ERD</h2>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>1 · The diagram</h3>
+          <ul>
+            <li>Built in dbdiagram.io, exported as PNG or PDF</li>
+            <li>All entities, all relationships, all bridges</li>
+            <li>PKs and FKs clearly marked</li>
+            <li>Sensible data types on every attribute</li>
+          </ul>
+        </div>
+        <div class="card" data-build>
+          <h3>2 · One page of reasoning</h3>
+          <ul>
+            <li>Why these entities (link them to your canvas blocks)</li>
+            <li>Each M:N: why, and what the bridge carries</li>
+            <li>One normalization decision you made</li>
+            <li>One open question you're unsure about</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Success tips:</strong> start from the canvas-to-entities mapping, model the customer journey step by step (browse → order → pay → fulfil), and keep it small — 6 to 9 tables is the sweet spot. Complexity is not graded; coherence is.</div>
+      <div class="callout green" data-build><strong>Why it matters:</strong> this ERD becomes your CREATE TABLE statements in Week 4. An hour of care now saves a week of ALTER TABLE later.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 25. WRAP-UP + NEXT WEEK                             -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Week 3 · Wrap-Up</div>
+      <h2 class="title">What You Now Know</h2>
+      <ul class="points">
+        <li data-build>Entities, attributes, records — and why every table needs an invented, stable <strong>primary key</strong>.</li>
+        <li data-build><strong>1:N</strong> puts the foreign key on the many side; <strong>M:N</strong> always becomes a bridge table — often carrying its own facts.</li>
+        <li data-build><strong>Normalization:</strong> every fact in exactly one place; point at it with keys.</li>
+        <li data-build>The full bookstore ERD: 5 entities + 2 bridges = 7 tables — the exact schema of our course project.</li>
+        <li data-build>Your canvas already names your entities — including the one table that's unmistakably yours.</li>
+      </ul>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>Week 3</h3>
+          <p class="small"><strong>ERD design</strong><br/>the blueprint (done!)</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Week 4</h3>
+          <p class="small"><strong>MSSQL</strong><br/>CREATE TABLE, INSERT, SELECT — your ERD becomes real</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Week 5</h3>
+          <p class="small"><strong>Node.js API</strong><br/>code that serves your data to a storefront</p>
+        </div>
+      </div>
+      <div class="callout green" data-build><strong>Due next class:</strong> ERD (PNG/PDF) + one page of reasoning. It will be the foundation of everything we build from here.</div>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    <div class="controls">
+      <button id="prev" type="button" class="nav-btn ghost" aria-label="Previous">◀ Prev</button>
+      <button id="next" type="button" class="nav-btn" aria-label="Next">Next ▶</button>
+    </div>
+    <div class="stepdots" id="stepdots" title="Reveal steps on this slide"></div>
+    <div class="progress"><div id="bar" class="bar"></div></div>
+    <div class="counter" id="counter">1 / 1</div>
+    <button id="fs" type="button" class="nav-btn ghost" aria-label="Fullscreen" title="Fullscreen (F)">⛶</button>
+  </div>
+</div>
+
+<script src="deck.js"></script>
+</body>
+</html>

@@ -351,3 +351,57 @@ button.nav-btn.ghost { background: var(--bg-soft); color: var(--blue-900); borde
 .slide-menu-item.current { background: var(--blue-900); color: #fff; }
 .slide-menu-item.current .num { color: #cfe1f5; }
 @media print { .slide-menu { display: none; } }
+
+/* ---------- entity tables & code (Week 3) ---------- */
+.etable {
+  background: var(--bg);
+  border: 2px solid var(--blue-900);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: .85rem;
+}
+.etable .ehead {
+  background: var(--blue-900); color: #fff;
+  font-weight: 700; padding: .4rem .75rem;
+  letter-spacing: .02em;
+}
+.etable .erow {
+  padding: .3rem .75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: .5rem; align-items: baseline;
+  font-family: Consolas, 'Courier New', monospace;
+  color: var(--ink-2);
+}
+.etable .erow:last-child { border-bottom: none; }
+.etable .erow .muted { color: var(--muted); margin-left: auto; font-size: .75rem; }
+.key {
+  font-size: .62rem; font-weight: 800; padding: .08rem .4rem;
+  border-radius: 4px; letter-spacing: .04em;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+.key.pk { background: var(--amber-100); color: var(--amber); border: 1px solid #eedaad; }
+.key.fk { background: var(--blue-100); color: var(--blue-600); border: 1px solid #c6dcf5; }
+.key.uq { background: var(--green-100); color: var(--green); border: 1px solid #bfe6cf; }
+
+pre.code {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .9rem 1.1rem;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: .88rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: .75rem 0 0;
+  color: var(--ink-2);
+}
+pre.code .kw { color: var(--blue-600); font-weight: 700; }
+
+mark.hl {
+  background: var(--amber-100);
+  border: 1px solid #eedaad;
+  color: var(--ink);
+  padding: 0 .25rem;
+  border-radius: 5px;
+  font-weight: 700;
+}
