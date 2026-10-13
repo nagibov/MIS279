@@ -405,3 +405,21 @@ mark.hl {
   border-radius: 5px;
   font-weight: 700;
 }
+
+/* ---------- SQL code, results & messages (Week 4) ---------- */
+pre.code .cm  { color: #718096; font-style: italic; }
+pre.code .str { color: var(--green); }
+pre.code.tight { font-size: .8rem; padding: .7rem .9rem; }
+.card pre.code { background: var(--bg); margin-top: .5rem; }
+
+table.tbl.mono { font-family: Consolas, 'Courier New', monospace; font-size: .88rem; }
+table.tbl.mono th, table.tbl.mono td { padding: .4rem .75rem; }
+
+.sqlmsg {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: .8rem; line-height: 1.45;
+  background: var(--red-100); color: var(--red);
+  border: 1px solid #f3c1c1; border-radius: 8px;
+  padding: .5rem .75rem; margin-top: .5rem;
+}
+.sqlmsg.ok { background: var(--green-100); color: var(--green); border-color: #bfe6cf; }

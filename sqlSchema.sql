@@ -214,7 +214,7 @@ SET IDENTITY_INSERT [dbo].[OrderBooks] ON
 GO
 INSERT [dbo].[OrderBooks] ([OrderBookID], [OrderID], [BookID], [Quantity], [UnitPrice]) VALUES (1, 1, 1, 2, CAST(12.99 AS Decimal(10, 2)))
 GO
-INSERT [dbo].[OrderBooks] ([OrderBookID], [OrderID], [BookID], [Quantity], [UnitPrice]) VALUES (2, 1, 2, 2, CAST(14.99 AS Decimal(10, 2)))
+INSERT [dbo].[OrderBooks] ([OrderBookID], [OrderID], [BookID], [Quantity], [UnitPrice]) VALUES (2, 1, 2, 2, CAST(9.99 AS Decimal(10, 2)))
 GO
 INSERT [dbo].[OrderBooks] ([OrderBookID], [OrderID], [BookID], [Quantity], [UnitPrice]) VALUES (3, 2, 3, 2, CAST(14.99 AS Decimal(10, 2)))
 GO
@@ -350,69 +350,69 @@ SET IDENTITY_INSERT [dbo].[OrderBooks] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Orders] ON 
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (1, 1, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(27.98 AS Decimal(10, 2)), N'Completed')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (1, 1, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(45.96 AS Decimal(10, 2)), N'Completed')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (2, 2, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(14.99 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (2, 2, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(29.98 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (3, 3, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(15.99 AS Decimal(10, 2)), N'Completed')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (3, 3, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(31.98 AS Decimal(10, 2)), N'Completed')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (4, 4, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(25.98 AS Decimal(10, 2)), N'Completed')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (4, 4, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(51.96 AS Decimal(10, 2)), N'Completed')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (5, 5, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(13.99 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (5, 5, CAST(N'2025-10-21T10:16:08.087' AS DateTime), CAST(27.98 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (6, 6, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(79.94 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (6, 6, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(159.88 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (7, 7, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(72.46 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (7, 7, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(144.92 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (8, 8, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(103.44 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (8, 8, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(206.88 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (9, 9, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(71.95 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (9, 9, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(143.90 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (10, 10, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(115.43 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (10, 10, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(230.86 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (11, 1, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(79.94 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (11, 1, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(159.88 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (12, 2, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(105.44 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (12, 2, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(210.88 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (13, 3, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(74.46 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (13, 3, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(148.92 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (14, 4, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(73.46 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (14, 4, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(146.92 AS Decimal(10, 2)), N'Pending')
 GO
-INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (15, 5, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(83.94 AS Decimal(10, 2)), N'Pending')
+INSERT [dbo].[Orders] ([OrderID], [CustomerID], [OrderDate], [TotalAmount], [Status]) VALUES (15, 5, CAST(N'2025-11-04T09:51:18.827' AS DateTime), CAST(167.88 AS Decimal(10, 2)), N'Pending')
 GO
 SET IDENTITY_INSERT [dbo].[Orders] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Payments] ON 
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (1, 1, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(27.98 AS Decimal(10, 2)), N'Credit Card', N'TXN1001', N'Completed')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (1, 1, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(45.96 AS Decimal(10, 2)), N'Credit Card', N'TXN1001', N'Completed')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (2, 2, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(14.99 AS Decimal(10, 2)), N'PayPal', N'TXN1002', N'Pending')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (2, 2, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(29.98 AS Decimal(10, 2)), N'PayPal', N'TXN1002', N'Pending')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (3, 3, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(15.99 AS Decimal(10, 2)), N'Credit Card', N'TXN1003', N'Completed')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (3, 3, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(31.98 AS Decimal(10, 2)), N'Credit Card', N'TXN1003', N'Completed')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (4, 4, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(25.98 AS Decimal(10, 2)), N'Bank Transfer', N'TXN1004', N'Completed')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (4, 4, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(51.96 AS Decimal(10, 2)), N'Bank Transfer', N'TXN1004', N'Completed')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (5, 5, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(13.99 AS Decimal(10, 2)), N'Cash', N'TXN1005', N'Pending')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (5, 5, CAST(N'2025-10-21T10:16:08.307' AS DateTime), CAST(27.98 AS Decimal(10, 2)), N'Cash', N'TXN1005', N'Pending')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (6, 6, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(79.94 AS Decimal(10, 2)), N'PayPal', N'TXN2006', N'Completed')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (6, 6, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(159.88 AS Decimal(10, 2)), N'PayPal', N'TXN2006', N'Completed')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (7, 7, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(72.46 AS Decimal(10, 2)), N'Credit Card', N'TXN2007', N'Pending')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (7, 7, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(144.92 AS Decimal(10, 2)), N'Credit Card', N'TXN2007', N'Pending')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (8, 8, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(103.44 AS Decimal(10, 2)), N'Bank Transfer', N'TXN2008', N'Completed')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (8, 8, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(206.88 AS Decimal(10, 2)), N'Bank Transfer', N'TXN2008', N'Completed')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (9, 9, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(71.95 AS Decimal(10, 2)), N'PayPal', N'TXN2009', N'Pending')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (9, 9, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(143.90 AS Decimal(10, 2)), N'PayPal', N'TXN2009', N'Pending')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (10, 10, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(115.43 AS Decimal(10, 2)), N'Credit Card', N'TXN2010', N'Completed')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (10, 10, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(230.86 AS Decimal(10, 2)), N'Credit Card', N'TXN2010', N'Completed')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (11, 11, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(79.94 AS Decimal(10, 2)), N'Bank Transfer', N'TXN2011', N'Pending')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (11, 11, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(159.88 AS Decimal(10, 2)), N'Bank Transfer', N'TXN2011', N'Pending')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (12, 12, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(105.44 AS Decimal(10, 2)), N'PayPal', N'TXN2012', N'Completed')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (12, 12, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(210.88 AS Decimal(10, 2)), N'PayPal', N'TXN2012', N'Completed')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (13, 13, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(74.46 AS Decimal(10, 2)), N'Credit Card', N'TXN2013', N'Pending')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (13, 13, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(148.92 AS Decimal(10, 2)), N'Credit Card', N'TXN2013', N'Pending')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (14, 14, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(73.46 AS Decimal(10, 2)), N'Bank Transfer', N'TXN2014', N'Completed')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (14, 14, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(146.92 AS Decimal(10, 2)), N'Bank Transfer', N'TXN2014', N'Completed')
 GO
-INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (15, 15, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(83.94 AS Decimal(10, 2)), N'PayPal', N'TXN2015', N'Pending')
+INSERT [dbo].[Payments] ([PaymentID], [OrderID], [PaymentDate], [Amount], [PaymentMethod], [TransactionReference], [Status]) VALUES (15, 15, CAST(N'2025-11-04T09:51:19.227' AS DateTime), CAST(167.88 AS Decimal(10, 2)), N'PayPal', N'TXN2015', N'Pending')
 GO
 SET IDENTITY_INSERT [dbo].[Payments] OFF
 GO

@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MIS 276 – Week 4: From ERD to a Live Database (MSSQL)</title>
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="deck" id="deck">
+
+    <!-- ================================================== -->
+    <!-- 1. TITLE                                            -->
+    <!-- ================================================== -->
+    <section class="slide divider active">
+      <div class="kicker">MIS 276 · E-Commerce &amp; Digital Business</div>
+      <span class="lecture-num">Week 4</span>
+      <h2 class="title">From ERD to a Live Database</h2>
+      <p class="subtitle">Your blueprint becomes real tables in Microsoft SQL Server —<br/>CREATE TABLE, INSERT, SELECT.</p>
+      <p class="small">Lecture 4.1 · From ERD to Tables &nbsp;&nbsp;|&nbsp;&nbsp; Lecture 4.2 · Data In, Answers Out</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 2. DIVIDER 4.1                                      -->
+    <!-- ================================================== -->
+    <section class="slide divider">
+      <div class="kicker">Lecture 4.1</div>
+      <h2 class="title">From ERD to Tables</h2>
+      <p class="subtitle">SQL Server &amp; SSMS · CREATE TABLE · Data types &amp; constraints · Foreign keys · Creation order</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 3. HOOK                                             -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · The Hook</div>
+      <h2 class="title">A Diagram Can't Take an Order</h2>
+      <p class="subtitle">Last week you drew the bookstore. This week it opens its doors.</p>
+      <div class="grid two">
+        <div class="card accent-amber" data-build>
+          <h3>Week 3 · the blueprint</h3>
+          <ul>
+            <li>Shows 7 tables and how they connect</li>
+            <li>Cannot store a single customer</li>
+            <li>Cannot refuse a bad order</li>
+            <li>Cannot answer "what sold best?"</li>
+          </ul>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>Week 4 · the building</h3>
+          <ul>
+            <li>The same 7 tables, running in SQL Server</li>
+            <li>Stores every row, permanently</li>
+            <li>Rejects data that breaks your rules</li>
+            <li>Answers business questions in one query</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>Define</h3>
+          <p style="font-family: Consolas, monospace;">CREATE · ALTER · DROP</p>
+          <p class="small">Build the shelves.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Change</h3>
+          <p style="font-family: Consolas, monospace;">INSERT · UPDATE · DELETE</p>
+          <p class="small">Stock them, sell from them.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Ask</h3>
+          <p style="font-family: Consolas, monospace;">SELECT</p>
+          <p class="small">Get answers back.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>That is all of today:</strong> three kinds of SQL sentence. By the end of class you will have typed each one against a real database.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 4. TOOLBOX                                          -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · Setup</div>
+      <h2 class="title">The Toolbox: Engine, Window, Database</h2>
+      <div class="grid three">
+        <div class="card accent-blue" data-build>
+          <h3>SQL Server</h3>
+          <p class="small">The <strong>engine</strong>. A program running in the background that stores the data and executes your SQL. It has no screen of its own.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>SSMS</h3>
+          <p class="small">The <strong>window</strong>. SQL Server Management Studio is where you type queries and see results. It only talks to the engine.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>ClassDemo</h3>
+          <p class="small">The <strong>database</strong>. One engine holds many databases; ours is called ClassDemo and holds the 7 bookstore tables.</p>
+        </div>
+      </div>
+      <div class="grid two" style="grid-template-columns: 1.1fr 1fr;">
+        <div class="card" data-build>
+          <h3>First connection</h3>
+          <ul>
+            <li>Server name: <span style="font-family:Consolas, monospace">localhost</span> or <span style="font-family:Consolas, monospace">localhost\SQLEXPRESS</span></li>
+            <li>Authentication: Windows Authentication</li>
+            <li>Tick <strong>Trust server certificate</strong>, then Connect</li>
+            <li><strong>New Query</strong>, type, press <strong>F5</strong> to run</li>
+          </ul>
+        </div>
+        <pre class="code" data-build><span class="kw">CREATE DATABASE</span> ClassDemo;
+<span class="kw">GO</span>
+<span class="kw">USE</span> ClassDemo;
+<span class="kw">GO</span>
+<span class="kw">SELECT</span> DB_NAME();  <span class="cm">-- should answer: ClassDemo</span></pre>
+      </div>
+      <div class="callout amber" data-build><strong>The number one beginner mistake:</strong> running your script in <span style="font-family:Consolas, monospace">master</span>. Before every F5, read the database dropdown in the toolbar. It must say ClassDemo.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 5. ERD → SQL TRANSLATION                            -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1</div>
+      <h2 class="title">Every Mark on Your ERD Has a SQL Keyword</h2>
+      <table class="tbl">
+        <tr><th style="width:27%">On the ERD</th><th style="width:36%">In SQL</th><th>Bookstore example</th></tr>
+        <tr data-build><td>Entity (a box)</td><td style="font-family:Consolas, monospace">CREATE TABLE</td><td>Books, Customers, Orders…</td></tr>
+        <tr data-build><td>Attribute + type</td><td style="font-family:Consolas, monospace">column + data type</td><td>Price DECIMAL(10,2)</td></tr>
+        <tr data-build><td><span class="key pk">PK</span> auto-numbered</td><td style="font-family:Consolas, monospace">IDENTITY(1,1) PRIMARY KEY</td><td>BookID: 1, 2, 3…</td></tr>
+        <tr data-build><td>"must have a value"</td><td style="font-family:Consolas, monospace">NOT NULL</td><td>Title, Price</td></tr>
+        <tr data-build><td><span class="key uq">UNIQUE</span></td><td style="font-family:Consolas, monospace">UNIQUE</td><td>ISBN, Email</td></tr>
+        <tr data-build><td>"default: …"</td><td style="font-family:Consolas, monospace">DEFAULT</td><td>Status = 'Pending', Stock = 0</td></tr>
+        <tr data-build><td><span class="key fk">FK</span> a relationship line</td><td style="font-family:Consolas, monospace">FOREIGN KEY … REFERENCES</td><td>Orders.CustomerID → Customers</td></tr>
+        <tr data-build><td>A business rule</td><td style="font-family:Consolas, monospace">CHECK</td><td>Quantity &gt; 0</td></tr>
+      </table>
+      <div class="callout" data-build><strong>Nothing new to design today.</strong> You made every one of these decisions last week. Today is translation, and SQL Server enforces each line from the moment the table exists.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 6. CREATE TABLE BOOKS, LINE BY LINE                 -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · CREATE TABLE</div>
+      <h2 class="title">Your First Table, Line by Line</h2>
+      <pre class="code" style="font-size: .84rem;"><span class="kw">CREATE TABLE</span> Books (
+<span data-build>  BookID      <span class="kw">INT IDENTITY</span>(1,1) <span class="kw">PRIMARY KEY</span>,   <span class="cm">-- invented key: the database numbers rows 1, 2, 3…</span></span>
+<span data-build>  Title       <span class="kw">NVARCHAR</span>(255) <span class="kw">NOT NULL</span>,          <span class="cm">-- required: no book without a title</span></span>
+<span data-build>  ISBN        <span class="kw">NVARCHAR</span>(20)  <span class="kw">NOT NULL UNIQUE</span>,   <span class="cm">-- required, and no two books may share one</span></span>
+<span data-build>  Genre       <span class="kw">NVARCHAR</span>(100) <span class="kw">NULL</span>,              <span class="cm">-- optional</span>
+  PublishDate <span class="kw">DATE</span>          <span class="kw">NULL</span>,
+  Description <span class="kw">NVARCHAR</span>(<span class="kw">MAX</span>) <span class="kw">NULL</span>,              <span class="cm">-- long text, also optional</span></span>
+<span data-build>  Price       <span class="kw">DECIMAL</span>(10,2) <span class="kw">NOT NULL</span>,          <span class="cm">-- money: exact to the cent, never FLOAT</span></span>
+<span data-build>  Stock       <span class="kw">INT</span>           <span class="kw">DEFAULT</span> 0,         <span class="cm">-- say nothing and it is 0</span>
+  CreatedAt   <span class="kw">DATETIME</span>      <span class="kw">DEFAULT</span> GETDATE()  <span class="cm">-- stamps "now" by itself</span></span>
+);</pre>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>The shape of every CREATE TABLE</h3>
+          <p class="small">Name, then a comma-separated list in parentheses. Each line is <strong>column name · type · rules</strong>. No comma after the last one.</p>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>Run it, then look</h3>
+          <p class="small">F5, then refresh <strong>Tables</strong> in Object Explorer. <span style="font-family:Consolas, monospace">dbo.Books</span> appears: empty, but already guarding its rules.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 7. DATA TYPES                                       -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · Data Types</div>
+      <h2 class="title">Six Data Types Cover an Entire Store</h2>
+      <table class="tbl">
+        <tr><th style="width:22%">Type</th><th style="width:30%">Use it for</th><th>In our schema</th></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">INT</td><td>IDs, counts, quantities</td><td>BookID, Stock, Quantity</td></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">DECIMAL(10,2)</td><td>Money</td><td>Price, UnitPrice, TotalAmount</td></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">NVARCHAR(n)</td><td>Short text, up to n characters</td><td>Title (255), Email (255), Status (50)</td></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">NVARCHAR(MAX)</td><td>Long text</td><td>Description, Bio</td></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">DATE / DATETIME</td><td>A day / a day and time</td><td>PublishDate / OrderDate, CreatedAt</td></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">BIT</td><td>Yes or no (1 or 0)</td><td>Author_Book.isMain</td></tr>
+      </table>
+      <div class="grid two">
+        <div class="card accent-red" data-build>
+          <h3>Why not FLOAT for money?</h3>
+          <p class="small">FLOAT stores approximations, so sums drift by fractions of a cent. DECIMAL(10,2) stores exactly two decimals, up to 99,999,999.99.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Why NVARCHAR and not VARCHAR?</h3>
+          <p class="small">The <strong>N</strong> means Unicode. A customer named <strong>علي</strong> or <strong>Zoé</strong> is stored correctly. Write text values as <span style="font-family:Consolas, monospace">N'…'</span>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 8. FOREIGN KEYS                                     -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · Foreign Keys</div>
+      <h2 class="title">The Relationship Line Becomes a Constraint</h2>
+      <div class="grid two" style="grid-template-columns: 1.15fr 1fr;">
+        <pre class="code"><span class="kw">CREATE TABLE</span> Orders (
+  OrderID     <span class="kw">INT IDENTITY</span>(1,1) <span class="kw">PRIMARY KEY</span>,
+  CustomerID  <span class="kw">INT</span>           <span class="kw">NOT NULL</span>,
+  OrderDate   <span class="kw">DATETIME</span>      <span class="kw">DEFAULT</span> GETDATE(),
+  TotalAmount <span class="kw">DECIMAL</span>(10,2) <span class="kw">NOT NULL</span>,
+  Status      <span class="kw">NVARCHAR</span>(50)  <span class="kw">DEFAULT</span> <span class="str">'Pending'</span>,
+<span data-build>
+  <span class="kw">CONSTRAINT</span> FK_Orders_Customers
+    <span class="kw">FOREIGN KEY</span> (CustomerID)
+    <span class="kw">REFERENCES</span> Customers(CustomerID)</span>
+);</pre>
+        <div class="grid" style="gap: .75rem; margin: .75rem 0 0; align-content: start;">
+          <div class="card" data-build>
+            <h3>Read it aloud</h3>
+            <p class="small">"The CustomerID in Orders must be a CustomerID that exists in Customers."</p>
+          </div>
+          <div class="card accent-green" data-build>
+            <h3>What it guarantees</h3>
+            <p class="small">No order for a customer who does not exist. No deleting a customer who still has orders.</p>
+          </div>
+          <div class="card" data-build>
+            <h3>Give it a name</h3>
+            <p class="small"><span style="font-family:Consolas, monospace">FK_Child_Parent</span>. The name appears in error messages, so a good one tells you what went wrong.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Same rule as the diagram:</strong> the foreign key sits on the "many" side. Orders carries CustomerID; Customers knows nothing about orders. The two columns must have the same data type.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 9. BRIDGE TABLE IN SQL                              -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · Foreign Keys</div>
+      <h2 class="title">A Bridge Table Is Just Two Foreign Keys</h2>
+      <div class="grid two" style="grid-template-columns: 1.15fr 1fr;">
+        <pre class="code"><span class="kw">CREATE TABLE</span> OrderBooks (
+  OrderBookID <span class="kw">INT IDENTITY</span>(1,1) <span class="kw">PRIMARY KEY</span>,
+  OrderID     <span class="kw">INT</span>           <span class="kw">NOT NULL</span>,
+  BookID      <span class="kw">INT</span>           <span class="kw">NOT NULL</span>,
+<span data-build>  Quantity    <span class="kw">INT</span>           <span class="kw">NOT NULL</span>
+              <span class="kw">CHECK</span> (Quantity &gt; 0),
+  UnitPrice   <span class="kw">DECIMAL</span>(10,2) <span class="kw">NOT NULL</span>,</span>
+<span data-build>
+  <span class="kw">CONSTRAINT</span> FK_OrderBooks_Orders
+    <span class="kw">FOREIGN KEY</span> (OrderID)
+    <span class="kw">REFERENCES</span> Orders(OrderID),
+  <span class="kw">CONSTRAINT</span> FK_OrderBooks_Books
+    <span class="kw">FOREIGN KEY</span> (BookID)
+    <span class="kw">REFERENCES</span> Books(BookID)</span>
+);</pre>
+        <div class="grid" style="gap: .75rem; margin: .75rem 0 0; align-content: start;">
+          <div class="card accent-blue" data-build>
+            <h3>Facts about the pair</h3>
+            <p class="small">Quantity and UnitPrice belong to "this book in this order", so they live here. CHECK refuses a line with zero books.</p>
+          </div>
+          <div class="card accent-green" data-build>
+            <h3>Two 1:N links</h3>
+            <p class="small">One foreign key to Orders, one to Books. That is the whole many-to-many, exactly as you drew it.</p>
+          </div>
+          <div class="card" data-build>
+            <h3>The other bridge</h3>
+            <p class="small"><span style="font-family:Consolas, monospace">Author_Book</span> follows the same pattern: BookId, AuthorId, and its own fact, <span style="font-family:Consolas, monospace">isMain BIT</span>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 10. CREATION ORDER                                  -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · Creation Order</div>
+      <h2 class="title">Parents First, Children After</h2>
+      <p class="subtitle">A table can only reference a table that already exists. So the order of your script matters.</p>
+      <svg class="diagram" viewBox="0 0 960 250" role="img" aria-label="Creation order of the seven bookstore tables in three levels">
+        <g data-build>
+          <text x="140" y="24" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--blue-900)">1 · Reference nothing</text>
+          <rect class="svg-node" x="40" y="40" width="200" height="40" rx="8"/>
+          <text x="140" y="65" text-anchor="middle" font-size="14" class="svg-label">Customers</text>
+          <rect class="svg-node" x="40" y="115" width="200" height="40" rx="8"/>
+          <text x="140" y="140" text-anchor="middle" font-size="14" class="svg-label">Books</text>
+          <rect class="svg-node" x="40" y="190" width="200" height="40" rx="8"/>
+          <text x="140" y="215" text-anchor="middle" font-size="14" class="svg-label">Authors</text>
+        </g>
+        <g data-build>
+          <text x="480" y="24" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--blue-900)">2 · Reference level 1</text>
+          <rect class="svg-node" x="380" y="40" width="200" height="40" rx="8"/>
+          <text x="480" y="65" text-anchor="middle" font-size="14" class="svg-label">Orders</text>
+          <rect x="380" y="165" width="200" height="40" rx="8" fill="var(--green-100)" stroke="var(--green)" stroke-width="2"/>
+          <text x="480" y="190" text-anchor="middle" font-size="14" class="svg-label">Author_Book</text>
+          <line class="draw" pathLength="1" x1="378" y1="60" x2="246" y2="60" stroke="var(--blue-600)" stroke-width="2.2" marker-end="url(#arr4)"/>
+          <line class="draw" pathLength="1" x1="378" y1="178" x2="246" y2="142" stroke="var(--blue-600)" stroke-width="2.2" marker-end="url(#arr4)"/>
+          <line class="draw" pathLength="1" x1="378" y1="194" x2="246" y2="210" stroke="var(--blue-600)" stroke-width="2.2" marker-end="url(#arr4)"/>
+        </g>
+        <g data-build>
+          <text x="820" y="24" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--blue-900)">3 · Reference level 2</text>
+          <rect class="svg-node" x="720" y="40" width="200" height="40" rx="8"/>
+          <text x="820" y="65" text-anchor="middle" font-size="14" class="svg-label">Payments</text>
+          <rect x="720" y="105" width="200" height="40" rx="8" fill="var(--green-100)" stroke="var(--green)" stroke-width="2"/>
+          <text x="820" y="130" text-anchor="middle" font-size="14" class="svg-label">OrderBooks</text>
+          <line class="draw" pathLength="1" x1="718" y1="56" x2="586" y2="56" stroke="var(--blue-600)" stroke-width="2.2" marker-end="url(#arr4)"/>
+          <line class="draw" pathLength="1" x1="718" y1="116" x2="586" y2="72" stroke="var(--blue-600)" stroke-width="2.2" marker-end="url(#arr4)"/>
+          <line class="draw" pathLength="1" x1="718" y1="130" x2="246" y2="133" stroke="var(--blue-600)" stroke-width="2.2" marker-end="url(#arr4)"/>
+        </g>
+        <defs>
+          <marker id="arr4" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M0,0 L10,6 L0,12 z" fill="var(--blue-600)"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="sqlmsg" data-build>Msg 1767 · Foreign key 'FK_Orders_Customers' references invalid table 'Customers'.<br/>Msg 1750 · Could not create constraint or index. See previous errors.</div>
+      <div class="callout" data-build><strong>That is what you see if Orders runs before Customers.</strong> Arrows point from child to parent: create along the levels, drop in reverse. Our <span style="font-family:Consolas, monospace">sqlSchema.sql</span> uses the other valid approach: all tables first, then the foreign keys added at the end with ALTER TABLE.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 11. QUIZ: SPOT THE BUGS                             -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · Quick Quiz</div>
+      <h2 class="title">Spot the Bugs: a Reviews Table</h2>
+      <p class="subtitle">A teammate wants customers to rate books from 1 to 5. Find four problems before they appear.</p>
+      <div class="grid two" style="grid-template-columns: 1fr 1.15fr;">
+        <pre class="code"><span class="kw">CREATE TABLE</span> Reviews (
+  ReviewID   <span class="kw">INT</span>,
+  BookID     <span class="kw">INT</span>,
+  CustomerID <span class="kw">INT</span>
+    <span class="kw">REFERENCES</span> Customer(CustomerID),
+  Rating     <span class="kw">FLOAT</span>,
+  Comment    <span class="kw">VARCHAR</span>(50),
+  CreatedAt  <span class="kw">DATETIME</span>
+);</pre>
+        <div class="grid two" style="gap: .75rem; margin: 0; align-content: start;">
+          <div class="card accent-red" data-build>
+            <h3>1 · No primary key</h3>
+            <p class="small">ReviewID is a plain INT. It needs IDENTITY(1,1) PRIMARY KEY.</p>
+          </div>
+          <div class="card accent-red" data-build>
+            <h3>2 · BookID points nowhere</h3>
+            <p class="small">No foreign key and no NOT NULL: a review of a book that does not exist.</p>
+          </div>
+          <div class="card accent-red" data-build>
+            <h3>3 · Wrong table name</h3>
+            <p class="small">The table is Customer<strong>s</strong>. This script stops with Msg 1767.</p>
+          </div>
+          <div class="card accent-red" data-build>
+            <h3>4 · Rating can be 3.7 or 900</h3>
+            <p class="small">Use INT with CHECK (Rating BETWEEN 1 AND 5).</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Bonus points:</strong> VARCHAR(50) cuts comments at 50 characters and breaks on Arabic text, and CreatedAt has no DEFAULT GETDATE(). Only bug 3 stops the script. The other five are accepted silently, which makes them the dangerous ones.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12. ALTER & DROP                                    -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · Changing Your Mind</div>
+      <h2 class="title">ALTER and DROP: When the Design Changes</h2>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>Add a column to a live table</h3>
+          <pre class="code"><span class="kw">ALTER TABLE</span> Books
+  <span class="kw">ADD</span> CoverUrl <span class="kw">NVARCHAR</span>(500) <span class="kw">NULL</span>;</pre>
+          <p class="small">Existing rows get NULL. A new NOT NULL column needs a DEFAULT, or SQL Server refuses.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Remove a table completely</h3>
+          <pre class="code"><span class="kw">DROP TABLE</span> Author_Book;  <span class="cm">-- child first</span>
+<span class="kw">DROP TABLE</span> Authors;      <span class="cm">-- then parent</span></pre>
+          <p class="small">The table and every row in it are gone. There is no undo and no recycle bin.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card accent-amber" data-build>
+          <h3>Running a script twice</h3>
+          <div class="sqlmsg">Msg 2714 · There is already an object named 'Books' in the database.</div>
+          <p class="small">CREATE TABLE is not repeatable. Drop the table first, or start from an empty database.</p>
+        </div>
+        <div class="card accent-amber" data-build>
+          <h3>Dropping a parent that is still referenced</h3>
+          <div class="sqlmsg">Msg 3726 · Could not drop object 'Orders' because it is referenced by a FOREIGN KEY constraint.</div>
+          <p class="small">Foreign keys protect tables as well as rows.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Last week's promise, kept:</strong> "an hour of care saves a week of ALTER TABLE." Adding a column is easy. Splitting a table that already holds real orders is a project.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 13. HANDS-ON 4.1                                    -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.1 · Hands-On</div>
+      <h2 class="title">Your Turn: Build the Bookstore (15 Minutes)</h2>
+      <div class="grid two">
+        <div>
+          <ul class="points">
+            <li data-build><strong>1 · Create</strong> the ClassDemo database and select it.</li>
+            <li data-build><strong>2 · Open</strong> <span style="font-family:Consolas, monospace">sqlSchema.sql</span> from the course repository and press F5.</li>
+            <li data-build><strong>3 · Refresh</strong> Tables in Object Explorer: you should count 7.</li>
+            <li data-build><strong>4 · Prove it:</strong> <span style="font-family:Consolas, monospace">SELECT * FROM Books;</span> returns 8 rows.</li>
+            <li data-build><strong>5 · Your project:</strong> write CREATE TABLE for one parent and one child from your own ERD.</li>
+          </ul>
+        </div>
+        <div class="card accent-amber" data-build>
+          <h3>If something goes wrong</h3>
+          <ul>
+            <li><strong>Cannot connect:</strong> try <span style="font-family:Consolas, monospace">localhost\SQLEXPRESS</span> and tick Trust server certificate</li>
+            <li><strong>Database 'ClassDemo' does not exist:</strong> run step 1 first</li>
+            <li><strong>Invalid object name 'Books':</strong> the dropdown says master, switch it to ClassDemo</li>
+            <li><strong>There is already an object named…:</strong> you ran the script twice</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Read the red text.</strong> SQL Server error messages name the table, the column, and usually the constraint. Read the message before raising your hand; most of the time it tells you the fix.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 14. DIVIDER 4.2                                     -->
+    <!-- ================================================== -->
+    <section class="slide divider">
+      <div class="kicker">Lecture 4.2</div>
+      <h2 class="title">Data In, Answers Out</h2>
+      <p class="subtitle">INSERT · the database refusing bad data · UPDATE &amp; DELETE · SELECT · JOIN across the bridges</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 15. INSERT BASICS                                   -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · INSERT</div>
+      <h2 class="title">INSERT: One Sentence, One Row</h2>
+      <pre class="code"><span class="kw">INSERT INTO</span> Books (Title, ISBN, Genre, Price, Stock)
+<span class="kw">VALUES</span> (<span class="str">N'Dune'</span>, <span class="str">N'9780441013593'</span>, <span class="str">N'Science Fiction'</span>, 17.99, 25);</pre>
+      <table class="tbl mono" data-build>
+        <tr><th>BookID</th><th>Title</th><th>ISBN</th><th>Genre</th><th>Price</th><th>Stock</th><th>PublishDate</th><th>CreatedAt</th></tr>
+        <tr><td><mark class="hl">9</mark></td><td>Dune</td><td>9780441013593</td><td>Science Fiction</td><td>17.99</td><td>25</td><td><mark class="hl">NULL</mark></td><td><mark class="hl">today, now</mark></td></tr>
+      </table>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>You never typed BookID</h3>
+          <p class="small">IDENTITY assigned 9, the next number after the 8 seed books. CreatedAt came from its DEFAULT.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Columns and values line up</h3>
+          <p class="small">First value goes to the first column listed, and so on. Text in single quotes, numbers without.</p>
+        </div>
+        <div class="card accent-amber" data-build>
+          <h3>An apostrophe inside text</h3>
+          <p class="small">Double it: <span style="font-family:Consolas, monospace">N'Sorcerer''s Stone'</span>. A backslash does not work in SQL Server.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Always list the columns.</strong> <span style="font-family:Consolas, monospace">INSERT INTO Books VALUES (…)</span> works until someone adds a column, and then every insert in your application breaks.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 16. REPLAY THE ORDER                                -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · The Schema in Motion</div>
+      <h2 class="title">One Order, Typed by Hand</h2>
+      <p class="subtitle">Last week you watched an order flow through 5 tables. Now you write it. Ali Hassan (CustomerID 3) buys one <em>1984</em> and two <em>Animal Farm</em>.</p>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>1 · Orders (+1 row)</h3>
+          <pre class="code tight"><span class="kw">INSERT INTO</span> Orders (CustomerID, TotalAmount)
+<span class="kw">VALUES</span> (3, 32.97);
+<span class="kw">SELECT</span> SCOPE_IDENTITY();  <span class="cm">-- the new OrderID: 16</span></pre>
+        </div>
+        <div class="card" data-build>
+          <h3>2 · OrderBooks (+2 rows)</h3>
+          <pre class="code tight"><span class="kw">INSERT INTO</span> OrderBooks
+  (OrderID, BookID, Quantity, UnitPrice)
+<span class="kw">VALUES</span> (16, 1, 1, 12.99),
+       (16, 2, 2, 9.99);</pre>
+        </div>
+        <div class="card" data-build>
+          <h3>3 · Books (stock updated)</h3>
+          <pre class="code tight"><span class="kw">UPDATE</span> Books <span class="kw">SET</span> Stock = Stock - 1
+<span class="kw">WHERE</span>  BookID = 1;
+<span class="kw">UPDATE</span> Books <span class="kw">SET</span> Stock = Stock - 2
+<span class="kw">WHERE</span>  BookID = 2;</pre>
+        </div>
+        <div class="card" data-build>
+          <h3>4 · Payments (+1 row)</h3>
+          <pre class="code tight"><span class="kw">INSERT INTO</span> Payments
+  (OrderID, Amount, PaymentMethod,
+   TransactionReference)
+<span class="kw">VALUES</span> (16, 32.97, <span class="str">N'Credit Card'</span>, <span class="str">N'TXN3016'</span>);</pre>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Same rule as creating tables:</strong> the parent row first. The order must exist before its lines and its payment can point at it. If your SCOPE_IDENTITY() is not 16, use your own number in steps 2 and 4.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 17. THE DATABASE FIGHTS BACK                        -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · Constraints at Work</div>
+      <h2 class="title">The Database Says No</h2>
+      <p class="subtitle">Three statements that look reasonable. Predict what happens before the answer appears.</p>
+      <div class="grid three">
+        <div class="card">
+          <h3>A second copy of 1984</h3>
+          <pre class="code tight"><span class="kw">INSERT INTO</span> Books
+  (Title, ISBN, Price)
+<span class="kw">VALUES</span> (<span class="str">N'1984 (new)'</span>,
+  <span class="str">N'9780451524935'</span>, 10.99);</pre>
+          <div class="sqlmsg" data-build>Msg 2627 · Violation of UNIQUE KEY constraint. Cannot insert duplicate key in object 'dbo.Books'. The duplicate key value is (9780451524935).</div>
+        </div>
+        <div class="card">
+          <h3>An order for nobody</h3>
+          <pre class="code tight"><span class="kw">INSERT INTO</span> Orders
+  (CustomerID, TotalAmount)
+<span class="kw">VALUES</span> (999, 20.00);
+
+</pre>
+          <div class="sqlmsg" data-build>Msg 547 · The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Orders_Customers" … table "dbo.Customers", column 'CustomerID'.</div>
+        </div>
+        <div class="card">
+          <h3>Zero copies of a book</h3>
+          <pre class="code tight"><span class="kw">INSERT INTO</span> OrderBooks
+  (OrderID, BookID,
+   Quantity, UnitPrice)
+<span class="kw">VALUES</span> (16, 3, 0, 14.99);</pre>
+          <div class="sqlmsg" data-build>Msg 547 · The INSERT statement conflicted with the CHECK constraint … table "dbo.OrderBooks", column 'Quantity'.</div>
+        </div>
+      </div>
+      <div class="callout green" data-build><strong>Three refusals, zero rows of bad data.</strong> Each message names the constraint, the table and the column. This is the "database defends itself" idea from Week 3, now running.</div>
+      <div class="callout amber" data-build><strong>A side effect you will notice:</strong> a refused insert still uses up an ID. Your next order may be 18, not 17. Gaps in IDs are normal; never rely on IDs being consecutive.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 18. UPDATE & DELETE                                 -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · UPDATE &amp; DELETE</div>
+      <h2 class="title">WHERE Is Your Seatbelt</h2>
+      <div class="grid two">
+        <div class="card accent-green" data-build>
+          <h3>With WHERE: one order changes</h3>
+          <pre class="code tight"><span class="kw">UPDATE</span> Orders
+<span class="kw">SET</span>    Status = <span class="str">N'Completed'</span>
+<span class="kw">WHERE</span>  OrderID = 16;</pre>
+          <div class="sqlmsg ok">(1 row affected)</div>
+        </div>
+        <div class="card accent-red" data-build>
+          <h3>Without WHERE: every order changes</h3>
+          <pre class="code tight"><span class="kw">UPDATE</span> Orders
+<span class="kw">SET</span>    Status = <span class="str">N'Completed'</span>;
+ </pre>
+          <div class="sqlmsg">(16 rows affected) — no warning, no undo</div>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>DELETE obeys foreign keys too</h3>
+          <pre class="code tight"><span class="kw">DELETE FROM</span> Customers
+<span class="kw">WHERE</span>  CustomerID = 3;</pre>
+          <div class="sqlmsg">Msg 547 · The DELETE statement conflicted with the REFERENCE constraint "FK_Orders_Customers" … table "dbo.Orders".</div>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>The professional habit</h3>
+          <ul>
+            <li>Write the WHERE as a <strong>SELECT</strong> first</li>
+            <li>Check that the rows shown are the ones you mean</li>
+            <li>Then change SELECT to UPDATE or DELETE</li>
+            <li>Read "rows affected" every single time</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Why stores rarely delete:</strong> Ali has orders, so his row cannot go, and you would not want it to; the sales history needs him. Real stores mark a customer inactive with an UPDATE.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 19. SELECT ANATOMY                                  -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · SELECT</div>
+      <h2 class="title">SELECT: Asking the Database a Question</h2>
+      <p class="subtitle">"Which books cost less than $13, cheapest first?"</p>
+      <div class="grid two" style="grid-template-columns: 1.1fr 1fr;">
+        <pre class="code"><span data-build><span class="kw">SELECT</span>   Title, Genre, Price   <span class="cm">-- which columns</span></span>
+<span data-build><span class="kw">FROM</span>     Books                 <span class="cm">-- which table</span></span>
+<span data-build><span class="kw">WHERE</span>    Price &lt; 13            <span class="cm">-- which rows</span></span>
+<span data-build><span class="kw">ORDER BY</span> Price;                <span class="cm">-- in what order</span></span></pre>
+        <table class="tbl mono" data-build>
+          <tr><th>Title</th><th>Genre</th><th>Price</th></tr>
+          <tr><td>Animal Farm</td><td>Political Satire</td><td>9.99</td></tr>
+          <tr><td>Murder on the Orient Express</td><td>Mystery</td><td>11.99</td></tr>
+          <tr><td>1984</td><td>Dystopian</td><td>12.99</td></tr>
+        </table>
+      </div>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>SELECT *</h3>
+          <p class="small">Every column. Fine for a quick look in SSMS; in application code, name the columns you need.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>More filters</h3>
+          <p class="small" style="font-family: Consolas, monospace;">Genre = N'Horror'<br/>Title LIKE N'%Potter%'<br/>Price BETWEEN 10 AND 15</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Only the first few</h3>
+          <p class="small"><span style="font-family:Consolas, monospace">SELECT TOP (3) …</span> with an ORDER BY gives you a top-3 list.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>SELECT never changes anything.</strong> You cannot break the database by asking it questions, so experiment freely.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 20. JOIN 1:N                                        -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · JOIN</div>
+      <h2 class="title">JOIN: Follow the Foreign Key</h2>
+      <p class="subtitle">Orders stores only CustomerID 3. To see a name next to each order, walk the relationship line.</p>
+      <pre class="code"><span class="kw">SELECT</span>   o.OrderID, c.FirstName, c.LastName, o.TotalAmount, o.Status
+<span class="kw">FROM</span>     Orders o
+<span data-build><span class="kw">JOIN</span>     Customers c <span class="kw">ON</span> o.CustomerID = c.CustomerID   <span class="cm">-- FK on the left, PK on the right</span></span>
+<span data-build><span class="kw">WHERE</span>    c.Country = <span class="str">N'Lebanon'</span>
+<span class="kw">ORDER BY</span> o.OrderID;</span></pre>
+      <table class="tbl mono" data-build>
+        <tr><th>OrderID</th><th>FirstName</th><th>LastName</th><th>TotalAmount</th><th>Status</th></tr>
+        <tr><td>3</td><td>Ali</td><td>Hassan</td><td>31.98</td><td>Completed</td></tr>
+        <tr><td>13</td><td>Ali</td><td>Hassan</td><td>148.92</td><td>Pending</td></tr>
+        <tr><td><mark class="hl">16</mark></td><td>Ali</td><td>Hassan</td><td>32.97</td><td>Completed</td></tr>
+      </table>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>The ON clause is the relationship</h3>
+          <p class="small">It is the line from your ERD written as a condition: this order's CustomerID equals that customer's CustomerID.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>o and c are nicknames</h3>
+          <p class="small">Aliases save typing and say which table a column comes from. Both tables have a CustomerID, so you must say which one.</p>
+        </div>
+      </div>
+      <div class="callout green" data-build><strong>Order 16 is the one you typed.</strong> Normalization stored Ali's name once; JOIN puts it back next to every order whenever you ask.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 21. JOIN THROUGH A BRIDGE                           -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · JOIN</div>
+      <h2 class="title">Across a Bridge: Two JOINs</h2>
+      <p class="subtitle">"Who wrote <em>Tales of the Unknown</em>?" Books and Authors are many-to-many, so the path goes through Author_Book.</p>
+      <div class="grid two" style="grid-template-columns: 1.3fr 1fr;">
+        <pre class="code"><span class="kw">SELECT</span> b.Title,
+       a.FirstName + <span class="str">N' '</span> + a.LastName <span class="kw">AS</span> Author,
+       ab.isMain
+<span class="kw">FROM</span>   Books b
+<span data-build><span class="kw">JOIN</span>   Author_Book ab <span class="kw">ON</span> b.BookID = ab.BookId</span>
+<span data-build><span class="kw">JOIN</span>   Authors a      <span class="kw">ON</span> ab.AuthorId = a.AuthorID</span>
+<span class="kw">WHERE</span>  b.Title = <span class="str">N'Tales of the Unknown'</span>
+<span class="kw">ORDER BY</span> ab.isMain <span class="kw">DESC</span>;</pre>
+        <div>
+          <table class="tbl mono" data-build>
+            <tr><th>Title</th><th>Author</th><th>isMain</th></tr>
+            <tr><td>Tales of the Unknown</td><td>Agatha Christie</td><td>1</td></tr>
+            <tr><td>Tales of the Unknown</td><td>George Orwell</td><td>0</td></tr>
+            <tr><td>Tales of the Unknown</td><td>J.K. Rowling</td><td>0</td></tr>
+          </table>
+          <div class="card accent-blue" data-build style="margin-top: 1rem;">
+            <h3>Count the hops</h3>
+            <p class="small">Books → Author_Book → Authors. Two relationship lines on the ERD, two JOINs in the query.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>One book, three rows.</strong> A JOIN returns one row per matching pair, so a book with three authors appears three times. Remember this in Week 5: the API has to fold these rows back into one book with a list of authors.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 22. FIRST BUSINESS QUESTION                         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · A First Business Question</div>
+      <h2 class="title">"What Are Our Three Best Sellers?"</h2>
+      <div class="grid two" style="grid-template-columns: 1.25fr 1fr;">
+        <pre class="code"><span class="kw">SELECT TOP</span> (3)
+       b.Title,
+<span data-build>       <span class="kw">SUM</span>(ob.Quantity)                <span class="kw">AS</span> UnitsSold,
+       <span class="kw">SUM</span>(ob.Quantity * ob.UnitPrice) <span class="kw">AS</span> Revenue</span>
+<span class="kw">FROM</span>   OrderBooks ob
+<span class="kw">JOIN</span>   Books b <span class="kw">ON</span> ob.BookID = b.BookID
+<span data-build><span class="kw">GROUP BY</span> b.Title</span>
+<span data-build><span class="kw">ORDER BY</span> Revenue <span class="kw">DESC</span>;</span></pre>
+        <div>
+          <table class="tbl mono" data-build>
+            <tr><th>Title</th><th>UnitsSold</th><th>Revenue</th></tr>
+            <tr><td>The Da Vinci Code</td><td>22</td><td>307.78</td></tr>
+            <tr><td>The Shining</td><td>18</td><td>287.82</td></tr>
+            <tr><td>Harry Potter and the Sorcerer's Stone</td><td>18</td><td>269.82</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>GROUP BY makes piles</h3>
+          <p class="small">All order lines for the same title go into one pile; SUM adds up each pile. One row comes out per book, however many lines went in.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Why UnitPrice and not Books.Price</h3>
+          <p class="small">Revenue is what customers actually paid on the day. That is why the price was copied onto the order line.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>The answer lives in the bridge table.</strong> OrderBooks looked like plumbing on the ERD; it is where every sales question gets answered. Same units for two books, different revenue: price matters.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 23. QUIZ: WHICH TOOL                                -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · Quick Quiz</div>
+      <h2 class="title">Call It: Which SQL Does the Job?</h2>
+      <p class="subtitle">Name the statement and the key clause before the answer appears.</p>
+      <div class="grid two">
+        <div class="card">
+          <h3>"Raise the price of The Shining to 16.99"</h3>
+          <p class="small" data-build><span class="tag amber">UPDATE + WHERE</span> SET Price = 16.99 WHERE BookID = 4. Old order lines keep 15.99 in UnitPrice.</p>
+        </div>
+        <div class="card">
+          <h3>"List every customer in the USA"</h3>
+          <p class="small" data-build><span class="tag green">SELECT + WHERE</span> One table, one filter: WHERE Country = N'USA'. No JOIN needed.</p>
+        </div>
+        <div class="card">
+          <h3>"Show each payment with the customer's email"</h3>
+          <p class="small" data-build><span class="tag">2 JOINs</span> Payments → Orders → Customers. Payments has no CustomerID; you reach it through the order.</p>
+        </div>
+        <div class="card">
+          <h3>"A new author signs with us"</h3>
+          <p class="small" data-build><span class="tag green">INSERT</span> One row in Authors. Linking the author to a book is a second INSERT, into Author_Book.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>The method for any question:</strong> find the tables that hold the facts, trace the path between them on the ERD, and write one JOIN per line you cross.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 24. HANDS-ON 4.2                                    -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · Hands-On</div>
+      <h2 class="title">Your Turn: Five Questions for ClassDemo (20 Minutes)</h2>
+      <table class="tbl">
+        <tr><th style="width:5%">#</th><th style="width:52%">Write a query that answers…</th><th>Check yourself</th></tr>
+        <tr data-build><td>1</td><td>Customers who live in the USA, sorted by last name</td><td>3 rows; Johnson comes first</td></tr>
+        <tr data-build><td>2</td><td>Every order with the customer's full name and total, biggest first</td><td>Top row: Emma Johnson, 230.86</td></tr>
+        <tr data-build><td>3</td><td>The authors of <em>The Coded Conspiracy</em>, main author first</td><td>2 rows; Dan Brown is the main author</td></tr>
+        <tr data-build><td>4</td><td>The books in order 13, with quantity and unit price</td><td>5 rows; quantities add up to 10</td></tr>
+        <tr data-build><td>5</td><td>Total units sold per book, highest first</td><td>The Da Vinci Code leads with 22</td></tr>
+      </table>
+      <div class="grid two">
+        <div class="card accent-blue" data-build>
+          <h3>How to work</h3>
+          <ul>
+            <li>Pairs; one types, one reads the ERD</li>
+            <li>Name the tables before you write a word of SQL</li>
+            <li>Start with SELECT * and narrow down</li>
+          </ul>
+        </div>
+        <div class="card accent-purple" data-build>
+          <h3>Stretch: audit the store</h3>
+          <p class="small">For each order, compare TotalAmount with the sum of Quantity × UnitPrice over its lines. Every order should match. Hint: GROUP BY o.OrderID, o.TotalAmount.</p>
+        </div>
+      </div>
+      <div class="callout amber" data-build><strong>Time box:</strong> 15 minutes writing, then 5 minutes where two pairs compare their query for question 2. There is more than one correct way to write it.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 25. BACK TO YOUR PROJECT                            -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · Back to Your Project</div>
+      <h2 class="title">From Your ERD to Your Script</h2>
+      <p class="subtitle">Your Week 3 diagram already contains most of the SQL. Five steps turn it into a database.</p>
+      <ul class="points">
+        <li data-build><strong>1 · Export</strong> from dbdiagram.io: Export → SQL Server. You get a first draft of every CREATE TABLE.</li>
+        <li data-build><strong>2 · Fix the types</strong>: NVARCHAR for text, DECIMAL(10,2) for money, IDENTITY(1,1) on every primary key.</li>
+        <li data-build><strong>3 · Add the guardrails</strong> the diagram could not show: NOT NULL, UNIQUE, DEFAULT, CHECK.</li>
+        <li data-build><strong>4 · Order it</strong>: parents first, children after, and name every foreign key FK_Child_Parent.</li>
+        <li data-build><strong>5 · Seed it</strong>: at least 5 rows per table, inserted in the same parent-first order.</li>
+      </ul>
+      <div class="callout green" data-build><strong>The test that matters:</strong> create an empty database, run your script once from top to bottom, and get zero red messages. If it passes that, anyone on your team can rebuild the database in ten seconds.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 26. HOMEWORK                                        -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Assignment · Due Week 5</div>
+      <h2 class="title">Homework: Your Database, Running</h2>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>1 · schema.sql</h3>
+          <ul>
+            <li>CREATE TABLE for every table in your ERD</li>
+            <li>Primary and foreign keys declared</li>
+            <li>At least one UNIQUE, one DEFAULT, one CHECK</li>
+          </ul>
+        </div>
+        <div class="card" data-build>
+          <h3>2 · seed.sql</h3>
+          <ul>
+            <li>5 or more realistic rows per table</li>
+            <li>Inserted parent-first</li>
+            <li>Totals that agree with their lines</li>
+          </ul>
+        </div>
+        <div class="card" data-build>
+          <h3>3 · queries.sql</h3>
+          <ul>
+            <li>5 questions your business would ask</li>
+            <li>At least 2 use JOIN, 1 crosses a bridge</li>
+            <li>Each with a one-line comment: the question in English</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>Also hand in one screenshot:</strong> a statement your database refused, with the error message visible, and one sentence on which constraint caught it. Proof that your guardrails work.</div>
+      <div class="callout green" data-build><strong>Why it matters:</strong> next week your Node.js API connects to this exact database. Every table you leave unfinished is an endpoint you cannot build.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 27. WRAP-UP + NEXT WEEK                             -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Week 4 · Wrap-Up</div>
+      <h2 class="title">What You Now Know</h2>
+      <ul class="points">
+        <li data-build><strong>CREATE TABLE</strong> turns each ERD box into a table: column, type, rules.</li>
+        <li data-build><strong>Constraints</strong> (PRIMARY KEY, NOT NULL, UNIQUE, DEFAULT, CHECK, FOREIGN KEY) make the database refuse bad data by itself.</li>
+        <li data-build><strong>Parents first</strong>, for creating tables and for inserting rows; the reverse for dropping.</li>
+        <li data-build><strong>INSERT, UPDATE, DELETE</strong> change data, and WHERE decides how much of it.</li>
+        <li data-build><strong>SELECT with JOIN</strong> walks the relationship lines; one JOIN per line, two to cross a bridge.</li>
+      </ul>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>Week 3</h3>
+          <p class="small"><strong>ERD design</strong><br/>the blueprint (done)</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Week 4</h3>
+          <p class="small"><strong>MSSQL</strong><br/>the database, built and queried (done)</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Week 5</h3>
+          <p class="small"><strong>Node.js API</strong><br/>code that runs these same queries for a storefront</p>
+        </div>
+      </div>
+      <div class="callout green" data-build><strong>Due next class:</strong> schema.sql, seed.sql, queries.sql and one refused-statement screenshot. Bring your laptop with ClassDemo still installed.</div>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    <div class="controls">
+      <button id="prev" type="button" class="nav-btn ghost" aria-label="Previous">◀ Prev</button>
+      <button id="next" type="button" class="nav-btn" aria-label="Next">Next ▶</button>
+    </div>
+    <div class="stepdots" id="stepdots" title="Reveal steps on this slide"></div>
+    <div class="progress"><div id="bar" class="bar"></div></div>
+    <div class="counter" id="counter">1 / 1</div>
+    <button id="fs" type="button" class="nav-btn ghost" aria-label="Fullscreen" title="Fullscreen (F)">⛶</button>
+  </div>
+</div>
+
+<script src="deck.js"></script>
+</body>
+</html>
