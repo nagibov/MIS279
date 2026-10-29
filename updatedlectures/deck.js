@@ -128,3 +128,36 @@
     });
   });
 })();
+
+/* ---------- click-through steppers (Week 4) ----------
+   Hidden .tick elements are ordinary build steps, so → / Next / the step dots
+   drive them. Inside a .stepper, with n = number of ticks shown:
+     data-hl="2 5"           → class "lit" exactly at those steps
+     data-on="1:tint 2:moved" → each class from that step onwards
+   Clicking the stepper advances the deck. */
+(function () {
+  document.querySelectorAll('.stepper').forEach(st => {
+    const ticks = Array.from(st.querySelectorAll('.tick'));
+    const caption = st.querySelector('.step-caption');
+    const update = () => {
+      const n = ticks.filter(t => t.classList.contains('on')).length;
+      st.querySelectorAll('[data-hl]').forEach(el =>
+        el.classList.toggle('lit', el.dataset.hl.split(/\s+/).map(Number).includes(n)));
+      st.querySelectorAll('[data-on]').forEach(el =>
+        el.dataset.on.split(/\s+/).forEach(pair => {
+          const [step, cls] = pair.split(':');
+          el.classList.toggle(cls, n >= Number(step));
+        }));
+      if (caption) {
+        caption.innerHTML = n
+          ? '<span class="n">Step ' + n + ' / ' + ticks.length + '</span>' + ticks[n - 1].dataset.caption
+          : st.dataset.start;
+      }
+    };
+    const watch = new MutationObserver(update);
+    ticks.forEach(t => watch.observe(t, { attributes: true, attributeFilter: ['class'] }));
+    st.addEventListener('click', () =>
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' })));
+    update();
+  });
+})();

@@ -642,6 +642,118 @@
     </section>
 
     <!-- ================================================== -->
+    <!-- 20b. HOW A JOIN MATCHES ROWS (interactive)         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · JOIN, Step by Step</div>
+      <h2 class="title">Watch a JOIN Match Rows</h2>
+      <div class="stepper" data-start="The query below joins Orders to Customers. Click the tables (or press →) to run it one row at a time.">
+        <i class="tick" data-build data-caption="The ON clause names the two matching columns: CustomerID in Orders (the foreign key) and CustomerID in Customers (the primary key)."></i>
+        <i class="tick" data-build data-caption="Order 3 carries CustomerID 3. SQL looks up CustomerID 3 in Customers and finds Ali Hassan. The two rows are glued together into the first result row."></i>
+        <i class="tick" data-build data-caption="Order 6 carries CustomerID 6, which is Lara Miller. Second result row."></i>
+        <i class="tick" data-build data-caption="Order 10 carries CustomerID 10, which is Emma Johnson. Third result row."></i>
+        <i class="tick" data-build data-caption="Order 13 also carries CustomerID 3, so Ali Hassan is matched again. One customer, many orders: his name is stored once, but appears in the result once per order."></i>
+        <i class="tick" data-build data-caption="Nour signed up today and has no orders yet. No order points at CustomerID 11, so a JOIN leaves her out of the result entirely."></i>
+        <i class="tick" data-build data-caption="Result: one row per matching pair. 4 orders went in, 4 rows came out, and every row now shows a name the Orders table never stored."></i>
+        <pre class="code tight"><span class="kw">SELECT</span> o.OrderID, c.FirstName + <span class="str">N' '</span> + c.LastName <span class="kw">AS</span> Customer, o.TotalAmount
+<span class="kw">FROM</span>   Orders o
+<span class="kw">JOIN</span>   Customers c <span data-hl="1">ON o.CustomerID = c.CustomerID</span>;</pre>
+        <div class="grid three" style="grid-template-columns: 1fr 1fr 1.25fr; margin: .9rem 0 .6rem;">
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>Orders</strong> (4 of 16 rows)</p>
+            <table class="tbl mono">
+              <tr><th>OrderID</th><th data-hl="1">CustomerID</th><th>Total</th></tr>
+              <tr data-hl="2"><td>3</td><td data-hl="1">3</td><td>31.98</td></tr>
+              <tr data-hl="3"><td>6</td><td data-hl="1">6</td><td>159.88</td></tr>
+              <tr data-hl="4"><td>10</td><td data-hl="1">10</td><td>230.86</td></tr>
+              <tr data-hl="5"><td>13</td><td data-hl="1">3</td><td>148.92</td></tr>
+            </table>
+          </div>
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>Customers</strong> (4 of 10, + 1 new)</p>
+            <table class="tbl mono">
+              <tr><th data-hl="1">CustomerID</th><th>Name</th></tr>
+              <tr data-hl="2 5"><td data-hl="1">3</td><td>Ali Hassan</td></tr>
+              <tr data-hl="3"><td data-hl="1">6</td><td>Lara Miller</td></tr>
+              <tr data-hl="4"><td data-hl="1">10</td><td>Emma Johnson</td></tr>
+              <tr class="miss" data-hl="6"><td data-hl="1">11</td><td>Nour Khalil</td></tr>
+            </table>
+          </div>
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>Result</strong></p>
+            <table class="tbl mono">
+              <tr><th>OrderID</th><th>Customer</th><th>TotalAmount</th></tr>
+              <tr class="fade" data-on="2:shown" data-hl="2"><td>3</td><td>Ali Hassan</td><td>31.98</td></tr>
+              <tr class="fade" data-on="3:shown" data-hl="3"><td>6</td><td>Lara Miller</td><td>159.88</td></tr>
+              <tr class="fade" data-on="4:shown" data-hl="4"><td>10</td><td>Emma Johnson</td><td>230.86</td></tr>
+              <tr class="fade" data-on="5:shown" data-hl="5"><td>13</td><td>Ali Hassan</td><td>148.92</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="step-caption"></div>
+      </div>
+      <div class="callout" data-build><strong>The whole idea of JOIN:</strong> for each row on the left, find the row on the right whose key matches, and put them side by side. Rows that find no partner are dropped. (A LEFT JOIN keeps Nour, with empty order columns; it comes with the analytics queries later in the course.)</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 20c. JOIN THROUGH THE BRIDGE (interactive)         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · JOIN, Step by Step</div>
+      <h2 class="title">Two Hops Through a Bridge</h2>
+      <div class="stepper" data-start="Books and Authors never point at each other; the bridge table Author_Book holds the pairs. Click to follow the two hops.">
+        <i class="tick" data-build data-caption="Start in Books. Tales of the Unknown has BookID 8."></i>
+        <i class="tick" data-build data-caption="Hop 1, Books → Author_Book: find every bridge row with BookId 8. There are three, so this one book now becomes three rows."></i>
+        <i class="tick" data-build data-caption="Hop 2, Author_Book → Authors: each bridge row's AuthorId finds exactly one author. 4 is Agatha Christie, 1 is George Orwell, 2 is J.K. Rowling."></i>
+        <i class="tick" data-build data-caption="The same two hops for The Coded Conspiracy (BookID 7): two bridge rows, so two authors, Dan Brown and Stephen King."></i>
+        <i class="tick" data-build data-caption="Result: 5 rows, each book repeated once per author. The bridge's own fact, isMain, comes along and tells you who goes first on the cover."></i>
+        <div class="grid three" style="grid-template-columns: 1fr 1fr 1fr; margin: .4rem 0 .6rem;">
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>Books</strong> (2 of 8 rows)</p>
+            <table class="tbl mono">
+              <tr><th>BookID</th><th>Title</th></tr>
+              <tr data-hl="4"><td>7</td><td>The Coded Conspiracy</td></tr>
+              <tr data-hl="1 2 3"><td>8</td><td>Tales of the Unknown</td></tr>
+            </table>
+          </div>
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>Author_Book</strong> (the bridge)</p>
+            <table class="tbl mono">
+              <tr><th>BookId</th><th>AuthorId</th><th>isMain</th></tr>
+              <tr data-hl="4"><td>7</td><td>5</td><td>1</td></tr>
+              <tr data-hl="4"><td>7</td><td>3</td><td>0</td></tr>
+              <tr data-hl="2 3"><td>8</td><td>4</td><td>1</td></tr>
+              <tr data-hl="2 3"><td>8</td><td>1</td><td>0</td></tr>
+              <tr data-hl="2 3"><td>8</td><td>2</td><td>0</td></tr>
+            </table>
+          </div>
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>Authors</strong> (all 5 rows)</p>
+            <table class="tbl mono">
+              <tr><th>AuthorID</th><th>Name</th></tr>
+              <tr data-hl="3"><td>1</td><td>George Orwell</td></tr>
+              <tr data-hl="3"><td>2</td><td>J.K. Rowling</td></tr>
+              <tr data-hl="4"><td>3</td><td>Stephen King</td></tr>
+              <tr data-hl="3"><td>4</td><td>Agatha Christie</td></tr>
+              <tr data-hl="4"><td>5</td><td>Dan Brown</td></tr>
+            </table>
+          </div>
+        </div>
+        <p class="small" style="margin: 0 0 .3rem;"><strong>Result</strong></p>
+        <table class="tbl mono">
+          <tr><th style="width:38%">Title</th><th style="width:38%">Author</th><th data-hl="5">isMain</th></tr>
+          <tr class="fade" data-on="2:shown" data-hl="2 3"><td>Tales of the Unknown</td><td class="fade" data-on="3:shown">Agatha Christie</td><td class="fade" data-on="3:shown" data-hl="5">1</td></tr>
+          <tr class="fade" data-on="2:shown" data-hl="2 3"><td>Tales of the Unknown</td><td class="fade" data-on="3:shown">George Orwell</td><td class="fade" data-on="3:shown" data-hl="5">0</td></tr>
+          <tr class="fade" data-on="2:shown" data-hl="2 3"><td>Tales of the Unknown</td><td class="fade" data-on="3:shown">J.K. Rowling</td><td class="fade" data-on="3:shown" data-hl="5">0</td></tr>
+          <tr class="fade" data-on="4:shown" data-hl="4"><td>The Coded Conspiracy</td><td>Dan Brown</td><td data-hl="5">1</td></tr>
+          <tr class="fade" data-on="4:shown" data-hl="4"><td>The Coded Conspiracy</td><td>Stephen King</td><td data-hl="5">0</td></tr>
+        </table>
+        <div class="step-caption"></div>
+      </div>
+      <div class="callout" data-build><strong>Nothing new here:</strong> the same matching, done twice; one JOIN per ERD line. The next slide writes it as SQL.</div>
+    </section>
+
+    <!-- ================================================== -->
     <!-- 21. JOIN THROUGH A BRIDGE                           -->
     <!-- ================================================== -->
     <section class="slide">
@@ -674,6 +786,87 @@
     </section>
 
     <!-- ================================================== -->
+    <!-- 21b. GROUP BY, STEP BY STEP (interactive)          -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · GROUP BY, Step by Step</div>
+      <h2 class="title">GROUP BY: Piles, Then Totals</h2>
+      <div class="stepper" data-start="Question: how many payments, and how much money, came in through each payment method? Click to watch GROUP BY answer it.">
+        <i class="tick" data-build data-caption="GROUP BY PaymentMethod tells SQL to look at one column only. Rows with the same value get the same color."></i>
+        <i class="tick" data-build data-caption="Rows with the same value slide together into one pile. 8 rows become 4 piles."></i>
+        <i class="tick" data-build data-caption="COUNT(*) counts the rows in each pile: 2 bank transfers, 1 cash payment, 3 credit cards, 2 PayPal."></i>
+        <i class="tick" data-build data-caption="SUM(Amount) adds up the Amount column inside each pile."></i>
+        <i class="tick" data-build data-caption="Each pile collapses into exactly one result row. 8 rows went in, 4 rows came out: one per payment method."></i>
+        <div class="grid two" style="grid-template-columns: 1.45fr 1fr; margin: .4rem 0 .6rem; align-items: start;">
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>Payments</strong> for orders 1 to 8</p>
+            <div class="piles">
+              <div class="prow head"><span>ID</span><span>PaymentMethod</span><span>Amount</span></div>
+              <div class="prow m-cc" style="--from:1; --to:4.8;" data-on="1:tint 2:moved"><span>1</span><span>Credit Card</span><span>45.96</span></div>
+              <div class="prow m-pp" style="--from:2; --to:8.2;" data-on="1:tint 2:moved"><span>2</span><span>PayPal</span><span>29.98</span></div>
+              <div class="prow m-cc" style="--from:3; --to:5.8;" data-on="1:tint 2:moved"><span>3</span><span>Credit Card</span><span>31.98</span></div>
+              <div class="prow m-bt" style="--from:4; --to:1;" data-on="1:tint 2:moved"><span>4</span><span>Bank Transfer</span><span>51.96</span></div>
+              <div class="prow m-ca" style="--from:5; --to:3.4;" data-on="1:tint 2:moved"><span>5</span><span>Cash</span><span>27.98</span></div>
+              <div class="prow m-pp" style="--from:6; --to:9.2;" data-on="1:tint 2:moved"><span>6</span><span>PayPal</span><span>159.88</span></div>
+              <div class="prow m-cc" style="--from:7; --to:6.8;" data-on="1:tint 2:moved"><span>7</span><span>Credit Card</span><span>144.92</span></div>
+              <div class="prow m-bt" style="--from:8; --to:2;" data-on="1:tint 2:moved"><span>8</span><span>Bank Transfer</span><span>206.88</span></div>
+              <div class="plabel m-bt fade" style="--y:1; --h:2;" data-on="2:shown"><b>Bank Transfer</b><span><span class="fade" data-on="3:shown">COUNT 2</span><span class="fade" data-on="4:shown"> · SUM 258.84</span></span></div>
+              <div class="plabel m-ca fade" style="--y:3.4; --h:1;" data-on="2:shown"><span><b>Cash</b><span class="fade" data-on="3:shown"> · COUNT 1</span><span class="fade" data-on="4:shown"> · SUM 27.98</span></span></div>
+              <div class="plabel m-cc fade" style="--y:4.8; --h:3;" data-on="2:shown"><b>Credit Card</b><span><span class="fade" data-on="3:shown">COUNT 3</span><span class="fade" data-on="4:shown"> · SUM 222.86</span></span></div>
+              <div class="plabel m-pp fade" style="--y:8.2; --h:2;" data-on="2:shown"><b>PayPal</b><span><span class="fade" data-on="3:shown">COUNT 2</span><span class="fade" data-on="4:shown"> · SUM 189.86</span></span></div>
+            </div>
+          </div>
+          <div>
+            <pre class="code tight" style="margin-top: 1.7rem;"><span class="kw">SELECT</span>   PaymentMethod,
+<span data-hl="3">         <span class="kw">COUNT</span>(*)    <span class="kw">AS</span> Payments,</span>
+<span data-hl="4">         <span class="kw">SUM</span>(Amount) <span class="kw">AS</span> Total</span>
+<span class="kw">FROM</span>     Payments
+<span class="kw">WHERE</span>    OrderID &lt;= 8
+<span data-hl="1 2"><span class="kw">GROUP BY</span> PaymentMethod;</span></pre>
+            <table class="tbl mono fade" data-on="5:shown" style="margin-top: .9rem;">
+              <tr><th>PaymentMethod</th><th>Payments</th><th>Total</th></tr>
+              <tr><td>Bank Transfer</td><td>2</td><td>258.84</td></tr>
+              <tr><td>Cash</td><td>1</td><td>27.98</td></tr>
+              <tr><td>Credit Card</td><td>3</td><td>222.86</td></tr>
+              <tr><td>PayPal</td><td>2</td><td>189.86</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="step-caption"></div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 21c. THE GROUP BY RULE                             -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 4.2 · GROUP BY</div>
+      <h2 class="title">The One Rule of GROUP BY</h2>
+      <p class="subtitle">After grouping, every column you SELECT must either be a grouping column or be summarized.</p>
+      <div class="grid two">
+        <div class="card accent-red" data-build>
+          <h3>This query fails</h3>
+          <pre class="code tight"><span class="kw">SELECT</span>   PaymentMethod, Amount
+<span class="kw">FROM</span>     Payments
+<span class="kw">GROUP BY</span> PaymentMethod;</pre>
+          <div class="sqlmsg">Msg 8120 · Column 'Payments.Amount' is invalid in the select list because it is not contained in either an aggregate function or the GROUP BY clause.</div>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>Why it has to fail</h3>
+          <p class="small">The Credit Card pile holds three amounts: 45.96, 31.98 and 144.92. A pile becomes <strong>one</strong> row, and one cell cannot hold three numbers. SQL will not guess; you must say how to summarize them.</p>
+        </div>
+      </div>
+      <table class="tbl">
+        <tr><th style="width:24%">Summary</th><th style="width:30%">Gives you, per pile</th><th>Bookstore question</th></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">COUNT(*)</td><td>how many rows</td><td>How many orders did each customer place?</td></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">SUM(col)</td><td>the total</td><td>How much revenue did each book bring in?</td></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">AVG(col)</td><td>the average</td><td>What is the average book price per genre?</td></tr>
+        <tr data-build><td style="font-family:Consolas, monospace">MIN / MAX(col)</td><td>smallest / largest</td><td>What is each customer's biggest order?</td></tr>
+      </table>
+      <div class="callout" data-build><strong>WHERE vs HAVING:</strong> WHERE removes <em>rows</em> before the piles are made (<span style="font-family:Consolas, monospace">WHERE OrderID &lt;= 8</span>). HAVING removes whole <em>piles</em> afterwards: add <span style="font-family:Consolas, monospace">HAVING COUNT(*) &gt;= 2</span> and the Cash pile disappears.</div>
+    </section>
+
+    <!-- ================================================== -->
     <!-- 22. FIRST BUSINESS QUESTION                         -->
     <!-- ================================================== -->
     <section class="slide">
@@ -699,8 +892,8 @@
       </div>
       <div class="grid two">
         <div class="card" data-build>
-          <h3>GROUP BY makes piles</h3>
-          <p class="small">All order lines for the same title go into one pile; SUM adds up each pile. One row comes out per book, however many lines went in.</p>
+          <h3>JOIN first, then the piles</h3>
+          <p class="small">The JOIN puts a title on every order line. GROUP BY then piles the lines by title, exactly like the payments, and SUM adds up each pile: one row per book.</p>
         </div>
         <div class="card accent-blue" data-build>
           <h3>Why UnitPrice and not Books.Price</h3>
