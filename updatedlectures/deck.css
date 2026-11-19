@@ -475,3 +475,4 @@ table.tbl.mono th, table.tbl.mono td { padding: .4rem .75rem; }
   .stepper .fade { opacity: 1 !important; }
   .step-caption { display: none; }
 }
+pre.code.narrow { font-size: .68rem; }

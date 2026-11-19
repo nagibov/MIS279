@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MIS 276 – Week 5: Your Database Gets an API (Node.js + Express)</title>
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="deck" id="deck">
+
+    <!-- ================================================== -->
+    <!-- 1. TITLE                                            -->
+    <!-- ================================================== -->
+    <section class="slide divider active">
+      <div class="kicker">MIS 276 · E-Commerce &amp; Digital Business</div>
+      <span class="lecture-num">Week 5</span>
+      <h2 class="title">Your Database Gets an API</h2>
+      <p class="subtitle">Node.js and Express put the bookstore database on the web —<br/>HTTP, REST, JSON, and the code that connects them.</p>
+      <p class="small">Lecture 5.1 · How Apps Talk to Databases &nbsp;&nbsp;|&nbsp;&nbsp; Lecture 5.2 · Building the Bookstore API</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 2. DIVIDER 5.1                                      -->
+    <!-- ================================================== -->
+    <section class="slide divider">
+      <div class="kicker">Lecture 5.1</div>
+      <h2 class="title">How Apps Talk to Databases</h2>
+      <p class="subtitle">Client, API, database · HTTP requests &amp; responses · JSON · REST · Status codes · Node.js &amp; Express</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 3. HOOK                                             -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · The Hook</div>
+      <h2 class="title">Why Can't the Storefront Just Run SQL?</h2>
+      <p class="subtitle">Last week you queried ClassDemo from SSMS. Imagine the website's own page code doing the same thing.</p>
+      <div class="grid three">
+        <div class="card accent-red" data-build>
+          <h3>The password ships to everyone</h3>
+          <p class="small">Page code runs on the customer's computer. Anyone can open it and read the database login inside.</p>
+        </div>
+        <div class="card accent-red" data-build>
+          <h3>Anyone can type any SQL</h3>
+          <p class="small">With that login, a visitor can run <span style="font-family:Consolas, monospace">UPDATE Books SET Price = 0</span>, or worse.</p>
+        </div>
+        <div class="card accent-red" data-build>
+          <h3>Every app repeats the rules</h3>
+          <p class="small">The website, the phone app and the admin panel would each re-implement "a price can't be negative".</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card accent-green" data-build>
+          <h3>The fix: a counter between customer and stockroom</h3>
+          <p class="small">Customers ask at the counter ("show me book 8"); staff fetch it from the stockroom and hand it over. Customers never walk into the stockroom.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>That counter is an API</h3>
+          <p class="small">An <strong>Application Programming Interface</strong>: a small program that accepts a fixed set of requests, runs the SQL itself, and returns only the answer.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>This week you build that counter</strong> for the bookstore, on top of the exact database you created in Week 4.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 4. THREE TIERS                                      -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · The Big Picture</div>
+      <h2 class="title">Three Programs, Two Languages</h2>
+      <svg class="diagram" viewBox="0 0 960 260" role="img" aria-label="Browser sends HTTP to the Express API, which sends SQL to SQL Server">
+        <g>
+          <rect class="svg-node" x="20" y="70" width="220" height="90" rx="12"/>
+          <text x="130" y="105" text-anchor="middle" font-size="16" class="svg-label">Storefront</text>
+          <text x="130" y="128" text-anchor="middle" font-size="12.5" class="svg-sub">browser, phone app, Postman</text>
+          <rect class="svg-node" x="370" y="70" width="220" height="90" rx="12"/>
+          <text x="480" y="105" text-anchor="middle" font-size="16" class="svg-label">Bookstore API</text>
+          <text x="480" y="128" text-anchor="middle" font-size="12.5" class="svg-sub">Node.js + Express, port 4000</text>
+          <rect x="720" y="70" width="220" height="90" rx="12" fill="var(--green-100)" stroke="var(--green)" stroke-width="2"/>
+          <text x="830" y="105" text-anchor="middle" font-size="16" class="svg-label">SQL Server</text>
+          <text x="830" y="128" text-anchor="middle" font-size="12.5" class="svg-sub">ClassDemo database</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="242" y1="95" x2="366" y2="95" stroke="var(--blue-600)" stroke-width="2.5" marker-end="url(#arr5)"/>
+          <text x="304" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="var(--blue-900)">HTTP request</text>
+          <text x="304" y="80" text-anchor="middle" font-size="12" fill="var(--ink-2)" font-family="Consolas, monospace">GET /books/8</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="592" y1="95" x2="716" y2="95" stroke="var(--green)" stroke-width="2.5" marker-end="url(#arr5g)"/>
+          <text x="654" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="var(--green)">SQL query</text>
+          <text x="654" y="80" text-anchor="middle" font-size="12" fill="var(--ink-2)" font-family="Consolas, monospace">WHERE BookID = 8</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="716" y1="138" x2="592" y2="138" stroke="var(--green)" stroke-width="2.5" marker-end="url(#arr5g)"/>
+          <text x="654" y="182" text-anchor="middle" font-size="13" font-weight="700" fill="var(--green)">rows</text>
+          <text x="654" y="200" text-anchor="middle" font-size="12" fill="var(--ink-2)">3 rows (3 authors)</text>
+        </g>
+        <g data-build>
+          <line class="draw" pathLength="1" x1="366" y1="138" x2="242" y2="138" stroke="var(--blue-600)" stroke-width="2.5" marker-end="url(#arr5)"/>
+          <text x="304" y="182" text-anchor="middle" font-size="13" font-weight="700" fill="var(--blue-900)">HTTP response</text>
+          <text x="304" y="200" text-anchor="middle" font-size="12" fill="var(--ink-2)" font-family="Consolas, monospace">200 OK + JSON</text>
+        </g>
+        <g data-build>
+          <rect x="240" y="222" width="480" height="32" rx="8" fill="var(--blue-100)" stroke="#c6dcf5"/>
+          <text x="480" y="243" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--blue-900)">Only the API knows the database password and the SQL.</text>
+        </g>
+        <defs>
+          <marker id="arr5" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,6 L0,12 z" fill="var(--blue-600)"/></marker>
+          <marker id="arr5g" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,6 L0,12 z" fill="var(--green)"/></marker>
+        </defs>
+      </svg>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>Storefront shows</h3>
+          <p class="small">Pages, buttons, a cart. Speaks HTTP. Knows nothing about tables.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>API decides</h3>
+          <p class="small">Which requests are allowed, what is valid, which SQL to run.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Database remembers</h3>
+          <p class="small">Stores rows and enforces the constraints you wrote in Week 4.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 5. HTTP REQUEST / RESPONSE                          -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · HTTP</div>
+      <h2 class="title">Anatomy of a Request and a Response</h2>
+      <p class="subtitle">Every conversation with the API is one request and one response. Here a storefront adds a book.</p>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>The request</h3>
+          <pre class="code tight"><span class="kw">POST</span> /books HTTP/1.1     <span class="cm">← method + path</span>
+Host: localhost:4000
+Content-Type: application/json
+                      <span class="cm">↑ headers</span>
+{                     <span class="cm">← body</span>
+  <span class="str">"title"</span>: <span class="str">"The Great Gatsby"</span>,
+  <span class="str">"isbn"</span>:  <span class="str">"9780743273565"</span>,
+  <span class="str">"price"</span>: 13.99
+}</pre>
+        </div>
+        <div class="card" data-build>
+          <h3>The response</h3>
+          <pre class="code tight">HTTP/1.1 <span class="kw">201 Created</span>  <span class="cm">← status</span>
+Content-Type: application/json
+                      <span class="cm">↑ headers</span>
+{                     <span class="cm">← body</span>
+  <span class="str">"message"</span>: <span class="str">"Book created successfully"</span>,
+  <span class="str">"BookID"</span>: 10   <span class="cm">← from IDENTITY</span>
+}
+
+ </pre>
+        </div>
+      </div>
+      <div class="grid four">
+        <div class="card accent-blue" data-build><h3>Method</h3><p class="small">The verb: GET, POST, PUT, DELETE.</p></div>
+        <div class="card accent-blue" data-build><h3>Path</h3><p class="small">The noun: which resource, <span style="font-family:Consolas, monospace">/books</span>.</p></div>
+        <div class="card accent-blue" data-build><h3>Body</h3><p class="small">Data sent along, as JSON. GET has none.</p></div>
+        <div class="card accent-amber" data-build><h3>Status</h3><p class="small">A 3-digit verdict: did it work?</p></div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 6. ROWS → JSON                                      -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · JSON</div>
+      <h2 class="title">From a Table Row to JSON</h2>
+      <p class="subtitle">SQL Server hands the API rows. The API hands the storefront JSON: the format every web app reads.</p>
+      <table class="tbl mono" data-build>
+        <tr><th>BookID</th><th>Title</th><th>Genre</th><th>Price</th><th>Stock</th><th>PublishDate</th></tr>
+        <tr><td>4</td><td>The Shining</td><td>Horror</td><td>15.99</td><td>60</td><td>1977-01-28</td></tr>
+        <tr><td>5</td><td>Murder on the Orient Express</td><td>Mystery</td><td>11.99</td><td>30</td><td>1934-01-01</td></tr>
+      </table>
+      <div class="grid two" style="grid-template-columns: 1.2fr 1fr;">
+        <pre class="code" data-build>[                     <span class="cm">← a list</span>
+  {                   <span class="cm">← one row</span>
+    <span class="str">"BookID"</span>: 4,      <span class="cm">← column: value</span>
+    <span class="str">"Title"</span>: <span class="str">"The Shining"</span>,
+    <span class="str">"Genre"</span>: <span class="str">"Horror"</span>,
+    <span class="str">"Price"</span>: 15.99,
+    <span class="str">"Stock"</span>: 60,
+    <span class="str">"PublishDate"</span>: <span class="str">"1977-01-28T00:00:00.000Z"</span>
+  },
+  { <span class="str">"BookID"</span>: 5, … }
+]</pre>
+        <div class="grid" style="gap: .75rem; margin: .75rem 0 0; align-content: start;">
+          <div class="card" data-build>
+            <h3>Same data, new shape</h3>
+            <p class="small">Columns become keys, rows become objects, a result set becomes a list.</p>
+          </div>
+          <div class="card" data-build>
+            <h3>Types survive</h3>
+            <p class="small">Numbers stay numbers, text gets quotes, NULL becomes <span style="font-family:Consolas, monospace">null</span>, BIT becomes <span style="font-family:Consolas, monospace">true</span>/<span style="font-family:Consolas, monospace">false</span>, dates become text.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>One more thing JSON can do that a table cannot:</strong> nest. A book can carry a list of its authors inside it. You will build exactly that in Lecture 5.2.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 7. REST                                             -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · REST</div>
+      <h2 class="title">REST: Nouns in the URL, Verbs in the Method</h2>
+      <p class="subtitle">You already know half of this: Create = POST = INSERT · Read = GET = SELECT · Update = PUT = UPDATE · Delete = DELETE.</p>
+      <table class="tbl">
+        <tr><th style="width:12%">Method</th><th style="width:26%">Path</th><th style="width:30%">Means</th><th>SQL behind it (Week 4)</th></tr>
+        <tr data-build><td><span class="tag green">GET</span></td><td style="font-family:Consolas, monospace">/books</td><td>List the books</td><td style="font-family:Consolas, monospace">SELECT … FROM Books</td></tr>
+        <tr data-build><td><span class="tag green">GET</span></td><td style="font-family:Consolas, monospace">/books/8</td><td>One book</td><td style="font-family:Consolas, monospace">… WHERE BookID = 8</td></tr>
+        <tr data-build><td><span class="tag">POST</span></td><td style="font-family:Consolas, monospace">/books</td><td>Add a book</td><td style="font-family:Consolas, monospace">INSERT INTO Books …</td></tr>
+        <tr data-build><td><span class="tag amber">PUT</span></td><td style="font-family:Consolas, monospace">/books/8</td><td>Change book 8</td><td style="font-family:Consolas, monospace">UPDATE Books … WHERE BookID = 8</td></tr>
+        <tr data-build><td><span class="tag red">DELETE</span></td><td style="font-family:Consolas, monospace">/books/8</td><td>Remove book 8</td><td style="font-family:Consolas, monospace">DELETE FROM Books WHERE BookID = 8</td></tr>
+        <tr data-build><td><span class="tag green">GET</span></td><td style="font-family:Consolas, monospace">/customers/3/orders</td><td>Ali's orders</td><td style="font-family:Consolas, monospace">… JOIN … WHERE CustomerID = 3</td></tr>
+      </table>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>Resources are plural nouns</h3>
+          <p class="small">Usually one per table. An ID picks one row; a nested path follows a foreign key.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Stateless</h3>
+          <p class="small">Each request carries everything needed; the API remembers nothing between requests.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 8. QUIZ: DESIGN THE REQUEST                         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Quick Quiz</div>
+      <h2 class="title">Call It: Which Method and Path?</h2>
+      <p class="subtitle">Say the request out loud before the answer appears.</p>
+      <div class="grid two">
+        <div class="card">
+          <h3>"Show order 13 with the books in it"</h3>
+          <p class="small" data-build><span class="tag green">GET /orders/13</span> One resource by ID. The API joins OrderBooks and Books for you.</p>
+        </div>
+        <div class="card">
+          <h3>"A new author signs with us"</h3>
+          <p class="small" data-build><span class="tag">POST /authors</span> The author's details travel in the JSON body. No ID in the path: the database assigns it.</p>
+        </div>
+        <div class="card">
+          <h3>"Mark order 16 as Completed"</h3>
+          <p class="small" data-build><span class="tag amber">PUT /orders/16</span> Body: <span style="font-family:Consolas, monospace">{ "status": "Completed" }</span>.</p>
+        </div>
+        <div class="card">
+          <h3>What is wrong with <span style="font-family:Consolas, monospace">GET /deleteBook?id=4</span>?</h3>
+          <p class="small" data-build><span class="tag red">Two things</span> The verb is in the URL instead of the method, and a GET must never change data: browsers and search engines repeat GETs freely. It should be <strong>DELETE /books/4</strong>.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>The test for any endpoint:</strong> could someone guess it from the table names alone? If yes, your API is RESTful enough.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 9. STATUS CODES                                     -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Status Codes</div>
+      <h2 class="title">Six Status Codes Our API Actually Sends</h2>
+      <table class="tbl">
+        <tr><th style="width:20%">Code</th><th style="width:28%">Meaning</th><th>When the bookstore API sends it</th></tr>
+        <tr data-build><td><span class="tag green">200 OK</span></td><td>It worked, here's the data</td><td>GET /books, GET /books/8, a successful PUT or DELETE</td></tr>
+        <tr data-build><td><span class="tag green">201 Created</span></td><td>A new row exists</td><td>POST /books inserted a book; the reply includes its new BookID</td></tr>
+        <tr data-build><td><span class="tag amber">400 Bad Request</span></td><td>Your data is wrong</td><td>POST without a title, a negative price, a PUT with an empty body</td></tr>
+        <tr data-build><td><span class="tag amber">404 Not Found</span></td><td>No such resource</td><td>GET /books/999, or a path the API doesn't have</td></tr>
+        <tr data-build><td><span class="tag amber">409 Conflict</span></td><td>It clashes with existing data</td><td>A duplicate ISBN; deleting a book that still appears in orders</td></tr>
+        <tr data-build><td><span class="tag red">500 Server Error</span></td><td>The API itself failed</td><td>Database offline, a bug in our code</td></tr>
+      </table>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>Read the first digit</h3>
+          <p class="small"><strong>2xx</strong>: success. <strong>4xx</strong>: the <em>client</em> must change the request. <strong>5xx</strong>: the <em>server</em> must be fixed; retrying might work.</p>
+        </div>
+        <div class="card accent-red" data-build>
+          <h3>The "everything is 200" mistake</h3>
+          <p class="small">Replying <span style="font-family:Consolas, monospace">200 {"error": "not found"}</span> forces every app to read the text to learn it failed. The status code exists so they don't have to.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 10. NODE & EXPRESS                                  -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Node.js &amp; Express</div>
+      <h2 class="title">Node.js Runs JavaScript; Express Answers Requests</h2>
+      <div class="grid three">
+        <div class="card accent-blue" data-build>
+          <h3>Node.js</h3>
+          <p class="small">JavaScript outside the browser: on a server, with access to files, the network and databases.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>npm</h3>
+          <p class="small">Node's package manager. <span style="font-family:Consolas, monospace">npm install</span> downloads everything listed in package.json: express, mssql, joi…</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Express</h3>
+          <p class="small">A package for writing servers: "when a GET for this path arrives, run this function".</p>
+        </div>
+      </div>
+      <div class="grid two" style="grid-template-columns: 1.2fr 1fr;">
+        <pre class="code" data-build><span class="kw">import</span> express <span class="kw">from</span> <span class="str">"express"</span>;
+
+<span class="kw">const</span> app = express();
+
+app.get(<span class="str">"/hello"</span>, (req, res) =&gt; {
+  res.json({ message: <span class="str">"Hello from the bookstore"</span> });
+});
+
+app.listen(4000);</pre>
+        <div class="grid" style="gap: .75rem; margin: .75rem 0 0; align-content: start;">
+          <div class="card" data-build>
+            <h3>req and res</h3>
+            <p class="small"><strong>req</strong> is everything about the request (path, body, parameters). <strong>res</strong> is how you answer.</p>
+          </div>
+          <div class="card accent-green" data-build>
+            <h3>You'll type this yourself</h3>
+            <p class="small">In the lab in a few minutes, line by line, starting from installing Node.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>That's a complete web server in 7 lines.</strong> The bookstore API is the same idea repeated for every endpoint, plus a database connection.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 11. ASYNC / AWAIT                                   -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · async &amp; await</div>
+      <h2 class="title">Waiting for the Database Without Freezing</h2>
+      <p class="subtitle">A query takes milliseconds to seconds. Node must not stop serving every other customer while it waits.</p>
+      <div class="grid two">
+        <div class="card accent-red" data-build>
+          <h3>Forget await: wrong answer</h3>
+          <pre class="code tight"><span class="kw">const</span> result = pool.request()
+  .query(<span class="str">"SELECT * FROM Books"</span>);
+res.json(result.recordset);</pre>
+          <p class="small">The query has only <em>started</em>. <span style="font-family:Consolas, monospace">result</span> is a Promise, an IOU, so <span style="font-family:Consolas, monospace">recordset</span> is undefined and the client gets an empty reply.</p>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>With await: the real rows</h3>
+          <pre class="code tight"><span class="kw">const</span> result = <span class="kw">await</span> pool.request()
+  .query(<span class="str">"SELECT * FROM Books"</span>);
+res.json(result.recordset);</pre>
+          <p class="small"><span style="font-family:Consolas, monospace">await</span> pauses <em>this</em> request until SQL Server answers. Meanwhile Node keeps handling other requests.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>The rule</h3>
+          <p class="small">Any function that uses <span style="font-family:Consolas, monospace">await</span> must be declared <span style="font-family:Consolas, monospace">async</span>. That's why every controller begins <span style="font-family:Consolas, monospace">export const listBooks = async (req, res) =&gt;</span>.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>The analogy</h3>
+          <p class="small">A waiter takes your order to the kitchen and serves other tables while it cooks. They don't stand at the kitchen door until your food is ready.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12. LAB OVERVIEW + STEP 1: INSTALL NODE             -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Lab · Step 1 of 6</div>
+      <h2 class="title">Lab: Build Your First Server (40 Minutes)</h2>
+      <p class="subtitle">Follow along on your own laptop. Every step ends with a <strong>checkpoint</strong>: if your screen doesn't match it, raise your hand before moving on.</p>
+      <div class="grid two" style="grid-template-columns: 1fr 1.1fr;">
+        <div class="card" data-build>
+          <h3>Where we are going</h3>
+          <ul>
+            <li>1 · Install Node.js</li>
+            <li>2 · Start a project with npm</li>
+            <li>3 · Add the Express package</li>
+            <li>4 · Write server.js, line by line</li>
+            <li>5 · Serve books, with a 404</li>
+            <li>6 · Accept new books with POST</li>
+          </ul>
+          <p class="small">At the end you have a working API, built entirely by you, with no database yet.</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Step 1 · Install Node.js</h3>
+          <ul>
+            <li>Go to <strong>nodejs.org</strong> and download the <strong>LTS</strong> version (the stable one)</li>
+            <li>Run the installer with the default options; npm comes with it</li>
+            <li>Open a <strong>new</strong> terminal and type:</li>
+          </ul>
+          <pre class="code tight">node -v
+npm -v</pre>
+          <div class="sqlmsg ok">Checkpoint: two version numbers, e.g. v22.14.0 and 11.4.1 (yours may be newer).</div>
+        </div>
+      </div>
+      <div class="callout amber" data-build><strong>Windows trap:</strong> if PowerShell answers <span style="font-family:Consolas, monospace">npm : … running scripts is disabled on this system</span>, use <strong>Command Prompt</strong> instead (in VS Code: Terminal → the ∨ next to + → Command Prompt). "node is not recognized" means the terminal was opened before the install: close it and open a new one.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12b. STEP 2: NPM INIT                               -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Lab · Step 2 of 6</div>
+      <h2 class="title">Start a Project with npm</h2>
+      <div class="grid two" style="grid-template-columns: 1fr 1.15fr;">
+        <div>
+          <pre class="code" data-build>mkdir my-first-api
+cd my-first-api
+npm init -y</pre>
+          <div class="card" data-build style="margin-top: .9rem;">
+            <h3>What just happened</h3>
+            <p class="small"><span style="font-family:Consolas, monospace">npm init</span> creates <strong>package.json</strong>, the project's ID card: its name, its scripts, and later the list of packages it needs. <span style="font-family:Consolas, monospace">-y</span> accepts all the default answers.</p>
+          </div>
+          <div class="card accent-amber" data-build style="margin-top: .9rem;">
+            <h3>Open the folder in VS Code</h3>
+            <p class="small"><span style="font-family:Consolas, monospace">code .</span> (or File → Open Folder). Every file in this lab goes in this folder.</p>
+          </div>
+        </div>
+        <div>
+          <p class="small" style="margin: .75rem 0 .3rem;"><strong>package.json</strong>: make the two marked edits</p>
+          <pre class="code tight" style="margin-top: 0;">{
+  <span class="str">"name"</span>: <span class="str">"my-first-api"</span>,
+  <span class="str">"version"</span>: <span class="str">"1.0.0"</span>,
+<span data-build>  <span class="str">"main"</span>: <mark class="hl">"server.js"</mark>,        <span class="cm">← was "index.js"</span></span>
+  <span class="str">"scripts"</span>: {
+    <span class="str">"test"</span>: <span class="str">"echo \"Error: no test specified\" …"</span>
+  },
+  <span class="str">"keywords"</span>: [],
+  <span class="str">"author"</span>: <span class="str">""</span>,
+  <span class="str">"license"</span>: <span class="str">"ISC"</span>,
+<span data-build>  <span class="str">"type"</span>: <mark class="hl">"module"</mark>            <span class="cm">← was "commonjs"</span></span>
+}</pre>
+          <div class="callout" data-build><strong>Why "module"?</strong> It lets you write <span style="font-family:Consolas, monospace">import express from "express"</span>, the modern syntax used in every slide and in bookstore-api. Leave it as "commonjs" and line 1 of your server fails.</div>
+        </div>
+      </div>
+      <div class="sqlmsg ok" data-build>Checkpoint: a folder my-first-api containing package.json with "type": "module".</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12c. STEP 3: NPM INSTALL EXPRESS                    -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Lab · Step 3 of 6</div>
+      <h2 class="title">Add Express with npm install</h2>
+      <pre class="code" data-build>npm install express</pre>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>package.json gains a line</h3>
+          <pre class="code tight"><span class="str">"dependencies"</span>: {
+  <span class="str">"express"</span>: <span class="str">"^5.3.0"</span>
+}</pre>
+          <p class="small">The project now <em>declares</em> that it needs Express. The ^ means "this version or a newer compatible one".</p>
+        </div>
+        <div class="card" data-build>
+          <h3>node_modules/ appears</h3>
+          <p class="small">The actual code of Express <strong>and</strong> the ~60 small packages Express itself depends on. You never edit anything in here.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>package-lock.json appears</h3>
+          <p class="small">The exact version of every one of those packages, so your teammate's <span style="font-family:Consolas, monospace">npm install</span> gets precisely what you have.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card accent-amber" data-build>
+          <h3>node_modules never goes to Git</h3>
+          <p class="small">It is large and rebuilt in seconds from package.json. Create a file named <span style="font-family:Consolas, monospace">.gitignore</span> containing one line: <span style="font-family:Consolas, monospace">node_modules/</span></p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>That's how you will start bookstore-api too</h3>
+          <p class="small">Clone it, run <span style="font-family:Consolas, monospace">npm install</span> once, and npm reads package.json and downloads everything it lists.</p>
+        </div>
+      </div>
+      <div class="sqlmsg ok" data-build>Checkpoint: "added … packages" and "found 0 vulnerabilities"; express listed under dependencies.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12d. STEP 4: SERVER.JS LINE BY LINE (interactive)   -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Lab · Step 4 of 6</div>
+      <h2 class="title">server.js, One Line at a Time</h2>
+      <div class="stepper" data-start="Create a new file named server.js in my-first-api. Click (or press →) to add one line at a time; type each line as it appears.">
+        <i class="tick" data-build data-caption="Line 1 loads the Express package you just installed. Node finds it in node_modules/express."></i>
+        <i class="tick" data-build data-caption="Line 3 creates your server. By convention it is called app; everything else hangs off it."></i>
+        <i class="tick" data-build data-caption="Lines 5–7 are a route: when a GET request for the path / arrives, run this function. req is the request, res is your reply."></i>
+        <i class="tick" data-build data-caption="res.json sends an object back as JSON. You didn't set a status, so Express uses 200 OK."></i>
+        <i class="tick" data-build data-caption="Lines 9–12 start the server on port 3000. If the port can't be used, throw the error so you see it; otherwise print a message once it's ready."></i>
+        <i class="tick" data-build data-caption="Save, then run node server.js in the terminal. The terminal stays busy: that is your server waiting for requests. Ctrl + C stops it."></i>
+        <i class="tick" data-build data-caption="Open http://localhost:3000 in your browser. The JSON on screen came from code you wrote twelve lines ago."></i>
+        <div class="grid two" style="grid-template-columns: 1.3fr 1fr; margin: .4rem 0 .6rem; align-items: start;">
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>server.js</strong></p>
+            <pre class="code" style="margin-top: 0;"><span class="fade" data-on="1:shown" data-hl="1"><span class="kw">import</span> express <span class="kw">from</span> <span class="str">"express"</span>;</span>
+
+<span class="fade" data-on="2:shown" data-hl="2"><span class="kw">const</span> app = express();</span>
+
+<span class="fade" data-on="3:shown" data-hl="3">app.get(<span class="str">"/"</span>, (req, res) =&gt; {</span>
+<span class="fade" data-on="3:shown" data-hl="4">  res.json({ message: <span class="str">"My first API is running"</span> });</span>
+<span class="fade" data-on="3:shown" data-hl="3">});</span>
+
+<span class="fade" data-on="5:shown" data-hl="5">app.listen(3000, (error) =&gt; {
+  <span class="kw">if</span> (error) <span class="kw">throw</span> error;
+  console.log(<span class="str">"Server running on http://localhost:3000"</span>);
+});</span></pre>
+          </div>
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>Terminal</strong></p>
+            <pre class="code tight fade" data-on="6:shown" data-hl="6" style="margin-top: 0;">&gt; node server.js
+Server running on http://localhost:3000
+<span class="cm">▌ (waiting for requests)</span></pre>
+            <p class="small" style="margin: .7rem 0 .3rem;"><strong>Browser · localhost:3000</strong></p>
+            <pre class="code tight fade" data-on="7:shown" data-hl="7" style="margin-top: 0;">{<span class="str">"message"</span>:<span class="str">"My first API is running"</span>}</pre>
+          </div>
+        </div>
+        <div class="step-caption"></div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12e. STEP 5: GET /books AND /books/:id              -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Lab · Step 5 of 6</div>
+      <h2 class="title">Serve Books, and Say 404 When There Isn't One</h2>
+      <p class="subtitle">No database yet: three real bookstore rows in a JavaScript array. Add this <strong>above</strong> app.listen, then stop (Ctrl + C) and restart the server.</p>
+      <div class="grid two" style="grid-template-columns: 1.3fr 1fr;">
+        <pre class="code tight"><span data-build><span class="kw">const</span> books = [
+  { BookID: 1, Title: <span class="str">"1984"</span>, Price: 12.99 },
+  { BookID: 2, Title: <span class="str">"Animal Farm"</span>, Price: 9.99 },
+  { BookID: 8, Title: <span class="str">"Tales of the Unknown"</span>, Price: 18.50 }
+];</span>
+
+<span data-build>app.get(<span class="str">"/books"</span>, (req, res) =&gt; {
+  res.json(books);
+});</span>
+
+<span data-build>app.get(<span class="str">"/books/:id"</span>, (req, res) =&gt; {
+  <span class="kw">const</span> id = parseInt(req.params.id);
+  <span class="kw">const</span> book = books.find(b =&gt; b.BookID === id);</span>
+<span data-build>  <span class="kw">if</span> (!book) {
+    <span class="kw">return</span> res.status(404).json({ error: <span class="str">"Book not found"</span> });
+  }
+  res.json(book);
+});</span></pre>
+        <div class="grid" style="gap: .7rem; margin: .75rem 0 0; align-content: start;">
+          <div class="card" data-build>
+            <h3>:id is a placeholder</h3>
+            <p class="small">For <span style="font-family:Consolas, monospace">/books/8</span>, Express puts "8" in <span style="font-family:Consolas, monospace">req.params.id</span>. It arrives as text, so parseInt turns it into the number 8.</p>
+          </div>
+          <div class="card" data-build>
+            <h3>return stops the function</h3>
+            <p class="small">Without it, the code would go on to send a second reply, and Express would throw an error.</p>
+          </div>
+        </div>
+      </div>
+      <table class="tbl mono" data-build>
+        <tr><th style="width:36%">Checkpoint: open in the browser</th><th style="width:12%">Status</th><th>You should see</th></tr>
+        <tr><td>localhost:3000/books</td><td>200</td><td>All 3 books, as a list [ … ]</td></tr>
+        <tr><td>localhost:3000/books/8</td><td>200</td><td>{"BookID":8,"Title":"Tales of the Unknown","Price":18.5}</td></tr>
+        <tr><td>localhost:3000/books/99</td><td>404</td><td>{"error":"Book not found"}</td></tr>
+      </table>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12f. STEP 6: POST                                   -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Lab · Step 6 of 6</div>
+      <h2 class="title">Accept New Books with POST</h2>
+      <div class="grid two" style="grid-template-columns: 1.3fr 1fr;">
+        <pre class="code tight"><span data-build><span class="kw">const</span> app = express();
+<mark class="hl">app.use(express.json());</mark>     <span class="cm">← add right after this line</span></span>
+
+<span class="cm">// … books and the GET routes …</span>
+
+<span data-build>app.post(<span class="str">"/books"</span>, (req, res) =&gt; {
+  <span class="kw">const</span> { title, price } = req.body;</span>
+<span data-build>  <span class="kw">if</span> (!title || price === <span class="kw">undefined</span>) {
+    <span class="kw">return</span> res.status(400)
+      .json({ error: <span class="str">"title and price are required"</span> });
+  }</span>
+<span data-build>  <span class="kw">const</span> book = {
+    BookID: books[books.length - 1].BookID + 1,
+    Title: title,
+    Price: price
+  };
+  books.push(book);
+  res.status(201).json(book);
+});</span></pre>
+        <div class="grid" style="gap: .7rem; margin: .75rem 0 0; align-content: start;">
+          <div class="card" data-build>
+            <h3>express.json()</h3>
+            <p class="small">Middleware: it reads the JSON body of each request and puts it in <span style="font-family:Consolas, monospace">req.body</span>. Without it, req.body is empty.</p>
+          </div>
+          <div class="card accent-blue" data-build>
+            <h3>Test in Postman</h3>
+            <p class="small">POST <span style="font-family:Consolas, monospace">localhost:3000/books</span>, Body → <strong>raw</strong> → <strong>JSON</strong>:<br/><span style="font-family:Consolas, monospace">{ "title": "Dune", "price": 17.99 }</span></p>
+          </div>
+        </div>
+      </div>
+      <table class="tbl mono" data-build>
+        <tr><th style="width:42%">Checkpoint</th><th style="width:10%">Status</th><th>You should see</th></tr>
+        <tr><td>POST { "title": "Dune", "price": 17.99 }</td><td>201</td><td>{"BookID":9,"Title":"Dune","Price":17.99}</td></tr>
+        <tr><td>POST { "title": "Dune" }</td><td>400</td><td>{"error":"title and price are required"}</td></tr>
+        <tr><td>GET /books, then restart and GET again</td><td>200</td><td>4 books… then 3 again</td></tr>
+      </table>
+      <div class="callout green" data-build><strong>Dune vanished on restart.</strong> The array lives in memory and dies with the server. Keeping data safe across restarts, crashes and many users at once is exactly what SQL Server is for, which is Lecture 5.2.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 12g. LAB WRAP: WATCH MODE + TROUBLESHOOTING         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.1 · Lab · Wrap-Up</div>
+      <h2 class="title">Stop Restarting by Hand, and Fix the Usual Errors</h2>
+      <div class="grid two" style="grid-template-columns: 1fr 1.25fr;">
+        <div>
+          <div class="card" data-build>
+            <h3>Watch mode</h3>
+            <p class="small">Add a script to package.json:</p>
+            <pre class="code tight"><span class="str">"scripts"</span>: {
+  <span class="str">"dev"</span>: <span class="str">"node --watch server.js"</span>
+}</pre>
+            <p class="small">Run <span style="font-family:Consolas, monospace">npm run dev</span> once; Node restarts the server every time you save. bookstore-api does the same job with the nodemon package.</p>
+          </div>
+          <div class="card accent-green" data-build style="margin-top: .9rem;">
+            <h3>What you built</h3>
+            <p class="small">Four endpoints, four status codes (200, 201, 400, 404), JSON in and out, in about 40 lines. bookstore-api is this same file, split into routes and controllers, with the array replaced by SQL Server.</p>
+          </div>
+        </div>
+        <table class="tbl" data-build>
+          <tr><th style="width:52%">You see</th><th>Fix</th></tr>
+          <tr><td style="font-family:Consolas, monospace; font-size:.85rem;">Cannot use import statement outside a module</td><td>package.json: "type": "module"</td></tr>
+          <tr><td style="font-family:Consolas, monospace; font-size:.85rem;">Cannot find package 'express'</td><td>Run npm install express <em>inside</em> my-first-api</td></tr>
+          <tr><td style="font-family:Consolas, monospace; font-size:.85rem;">listen EADDRINUSE: address already in use :::3000</td><td>A copy is already running in another terminal: Ctrl + C there</td></tr>
+          <tr><td style="font-family:Consolas, monospace; font-size:.85rem;">Cannot GET /book</td><td>No route matches: check the spelling (/books)</td></tr>
+          <tr><td style="font-family:Consolas, monospace; font-size:.85rem;">Cannot destructure property 'title' of 'req.body'</td><td>Postman isn't sending JSON: Body → raw → JSON</td></tr>
+          <tr><td>The change doesn't show up</td><td>You didn't save, or didn't restart (use npm run dev)</td></tr>
+        </table>
+      </div>
+      <div class="callout" data-build><strong>Keep my-first-api.</strong> It is your sandbox: when something in bookstore-api confuses you, try the idea here first in five lines.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 13. DIVIDER 5.2                                     -->
+    <!-- ================================================== -->
+    <section class="slide divider">
+      <div class="kicker">Lecture 5.2</div>
+      <h2 class="title">Building the Bookstore API</h2>
+      <p class="subtitle">The project in our repository, file by file · Connecting to SQL Server · GET, POST, PUT, DELETE · Errors · Testing with Postman</p>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 14. PROJECT TOUR                                    -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · Project Tour</div>
+      <h2 class="title">Inside the bookstore-api Folder</h2>
+      <div class="grid two" style="grid-template-columns: 1fr 1.3fr;">
+        <pre class="code">bookstore-api/
+├── server.js     <span class="cm">front door</span>
+├── routes/
+│   ├── books.js  <span class="cm">URL → function</span>
+│   ├── customers.js
+│   ├── orders.js
+│   └── authors.js
+├── controllers/
+│   ├── books.js  <span class="cm">SQL + response</span>
+│   └── …
+├── db/
+│   └── config.js <span class="cm">connection</span>
+├── package.json  <span class="cm">dependencies</span>
+├── .env.example  <span class="cm">committed</span>
+└── .env          <span class="cm">secret, never committed</span></pre>
+        <div class="grid" style="gap: .75rem; margin: .75rem 0 0; align-content: start;">
+          <div class="card" data-build>
+            <h3>server.js</h3>
+            <p class="small">Creates the app, adds middleware (JSON parsing, CORS, logging), mounts each router under its path, connects to the database, then starts listening.</p>
+          </div>
+          <div class="card" data-build>
+            <h3>routes/</h3>
+            <p class="small">Short lists: <span style="font-family:Consolas, monospace">router.get("/:id", getBook)</span>. Read one and you know every endpoint for that resource.</p>
+          </div>
+          <div class="card" data-build>
+            <h3>controllers/</h3>
+            <p class="small">One function per endpoint: read the request, validate, run SQL, choose the status code, send JSON.</p>
+          </div>
+          <div class="card accent-amber" data-build>
+            <h3>Why split it this way?</h3>
+            <p class="small">Each file has one job. When GET /orders breaks, you know to open controllers/orders.js.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 15. FOLLOW ONE REQUEST (interactive)                -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · Step by Step</div>
+      <h2 class="title">Follow One Request Through the Code</h2>
+      <div class="stepper" data-start="A storefront asks for GET /books/8. Click the code (or press →) to follow the request from file to file.">
+        <i class="tick" data-build data-caption="server.js: the path starts with /books, so Express hands the request to the books router. What's left of the path is /8."></i>
+        <i class="tick" data-build data-caption="routes/books.js: /8 matches the pattern /:id, so Express sets req.params.id to &quot;8&quot; (text, not a number) and calls getBook."></i>
+        <i class="tick" data-build data-caption="The controller turns &quot;8&quot; into the number 8 with parseInt."></i>
+        <i class="tick" data-build data-caption="It sends the query to SQL Server with 8 as a typed parameter, and awaits the answer."></i>
+        <i class="tick" data-build data-caption="Three rows come back, one per author of Tales of the Unknown. The list is not empty, so this is not a 404."></i>
+        <i class="tick" data-build data-caption="The three rows are folded into one book object and sent back with status 200. Four files, one request, a few milliseconds."></i>
+        <div class="grid two" style="grid-template-columns: 1fr 1.25fr; margin: .4rem 0 .6rem; align-items: start;">
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>server.js</strong></p>
+            <pre class="code tight" style="margin-top: 0;">app.use(express.json());
+<span data-hl="1">app.use(<span class="str">"/books"</span>, booksRoutes);</span>
+app.use(<span class="str">"/customers"</span>, customersRoutes);</pre>
+            <p class="small" style="margin: .6rem 0 .3rem;"><strong>routes/books.js</strong></p>
+            <pre class="code tight" style="margin-top: 0;">router.get(<span class="str">"/"</span>, listBooks);
+<span data-hl="2">router.get(<span class="str">"/:id"</span>, getBook);</span>
+router.post(<span class="str">"/"</span>, createBook);</pre>
+            <p class="small" style="margin: .6rem 0 .3rem;"><strong>Response</strong></p>
+            <pre class="code tight fade" data-on="6:shown" style="margin-top: 0;">200 OK
+{ <span class="str">"BookID"</span>: 8,
+  <span class="str">"Title"</span>: <span class="str">"Tales of the Unknown"</span>,
+  <span class="str">"Authors"</span>: [ … 3 authors … ] }</pre>
+          </div>
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>controllers/books.js</strong> (shortened)</p>
+            <pre class="code tight" style="margin-top: 0;"><span class="kw">export const</span> getBook = <span class="kw">async</span> (req, res) =&gt; {
+<span data-hl="3">  <span class="kw">const</span> bookId = parseInt(req.params.id);</span>
+
+<span data-hl="4">  <span class="kw">const</span> result = <span class="kw">await</span> pool.request()
+    .input(<span class="str">"bookId"</span>, sql.Int, bookId)
+    .query(<span class="str">`SELECT … FROM Books b
+      LEFT JOIN Author_Book ab …
+      WHERE b.BookID = @bookId`</span>);</span>
+
+<span data-hl="5">  <span class="kw">if</span> (result.recordset.length === 0) {
+    <span class="kw">return</span> res.status(404)
+      .json({ error: <span class="str">"Book not found"</span> });
+  }</span>
+
+<span data-hl="6">  <span class="kw">const</span> book = { …fold the rows… };
+  res.status(200).json(book);</span>
+};</pre>
+          </div>
+        </div>
+        <div class="step-caption"></div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 16. CONNECTING NODE TO SQL SERVER                   -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · Setup</div>
+      <h2 class="title">Give the API Its Own Database Login</h2>
+      <p class="subtitle">SSMS signed you in with Windows. The Node driver signs in with a SQL Server username and password, so SQL Server needs three switches.</p>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>1 · Allow SQL logins</h3>
+          <p class="small">SSMS: right-click the server → Properties → Security → <strong>SQL Server and Windows Authentication mode</strong>. Then restart the SQL Server service.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>2 · Turn on TCP/IP</h3>
+          <p class="small">SQL Server Configuration Manager → Network Configuration → Protocols → <strong>TCP/IP: Enabled</strong>. For SQLEXPRESS, also start the <strong>SQL Server Browser</strong> service.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>3 · Create the login</h3>
+          <p class="small">Run the script on the right in SSMS, choosing your own password. Put the same name and password in <span style="font-family:Consolas, monospace">.env</span>.</p>
+        </div>
+      </div>
+      <div class="grid two" style="grid-template-columns: 1.3fr 1fr;">
+        <pre class="code tight" data-build><span class="kw">CREATE LOGIN</span> bookstore_app
+  <span class="kw">WITH PASSWORD</span> = <span class="str">N'pick-your-own-Strong-1'</span>;
+<span class="kw">GO</span>
+<span class="kw">USE</span> ClassDemo;
+<span class="kw">CREATE USER</span> bookstore_app <span class="kw">FOR LOGIN</span> bookstore_app;
+<span class="kw">ALTER ROLE</span> db_datareader <span class="kw">ADD MEMBER</span> bookstore_app;
+<span class="kw">ALTER ROLE</span> db_datawriter <span class="kw">ADD MEMBER</span> bookstore_app;</pre>
+        <div class="card accent-green" data-build>
+          <h3>Least privilege</h3>
+          <p class="small">This login can read and write rows, but it cannot DROP a table or create logins. If the API is ever hacked, the damage stops at the data it was already allowed to touch.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 17. DB CONFIG + .ENV                                -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · db/config.js</div>
+      <h2 class="title">One Connection Pool, Secrets in .env</h2>
+      <div class="grid two" style="grid-template-columns: 1.25fr 1fr;">
+        <pre class="code tight"><span class="kw">import</span> sql <span class="kw">from</span> <span class="str">"mssql"</span>;
+<span class="kw">import</span> dotenv <span class="kw">from</span> <span class="str">"dotenv"</span>;
+dotenv.config();                 <span class="cm">// read .env</span>
+
+<span data-build><span class="kw">const</span> dbConfig = {
+  user:     process.env.DB_USER,
+  password: process.env.DB_PASS,
+  server:   process.env.DB_SERVER,
+  database: <span class="str">"ClassDemo"</span>,
+  options:  { encrypt: <span class="kw">true</span>, trustServerCertificate: <span class="kw">true</span> },
+  pool:     { max: 10, min: 0, idleTimeoutMillis: 30000 }
+};</span>
+
+<span data-build><span class="kw">let</span> pool;
+<span class="kw">export const</span> connectDB = <span class="kw">async</span> () =&gt; {
+  pool = <span class="kw">await</span> sql.connect(dbConfig);   <span class="cm">// once, at startup</span>
+};
+<span class="kw">export const</span> getPool = () =&gt; pool;     <span class="cm">// every controller</span></span></pre>
+        <div>
+          <pre class="code tight" data-build style="margin-top: .75rem;"><span class="cm"># .env  (on your laptop only)</span>
+DB_SERVER=localhost\SQLEXPRESS
+DB_USER=bookstore_app
+DB_PASS=pick-your-own-Strong-1
+PORT=4000</pre>
+          <div class="card" data-build style="margin-top: .75rem;">
+            <h3>Why a pool?</h3>
+            <p class="small">Opening a connection is slow. The pool keeps up to 10 open and lends one to each request, like a stack of shopping baskets at the door.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout amber" data-build><strong>This repository is shared with the whole class.</strong> <span style="font-family:Consolas, monospace">.env</span> is listed in <span style="font-family:Consolas, monospace">.gitignore</span>, so Git never uploads it; only <span style="font-family:Consolas, monospace">.env.example</span>, with placeholder values, is committed. Do the same in your own project repository.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 18. RUN IT                                          -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · Run It</div>
+      <h2 class="title">From Clone to Running API</h2>
+      <div class="grid two">
+        <div>
+          <ul class="points">
+            <li data-build><strong>1 · Get the code:</strong> <span style="font-family:Consolas, monospace">git pull</span> the course repository.</li>
+            <li data-build><strong>2 · Install:</strong> <span style="font-family:Consolas, monospace">cd bookstore-api</span>, then <span style="font-family:Consolas, monospace">npm install</span>.</li>
+            <li data-build><strong>3 · Configure:</strong> copy <span style="font-family:Consolas, monospace">.env.example</span> to <span style="font-family:Consolas, monospace">.env</span> and fill in your login.</li>
+            <li data-build><strong>4 · Start:</strong> <span style="font-family:Consolas, monospace">npm run dev</span> (nodemon restarts it whenever you save).</li>
+            <li data-build><strong>5 · Check:</strong> open <span style="font-family:Consolas, monospace">http://localhost:4000</span>; the API lists its endpoints.</li>
+          </ul>
+        </div>
+        <div>
+          <pre class="code tight" data-build>&gt; npm run dev
+✅ Connected to ClassDemo database successfully
+🚀 Bookstore API server running on http://localhost:4000</pre>
+          <div class="card accent-amber" data-build style="margin-top: .75rem;">
+            <h3>If it doesn't start</h3>
+            <ul>
+              <li><strong>Login failed for user:</strong> wrong password in .env, or step 1 of the previous slide (SQL logins) isn't done</li>
+              <li><strong>Failed to connect… ECONNREFUSED / timeout:</strong> TCP/IP or SQL Server Browser is off</li>
+              <li><strong>Cannot find package 'express':</strong> run npm install inside bookstore-api</li>
+              <li><strong>Port 4000 already in use:</strong> another copy is running; close it or change PORT</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 19. ROWS → NESTED JSON (interactive)                -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · GET /books, Step by Step</div>
+      <h2 class="title">Folding Rows Back Into One Book</h2>
+      <div class="stepper" data-start="Week 4 warned you: a JOIN returns Tales of the Unknown three times, once per author. The storefront wants one book with a list of authors. Click to watch listBooks fold them.">
+        <i class="tick" data-build data-caption="Row 1: BookID 8 hasn't been seen yet, so the code creates a new book object with an empty Authors list, and remembers it in a Map under the key 8."></i>
+        <i class="tick" data-build data-caption="Still row 1: its author, Agatha Christie, is pushed onto that book's Authors list."></i>
+        <i class="tick" data-build data-caption="Row 2: BookID 8 is already in the Map, so no new book is created. George Orwell is added to the same list."></i>
+        <i class="tick" data-build data-caption="Row 3: same book again, J.K. Rowling is added. Three rows in, one book out, three authors inside it."></i>
+        <i class="tick" data-build data-caption="That nested object is what the storefront receives. In Week 6 it will display &quot;by Agatha Christie, with George Orwell and J.K. Rowling&quot; from this one object."></i>
+        <div class="grid two" style="grid-template-columns: 1.1fr 1fr; margin: .4rem 0 .6rem; align-items: start;">
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>result.recordset</strong> from SQL Server</p>
+            <table class="tbl mono">
+              <tr><th>BookID</th><th>Title</th><th>Author</th><th>isMain</th></tr>
+              <tr data-hl="1 2"><td>8</td><td>Tales of the Unknown</td><td>Agatha Christie</td><td>true</td></tr>
+              <tr data-hl="3"><td>8</td><td>Tales of the Unknown</td><td>George Orwell</td><td>false</td></tr>
+              <tr data-hl="4"><td>8</td><td>Tales of the Unknown</td><td>J.K. Rowling</td><td>false</td></tr>
+            </table>
+            <pre class="code tight" style="margin-top: .8rem;">result.recordset.forEach(row =&gt; {
+<span data-hl="1">  <span class="kw">if</span> (!booksMap.has(row.BookID)) {
+    booksMap.set(row.BookID,
+      { BookID: row.BookID, Title: row.Title,
+        …, Authors: [] });
+  }</span>
+<span data-hl="2 3 4">  booksMap.get(row.BookID).Authors.push(
+    { Name: row.Author, IsMain: row.isMain });</span>
+});
+<span data-hl="5"><span class="kw">const</span> books = Array.from(booksMap.values());</span></pre>
+          </div>
+          <div>
+            <p class="small" style="margin: 0 0 .3rem;"><strong>The book object being built</strong></p>
+            <pre class="code tight" style="margin-top: 0;"><span class="fade" data-on="1:shown">{
+  <span class="str">"BookID"</span>: 8,
+  <span class="str">"Title"</span>: <span class="str">"Tales of the Unknown"</span>,
+  <span class="str">"Price"</span>: 18.5,
+  <span class="str">"Authors"</span>: [</span>
+<span class="fade" data-on="2:shown" data-hl="2">    { <span class="str">"Name"</span>: <span class="str">"Agatha Christie"</span>, <span class="str">"IsMain"</span>: true },</span>
+<span class="fade" data-on="3:shown" data-hl="3">    { <span class="str">"Name"</span>: <span class="str">"George Orwell"</span>,   <span class="str">"IsMain"</span>: false },</span>
+<span class="fade" data-on="4:shown" data-hl="4">    { <span class="str">"Name"</span>: <span class="str">"J.K. Rowling"</span>,    <span class="str">"IsMain"</span>: false }</span>
+<span class="fade" data-on="1:shown">  ]
+}</span></pre>
+            <div class="card accent-blue fade" data-on="5:shown" style="margin-top: .8rem;">
+              <h3>Paging counts books, not rows</h3>
+              <p class="small"><span style="font-family:Consolas, monospace">GET /books?page=1&amp;limit=5</span> picks 5 <em>books</em> first, then joins their authors, so a co-written book never uses up extra places.</p>
+            </div>
+          </div>
+        </div>
+        <div class="step-caption"></div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 20. SQL INJECTION                                   -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · Security</div>
+      <h2 class="title">Never Glue User Input Into SQL</h2>
+      <p class="subtitle">Everything in <span style="font-family:Consolas, monospace">req.params</span>, <span style="font-family:Consolas, monospace">req.query</span> and <span style="font-family:Consolas, monospace">req.body</span> is typed by a stranger.</p>
+      <div class="grid two">
+        <div class="card accent-red" data-build>
+          <h3>Dangerous: string building</h3>
+          <pre class="code tight">pool.request().query(
+  <span class="str">`SELECT * FROM Books
+   WHERE BookID = ${req.params.id}`</span>);</pre>
+          <p class="small">A visitor requests <span style="font-family:Consolas, monospace">/books/1; DELETE FROM Payments</span> and SQL Server receives:</p>
+          <div class="sqlmsg">SELECT * FROM Books WHERE BookID = 1; DELETE FROM Payments</div>
+          <p class="small">Two statements. Both run. Every payment is gone.</p>
+        </div>
+        <div class="card accent-green" data-build>
+          <h3>Safe: a typed parameter</h3>
+          <pre class="code tight">pool.request()
+  .input(<span class="str">"bookId"</span>, sql.Int, bookId)
+  .query(<span class="str">`SELECT * FROM Books
+          WHERE BookID = @bookId`</span>);</pre>
+          <p class="small">The SQL text and the value travel <strong>separately</strong>. SQL Server never reads the value as code; <span style="font-family:Consolas, monospace">"1; DELETE…"</span> is simply not a valid Int and is rejected.</p>
+        </div>
+      </div>
+      <div class="callout" data-build><strong>This is called SQL injection</strong>, and it has been near the top of every web-security risk list for twenty years. The rule is absolute: values go in <span style="font-family:Consolas, monospace">.input()</span>, never inside the query string. Every query in bookstore-api follows it.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 21. POST                                            -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · POST /books</div>
+      <h2 class="title">Creating a Book: Check, Insert, Answer 201</h2>
+      <div class="grid two" style="grid-template-columns: 1.35fr 1fr;">
+        <pre class="code tight"><span data-build><span class="kw">const</span> createBookSchema = Joi.object({
+  title: Joi.string().min(2).max(255).required(),
+  isbn:  Joi.string().min(10).max(20).required(),
+  price: Joi.number().min(0).required(),
+  stock: Joi.number().integer().min(0).default(0), …
+});
+<span class="kw">const</span> { error, value } = createBookSchema.validate(req.body);
+<span class="kw">if</span> (error) <span class="kw">return</span> res.status(400)
+  .json({ error: error.details[0].message });</span>
+
+<span data-build><span class="cm">// same ISBN already in Books?  → 409</span>
+<span class="kw">if</span> (existingBook.recordset.length &gt; 0) <span class="kw">return</span> res.status(409)
+  .json({ error: <span class="str">"Book with this ISBN already exists"</span> });</span>
+
+<span data-build><span class="kw">const</span> result = <span class="kw">await</span> pool.request()
+  .input(<span class="str">"title"</span>, sql.NVarChar, title) …
+  .query(<span class="str">`INSERT INTO Books (Title, ISBN, …)
+          OUTPUT INSERTED.BookID
+          VALUES (@title, @isbn, …)`</span>);
+res.status(201).json({ message: <span class="str">"Book created successfully"</span>,
+  BookID: result.recordset[0].BookID });</span></pre>
+        <div class="grid" style="gap: .75rem; margin: .75rem 0 0; align-content: start;">
+          <div class="card accent-amber" data-build>
+            <h3>1 · Validate the shape (Joi)</h3>
+            <p class="small">Send <span style="font-family:Consolas, monospace">{ "title": "X" }</span> and the reply is 400: <span style="font-family:Consolas, monospace">"title" length must be at least 2 characters long</span>.</p>
+          </div>
+          <div class="card accent-amber" data-build>
+            <h3>2 · Check the business rule</h3>
+            <p class="small">A friendly 409 before the database's UNIQUE constraint would refuse it anyway.</p>
+          </div>
+          <div class="card accent-green" data-build>
+            <h3>3 · Insert and report the ID</h3>
+            <p class="small"><span style="font-family:Consolas, monospace">OUTPUT INSERTED.BookID</span> returns the new IDENTITY value in the same statement, so the client learns it right away.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 22. PUT & DELETE                                    -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · PUT &amp; DELETE</div>
+      <h2 class="title">Update and Delete: Translate the Database's "No"</h2>
+      <p class="subtitle">SQL error numbers mean nothing to a storefront. The API turns them into a status code and one sentence of JSON.</p>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>PUT /books/4 changes only what you send</h3>
+          <pre class="code tight"><span class="cm">// body: { "price": 16.99 }</span>
+<span class="kw">UPDATE</span> Books
+<span class="kw">SET</span> Title = COALESCE(@title, Title),
+    Price = COALESCE(@price, Price), …
+<span class="kw">WHERE</span> BookID = @bookId</pre>
+          <p class="small">Fields missing from the body arrive as NULL, and COALESCE keeps the current value. <span style="font-family:Consolas, monospace">rowsAffected[0] === 0</span> means no such book: 404.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>DELETE /books/4 meets a foreign key</h3>
+          <pre class="code tight"><span class="kw">catch</span> (error) {
+  <span class="kw">if</span> (error.number === 547) {   <span class="cm">// FK conflict</span>
+    <span class="kw">return</span> res.status(409).json({ error:
+      <span class="str">"Book cannot be deleted: it has
+       authors or appears in orders"</span> });
+  }
+  res.status(500) …</pre>
+          <p class="small">The Shining appears in 9 order lines, so SQL Server refuses, exactly like Week 4.</p>
+        </div>
+      </div>
+      <table class="tbl" data-build>
+        <tr><th style="width:36%">SQL Server says (Week 4)</th><th style="width:22%">API answers</th><th>Why</th></tr>
+        <tr><td>Msg 2627 · duplicate key (UNIQUE)</td><td><span class="tag amber">409 Conflict</span></td><td>The data clashes with a row that exists</td></tr>
+        <tr><td>Msg 547 · FOREIGN KEY / CHECK conflict</td><td><span class="tag amber">409 Conflict</span></td><td>Other rows depend on this one</td></tr>
+        <tr><td>0 rows affected</td><td><span class="tag amber">404 Not Found</span></td><td>The WHERE matched nothing</td></tr>
+      </table>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 23. ERROR HANDLING                                  -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · Errors</div>
+      <h2 class="title">Three Safety Nets in server.js and the Controllers</h2>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>1 · try / catch in every controller</h3>
+          <pre class="code tight narrow"><span class="kw">try</span> { … }
+<span class="kw">catch</span> (error) {
+  console.error(error);
+  res.status(500).json({
+    error: <span class="str">"Failed to fetch"</span> });
+}</pre>
+          <p class="small">Without it, a failed query leaves the request hanging until the client times out.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>2 · A 404 for unknown paths</h3>
+          <pre class="code tight narrow">app.use(<span class="str">"*"</span>, (req, res) =&gt;
+  res.status(404).json({
+    error: <span class="str">"Endpoint not found"</span>
+  }));</pre>
+          <p class="small">Registered after every router, so it only catches what nothing else matched.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>3 · A last-resort handler</h3>
+          <pre class="code tight narrow">app.use((err, req, res, next) =&gt;
+  res.status(500).json({
+    error: <span class="str">"Internal server error"</span>
+  }));</pre>
+          <p class="small">Four parameters tell Express this function handles errors.</p>
+        </div>
+      </div>
+      <div class="callout amber" data-build><strong>Log the details, send the summary.</strong> The full error (table names, SQL text) goes to <span style="font-family:Consolas, monospace">console.error</span> on the server. The client gets one plain sentence. Error details are a map of your database for an attacker.</div>
+      <div class="callout" data-build><strong>Order matters here too:</strong> routes/orders.js lists <span style="font-family:Consolas, monospace">/stats</span> before <span style="font-family:Consolas, monospace">/:id</span>. Swap them and <span style="font-family:Consolas, monospace">GET /orders/stats</span> is treated as an order whose ID is "stats".</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 24. POSTMAN                                         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · Testing</div>
+      <h2 class="title">Test Every Path with Postman</h2>
+      <p class="subtitle">A browser can only send GET. Postman sends any method, with any body, and shows the status code. Build one collection for the class API:</p>
+      <table class="tbl mono">
+        <tr><th style="width:42%">Request</th><th style="width:16%">Expect</th><th>What it proves</th></tr>
+        <tr data-build><td>GET {{baseUrl}}/books</td><td>200</td><td>9 books (with Week 4's Dune), each with Authors</td></tr>
+        <tr data-build><td>GET {{baseUrl}}/books/999</td><td>404</td><td>Missing rows are reported, not crashed on</td></tr>
+        <tr data-build><td>POST {{baseUrl}}/books  (Gatsby body)</td><td>201</td><td>Insert works; note the new BookID</td></tr>
+        <tr data-build><td>POST the same body again</td><td>409</td><td>Duplicate ISBN is refused</td></tr>
+        <tr data-build><td>POST { "title": "X" }</td><td>400</td><td>Joi validation runs before any SQL</td></tr>
+        <tr data-build><td>PUT {{baseUrl}}/books/4  { "price": 16.99 }</td><td>200</td><td>Partial update keeps the title</td></tr>
+        <tr data-build><td>DELETE {{baseUrl}}/books/4</td><td>409</td><td>The foreign key protects order history</td></tr>
+        <tr data-build><td>DELETE {{baseUrl}}/books/&lt;Gatsby's ID&gt;</td><td>200</td><td>A book with no orders can go</td></tr>
+      </table>
+      <div class="grid two">
+        <div class="card" data-build>
+          <h3>Set it up once</h3>
+          <p class="small">An environment variable <span style="font-family:Consolas, monospace">baseUrl = http://localhost:4000</span>; for POST/PUT choose Body → raw → JSON.</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Let Postman check for you</h3>
+          <p class="small">In each request's Tests tab:<br/><span style="font-family:Consolas, monospace">pm.test("201", () =&gt; pm.response.to.have.status(201));</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 25. HANDS-ON 5.2                                    -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Lecture 5.2 · Hands-On</div>
+      <h2 class="title">Your Turn: Add an Endpoint (25 Minutes)</h2>
+      <p class="subtitle">Build <span style="font-family:Consolas, monospace">GET /customers/:id/payments</span>: every payment a customer has made.</p>
+      <div class="grid two">
+        <div>
+          <ul class="points">
+            <li data-build><strong>1 · Run</strong> the API; pass 3 Postman tests.</li>
+            <li data-build><strong>2 · Route</strong> in routes/customers.js: <span style="font-family:Consolas, monospace; font-size: .95rem;">router.get("/:id/payments", getCustomerPayments)</span></li>
+            <li data-build><strong>3 · Controller:</strong> copy getCustomerOrders, rename, change the SQL.</li>
+            <li data-build><strong>4 · Test</strong> it in Postman.</li>
+          </ul>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Hints</h3>
+          <ul>
+            <li>Payments has no CustomerID: JOIN Orders to reach it (Week 4, slide "Which SQL does the job?")</li>
+            <li>Use <span style="font-family:Consolas, monospace">.input("customerId", sql.Int, customerId)</span>, never <span style="font-family:Consolas, monospace">${…}</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card accent-green" data-build>
+          <h3>Check yourself</h3>
+          <p class="small"><span style="font-family:Consolas, monospace">/customers/3/payments</span> returns Ali's 2 credit-card payments, 31.98 and 148.92, plus 32.97 if you kept the Week 4 demo order.</p>
+        </div>
+        <div class="card accent-purple" data-build>
+          <h3>Stretch</h3>
+          <p class="small">Return 404 when the customer doesn't exist (an empty list is not the same as no customer), or add <span style="font-family:Consolas, monospace">?method=PayPal</span> as a filter.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 26. HOMEWORK                                        -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Assignment · Due Week 6</div>
+      <h2 class="title">Homework: Your Store's API</h2>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>1 · The code</h3>
+          <ul>
+            <li>Start with a one-page endpoint plan: method, path and status codes for each screen of your store</li>
+            <li>Node + Express, on your Week 4 database</li>
+            <li>Full CRUD for your main resource (e.g. products)</li>
+            <li>2 more GET endpoints, one using a JOIN</li>
+          </ul>
+        </div>
+        <div class="card" data-build>
+          <h3>2 · Correct behaviour</h3>
+          <ul>
+            <li>201, 400, 404 and 409 each used where they belong</li>
+            <li>Every value passed with <span style="font-family:Consolas, monospace">.input()</span></li>
+            <li>try / catch in every controller</li>
+          </ul>
+        </div>
+        <div class="card" data-build>
+          <h3>3 · Proof</h3>
+          <ul>
+            <li>Postman collection exported as JSON</li>
+            <li>At least one test per endpoint, including a failure case</li>
+            <li>README listing every endpoint</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout amber" data-build><strong>Before you push:</strong> check that <span style="font-family:Consolas, monospace">.env</span> is in your .gitignore and only <span style="font-family:Consolas, monospace">.env.example</span> is committed. A database password on GitHub counts as a security incident, and it will cost you marks.</div>
+      <div class="callout green" data-build><strong>Why it matters:</strong> next week your storefront calls these endpoints. Every one you finish now is a page that works in Week 6.</div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- 27. WRAP-UP                                         -->
+    <!-- ================================================== -->
+    <section class="slide">
+      <div class="kicker">Week 5 · Wrap-Up</div>
+      <h2 class="title">What You Now Know</h2>
+      <ul class="points">
+        <li data-build>An <strong>API</strong> sits between storefront and database: it holds the password, the SQL and the rules.</li>
+        <li data-build><strong>HTTP</strong> is request and response: method, path, body, status code. <strong>JSON</strong> is the shape of the data.</li>
+        <li data-build><strong>REST</strong> maps nouns to paths and verbs to methods, which map one-to-one onto INSERT, SELECT, UPDATE, DELETE.</li>
+        <li data-build><strong>Express</strong> routes each request to a controller; <strong>await</strong> waits for SQL Server without freezing.</li>
+        <li data-build><strong>Safe by default:</strong> parameters against injection, secrets in .env, SQL errors translated into 400, 404, 409.</li>
+      </ul>
+      <div class="grid three">
+        <div class="card" data-build>
+          <h3>Week 4</h3>
+          <p class="small"><strong>MSSQL</strong><br/>the database (done)</p>
+        </div>
+        <div class="card" data-build>
+          <h3>Week 5</h3>
+          <p class="small"><strong>Node.js API</strong><br/>the counter in front of it (done)</p>
+        </div>
+        <div class="card accent-blue" data-build>
+          <h3>Week 6</h3>
+          <p class="small"><strong>Frontend</strong><br/>a storefront that calls this API with fetch()</p>
+        </div>
+      </div>
+      <div class="callout green" data-build><strong>Due next class:</strong> your API, the Postman collection and the README. Bring the API running on your laptop.</div>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    <div class="controls">
+      <button id="prev" type="button" class="nav-btn ghost" aria-label="Previous">◀ Prev</button>
+      <button id="next" type="button" class="nav-btn" aria-label="Next">Next ▶</button>
+    </div>
+    <div class="stepdots" id="stepdots" title="Reveal steps on this slide"></div>
+    <div class="progress"><div id="bar" class="bar"></div></div>
+    <div class="counter" id="counter">1 / 1</div>
+    <button id="fs" type="button" class="nav-btn ghost" aria-label="Fullscreen" title="Fullscreen (F)">⛶</button>
+  </div>
+</div>
+
+<script src="deck.js"></script>
+</body>
+</html>

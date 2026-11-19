@@ -12,6 +12,18 @@ const createBookSchema = Joi.object({
   publishDate: Joi.date().optional()
 });
 
+// Validation schema for updating a book: any subset of fields, at least one
+const updateBookSchema = Joi.object({
+  title: Joi.string().min(2).max(255),
+  genre: Joi.string().max(100),
+  price: Joi.number().min(0),
+  stock: Joi.number().integer().min(0),
+  description: Joi.string().max(1000)
+}).min(1);
+
+// SQL Server error 547: a foreign key or CHECK constraint refused the statement
+const FK_CONFLICT = 547;
+
 // GET /books - List all books with their authors
 export const listBooks = async (req, res) => {
   try {
@@ -20,27 +32,36 @@ export const listBooks = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
+    // Page over books first, then join their authors. Paging the joined
+    // rows would let a book with 3 authors use up 3 slots of the page.
     const result = await pool.request()
       .input("limit", sql.Int, limit)
       .input("offset", sql.Int, offset)
       .query(`
-        SELECT 
-          b.BookID, 
-          b.Title, 
+        WITH PageBooks AS (
+          SELECT BookID FROM Books
+          ORDER BY BookID DESC
+          OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
+        )
+        SELECT
+          b.BookID,
+          b.Title,
           b.ISBN,
           b.Genre,
-          b.Price, 
+          b.Price,
           b.Stock,
           b.PublishDate,
           b.Description,
           a.FirstName + ' ' + a.LastName AS Author,
           ab.isMain
-        FROM Books b
+        FROM PageBooks pb
+        JOIN Books b ON b.BookID = pb.BookID
         LEFT JOIN Author_Book ab ON b.BookID = ab.BookId
         LEFT JOIN Authors a ON ab.AuthorId = a.AuthorID
-        ORDER BY b.BookID DESC
-        OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
+        ORDER BY b.BookID DESC, ab.isMain DESC
       `);
+
+    const countResult = await pool.request().query("SELECT COUNT(*) AS Total FROM Books");
 
     // Group books by BookID to handle multiple authors
     const booksMap = new Map();
@@ -73,7 +94,7 @@ export const listBooks = async (req, res) => {
     res.status(200).json({
       page,
       limit,
-      total: books.length,
+      total: countResult.recordset[0].Total,
       books
     });
   } catch (error) {
@@ -106,6 +127,7 @@ export const getBook = async (req, res) => {
         LEFT JOIN Author_Book ab ON b.BookID = ab.BookId
         LEFT JOIN Authors a ON ab.AuthorId = a.AuthorID
         WHERE b.BookID = @bookId
+        ORDER BY ab.isMain DESC
       `);
 
     if (result.recordset.length === 0) {
@@ -187,10 +209,17 @@ export const createBook = async (req, res) => {
 export const updateBook = async (req, res) => {
   try {
     const bookId = parseInt(req.params.id);
-    const { title, price, stock, genre, description } = req.body;
+
+    // Validate request body
+    const { error, value } = updateBookSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+    const { title, price, stock, genre, description } = value;
 
     const pool = getPool();
 
+    // COALESCE keeps the current value of any field the request left out
     const result = await pool.request()
       .input("bookId", sql.Int, bookId)
       .input("title", sql.NVarChar, title)
@@ -199,9 +228,10 @@ export const updateBook = async (req, res) => {
       .input("genre", sql.NVarChar, genre)
       .input("description", sql.NVarChar, description)
       .query(`
-        UPDATE Books 
-        SET Title = @title, Price = @price, Stock = @stock, 
-            Genre = @genre, Description = @description
+        UPDATE Books
+        SET Title = COALESCE(@title, Title), Price = COALESCE(@price, Price),
+            Stock = COALESCE(@stock, Stock), Genre = COALESCE(@genre, Genre),
+            Description = COALESCE(@description, Description)
         WHERE BookID = @bookId
       `);
 
@@ -232,6 +262,11 @@ export const deleteBook = async (req, res) => {
 
     res.status(200).json({ message: "Book deleted successfully" });
   } catch (error) {
+    if (error.number === FK_CONFLICT) {
+      return res.status(409).json({
+        error: "Book cannot be deleted: it has authors or appears in orders"
+      });
+    }
     console.error("Error deleting book:", error);
     res.status(500).json({ error: "Failed to delete book" });
   }
